@@ -15,9 +15,11 @@ Curve Loop(3) = {1};
 Rectangle(1) = {-50, 3, 0, 100, 4, 0};
 Curve Loop(4) = {2, 3, 4, 5};
 
+Rotate {{0, 0, 1}, {-50, 3, 0}, 0} { Surface{1}; }
+
 // Rectangle B
 Rectangle(2) = {-50, -3, 0, 100, 4, 0}; 
-Curve Loop(5) = {5, 6, 7, 8};
+Curve Loop(5) = {6, 7, 8, 9};
 
 Plane Surface(3) = {3, 4, 5};
 
@@ -35,7 +37,7 @@ Physical Surface("space", 10) = {3};                // Remaining domain after su
 
 //--- Physical Curves
 Physical Curve("capacitorA", 11) = {2, 3, 4, 5};      // Rectangle A
-Physical Curve("capacitorB", 12) = {5, 6, 7, 8};      // Rectangle B
+Physical Curve("capacitorB", 12) = {6, 7, 8, 9};      // Rectangle B
 Physical Curve("boundary", 20) = {1};                 // Circle perimeter
 
 //--- Physical Points (all)
@@ -44,9 +46,6 @@ Physical Point("all_points", 30) = {
   4, 5, 6, 7,   // Rectangle A corners
   8, 9, 10, 11  // Rectangle B corners
 };
-//+
-Curve Loop(3) = {1};
-
 
 // Define a distance field for mesh refinement
 Field[1] = Distance;
