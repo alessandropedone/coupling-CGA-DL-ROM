@@ -2,54 +2,89 @@
 SetFactory("OpenCASCADE");
 
 //---------------------------------------
-// 2. Define Circle
-//---------------------------------------
-Circle(1) = {0, 0, 0, 200, 0, 2*Pi};
-Curve Loop(3) = {1};
-
-
-//---------------------------------------
-// 2. Define Rectangles (capacitor plates)
-//---------------------------------------
-// Rectangle A
-Rectangle(1) = {-50, 3, 0, 100, 4, 0};
-Curve Loop(4) = {2, 3, 4, 5};
-
-Rotate {{0, 0, 1}, {-50, 3, 0}, 0} { Surface{1}; }
-
-// Rectangle B
-Rectangle(2) = {-50, -3, 0, 100, 4, 0}; 
-Curve Loop(5) = {6, 7, 8, 9};
-
-Plane Surface(3) = {3, 4, 5};
-
-//---------------------------------------
-// 4. Subtract Rectangles from Circle
-//---------------------------------------
-BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
-
-//---------------------------------------
-// 5. Define Physical Groups
+// Rectangles
 //---------------------------------------
 
-//--- Physical Surfaces
-Physical Surface("space", 10) = {3};                // Remaining domain after subtraction
+// Rectangle 1 (top)
+Point(1) = {-50, 1, 0, 1.0};
+Point(2) = { 50, 1, 0, 1.0};
+Point(3) = { 50, 5, 0, 1.0};
+Point(4) = {-50, 5, 0, 1.0};
+
+Line(1) = {1, 2};
+Line(2) = {2, 3};
+Line(3) = {3, 4};
+Line(4) = {4, 1};
+
+Line Loop(1) = {1, 2, 3, 4};
+Plane Surface(1) = {1};
+
+Rotate {{0, 0, 1}, {-50, 1, 0}, 0} {
+  Duplicata {
+    Point{2,3,4};
+    Line{1,2,3,4};
+    Surface{1};
+  }
+}
+
+// Rectangle 2 (bottom)
+Point(5) = {-50, -1, 0, 1.0};
+Point(6) = { 50, -1, 0, 1.0};
+Point(7) = { 50,  -5, 0, 1.0};
+Point(8) = {-50,  -5, 0, 1.0};
+
+Line(5) = {5, 6};
+Line(6) = {6, 7};
+Line(7) = {7, 8};
+Line(8) = {8, 5};
+
+Line Loop(2) = {5, 6, 7, 8};
+Plane Surface(2) = {2};
+
+//---------------------------------------
+// Circle
+//---------------------------------------
+
+// Define points
+Point(9) = {0, 0, 0};        // Center
+Point(10) = {200, 0, 0};     // Start point
+Point(11) = {0, 200, 0};     // 90 degrees
+Point(12) = {-200, 0, 0};    // 180 degrees
+Point(13) = {0, -200, 0};    // 270 degrees
+
+// Define circle arcs (each needs start, center, end)
+Circle(9) = {10, 9, 11};
+Circle(10) = {11, 9, 12};
+Circle(11) = {12, 9, 13};
+Circle(12) = {13, 9, 10};
+
+// Define curve loop and surface if needed
+Curve Loop(3) = {9, 10, 11, 12};
+Surface(3) = {3};
+
+//---------------------------------------
+// Define Physical Groups
+//---------------------------------------                
 
 //--- Physical Curves
-Physical Curve("capacitorA", 11) = {2, 3, 4, 5};      // Rectangle A
-Physical Curve("capacitorB", 12) = {6, 7, 8, 9};      // Rectangle B
-Physical Curve("boundary", 20) = {1};                 // Circle perimeter
+// Physical groups for boundaries
+Physical Line("upper_plate", 10) = {1, 2, 3, 4};
+Physical Line("lower_plate", 11) = {5, 6, 7, 8};
+Physical Line("boundary", 20) = {9, 10, 11, 12};  
 
-//--- Physical Points (all)
-Physical Point("all_points", 30) = {
-  1, 2, 3,      // Circle points
-  4, 5, 6, 7,   // Rectangle A corners
-  8, 9, 10, 11  // Rectangle B corners
-};
+// Subtract Rectangles from Circle
+BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
+//--- Physical Surfaces
+Physical Surface("space", 30) = {3};
+
+
+//---------------------------------------
+// Fine mesh near the plates
+//--------------------------------------- 
 
 // Define a distance field for mesh refinement
 Field[1] = Distance;
-Field[1].CurvesList = {2, 3, 4, 5, 6, 7, 8, 9};  // Rectangle curves
+Field[1].CurvesList = {1, 2, 3, 4, 5, 6, 7, 8};  // Rectangle curves
 Field[1].NumPointsPerCurve = 200;
 
 // Define threshold field to control mesh size based on distance to attractor
@@ -62,8 +97,7 @@ Field[2].DistMax = 40;
 
 Background Field = 2;
 
-
 //---------------------------------------
-// 6. Generate the Mesh
+// Generate the Mesh
 //---------------------------------------
 Mesh 2;  // 2D mesh generation
