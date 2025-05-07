@@ -51,3 +51,5 @@ Physical Point("boundarypoint", 37) = {1};
 Physical Surface(" space", 35) -= {3};
 //+
 Physical Surface("space", 38) = {3};
+
+Mesh 2;  // 2D mesh generation
