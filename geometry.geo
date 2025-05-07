@@ -1,53 +1,70 @@
-//+
+// Set the geometry kernel
 SetFactory("OpenCASCADE");
-Circle(1) = {1, 1, 0, 1, 0, 2*Pi};
-//+
-Rectangle(1) = {0.5, 0.8, 0, 1, 0.02, 0};
-//+
-Rectangle(2) = {0.6, 1.3, 0, 0.8, 0.02, 0};
+
+//---------------------------------------
+// 2. Define Circle
+//---------------------------------------
+Circle(1) = {0, 0, 0, 200, 0, 2*Pi};
+Curve Loop(3) = {1};
+
+
+//---------------------------------------
+// 2. Define Rectangles (capacitor plates)
+//---------------------------------------
+// Rectangle A
+Rectangle(1) = {-50, 3, 0, 100, 4, 0};
+Curve Loop(4) = {2, 3, 4, 5};
+
+// Rectangle B
+Rectangle(2) = {-50, -3, 0, 100, 4, 0}; 
+Curve Loop(5) = {5, 6, 7, 8};
+
+Plane Surface(3) = {3, 4, 5};
+
+//---------------------------------------
+// 4. Subtract Rectangles from Circle
+//---------------------------------------
+BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
+
+//---------------------------------------
+// 5. Define Physical Groups
+//---------------------------------------
+
+//--- Physical Surfaces
+Physical Surface("space", 10) = {3};                // Remaining domain after subtraction
+
+//--- Physical Curves
+Physical Curve("capacitorA", 11) = {2, 3, 4, 5};      // Rectangle A
+Physical Curve("capacitorB", 12) = {5, 6, 7, 8};      // Rectangle B
+Physical Curve("boundary", 20) = {1};                 // Circle perimeter
+
+//--- Physical Points (all)
+Physical Point("all_points", 30) = {
+  1, 2, 3,      // Circle points
+  4, 5, 6, 7,   // Rectangle A corners
+  8, 9, 10, 11  // Rectangle B corners
+};
 //+
 Curve Loop(3) = {1};
-//+
-Curve Loop(4) = {8, 9, 6, 7};
-//+
-Curve Loop(5) = {4, 5, 2, 3};
-//+
-Plane Surface(3) = {3, 4, 5};
-//+
-Physical Curve("boundary", 10) = {1};
-//+
-Physical Curve("capacitorA", 11) = {8, 9, 6, 7};
-//+
-Physical Curve("capacitorB", 12) = {4, 5, 2, 3};
-//+
-BooleanDifference{ Surface{3}; Delete; }{ Surface{2}; Surface{1}; Delete; }
-//+
-Physical Surface("space", 13) = {3};
-//+
-Physical Surface(" space", 13) -= {3};
-//+
-Physical Surface(14) = {3};
-//+
-Physical Surface("space", 15) = {3};
-//+
-Physical Surface("space", 15) += {3};
-//+
-Physical Surface(" space", 15) -= {3};
-//+
-Physical Surface(14) -= {3};
-//+
-Physical Surface(" space", 15) -= {3};
-//+
-Physical Surface(16) -= {3};
-//+
-Physical Surface("space", 35) = {3};
-//+
-Physical Point("capacitor", 36) = {9, 8, 7, 6, 5, 2, 3, 4};
-//+
-Show "*";
-//+
-Physical Point("boundarypoint", 37) = {1};
-//+
-Physical Surface(" space", 35) -= {3};
-//+
-Physical Surface("space", 38) = {3};
+
+
+// Define a distance field for mesh refinement
+Field[1] = Distance;
+Field[1].CurvesList = {2, 3, 4, 5, 6, 7, 8, 9};  // Rectangle curves
+Field[1].NumPointsPerCurve = 200;
+
+// Define threshold field to control mesh size based on distance to attractor
+Field[2] = Threshold;
+Field[2].IField = 1;
+Field[2].LcMin = 0.1; // Minimum element size near the attractor
+Field[2].LcMax = 10;  // Maximum element size away from the attractor
+Field[2].DistMin = 0.01;
+Field[2].DistMax = 40;
+
+Background Field = 2;
+
+
+//---------------------------------------
+// 6. Generate the Mesh
+//---------------------------------------
+Mesh 2;  // 2D mesh generation
