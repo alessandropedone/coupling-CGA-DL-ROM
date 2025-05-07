@@ -67,7 +67,8 @@ Surface(3) = {3};
 // Physical groups for boundaries
 Physical Line("upper_plate", 10) = {1, 2, 3, 4};
 Physical Line("lower_plate", 11) = {5, 6, 7, 8};
-Physical Line("boundary", 20) = {9, 10, 11, 12};  
+Physical Line("force_segment", 12) = {1};
+Physical Line("boundary", 20) = {9, 10, 11, 12};
 
 // Subtract Rectangles from Circle
 BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
