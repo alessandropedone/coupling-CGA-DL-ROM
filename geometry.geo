@@ -20,11 +20,7 @@ Line Loop(1) = {1, 2, 3, 4};
 Plane Surface(1) = {1};
 
 Rotate {{0, 0, 1}, {-50, 1, 0}, 0} {
-  Duplicata {
-    Point{2,3,4};
-    Line{1,2,3,4};
-    Surface{1};
-  }
+  Surface{1};
 }
 
 // Rectangle 2 (bottom)
@@ -39,7 +35,8 @@ Line(7) = {7, 8};
 Line(8) = {8, 5};
 
 Line Loop(2) = {5, 6, 7, 8};
-Plane Surface(2) = {2};
+Plane Surface(2) = {2}; 
+
 
 //---------------------------------------
 // Circle
@@ -97,7 +94,3 @@ Field[2].DistMax = 40;
 
 Background Field = 2;
 
-//---------------------------------------
-// Generate the Mesh
-//---------------------------------------
-Mesh 2;  // 2D mesh generation
