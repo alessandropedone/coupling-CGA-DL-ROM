@@ -94,3 +94,7 @@ Field[2].DistMax = 40;
 
 Background Field = 2;
 
+//---------------------------------------
+// 6. Generate the Mesh
+//---------------------------------------
+Mesh 2;  // 2D mesh generation
