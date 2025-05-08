@@ -65,9 +65,9 @@ Surface(3) = {3};
 
 //--- Physical Curves
 // Physical groups for boundaries
-Physical Line("upper_plate", 10) = {1, 2, 3, 4};
-Physical Line("lower_plate", 11) = {5, 6, 7, 8};
-Physical Line("force_segment", 12) = {1};
+Physical Line("force_segment", 10) = {1};
+Physical Line("upper_plate", 11) = {2, 3, 4};
+Physical Line("lower_plate", 12) = {5, 6, 7, 8};
 Physical Line("boundary", 20) = {9, 10, 11, 12};
 
 // Subtract Rectangles from Circle
