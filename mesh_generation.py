@@ -312,12 +312,11 @@ if __name__ == "__main__":
     generate_meshes()
     print("Mesh files generated successfully.")
 
-
 """ import multiprocessing
 
 def generate_mesh(i):
     # Generate the mesh for each geometry
-    geo_path = f"meshes/{i}.geo"
+    geo_path = f"data/meshes/{i}.geo"
     generate_mesh_from_geo(geo_path)
 
 r = range(1, 1001)
