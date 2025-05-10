@@ -19,7 +19,7 @@ Line(4) = {4, 1};
 Line Loop(1) = {1, 2, 3, 4};
 Plane Surface(1) = {1};
 
-Rotate {{0, 0, 1}, {-50, 1, 0}, 0} {
+Rotate {{0, 0, 1}, {0, 1, 0}, 0} {
   Surface{1};
 }
 
