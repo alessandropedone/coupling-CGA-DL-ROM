@@ -85,7 +85,7 @@ Field[1] = Distance;
 Field[1].CurvesList = {1, 2, 3, 4, 5, 6, 7, 8};  // Rectangle curves
 Field[1].NumPointsPerCurve = 200;
 
-c = 0.3;
+c = 0.5;
 // Define threshold field to control mesh size based on distance to attractor
 Field[2] = Threshold;
 Field[2].IField = 1;
