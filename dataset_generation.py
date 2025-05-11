@@ -94,7 +94,7 @@ for mesh in mesh_folder_path.iterdir():
         grad_uh = problem_grad.solve()
 
 
-        # PLOTTING THE GRADIENT OF THE SOLUTION ON THE UPPER PLATE
+        # SAVE THE GRADIENT OF THE SOLUTION ON THE UPPER PLATE
 
         # Step 1: Find facets with tag 10
         facets10 = facet_tags.find(10)
@@ -166,3 +166,11 @@ for mesh in mesh_folder_path.iterdir():
             file.create_dataset("field_value_x", data=fval_x_plate)
             file.create_dataset("field_value_y", data=fval_y_plate)
                 
+
+        ''' # ALTERNATIVE: save all solutions in a single file (append mode)
+        with h5py.File("data/results/solutions.h5", "a") as file:
+            file.create_dataset(f"coordinates_{basename}", data=x_dofs)
+            file.create_dataset(f"potential_value_{basename}", data=fval)
+            file.create_dataset(f"field_value_x_{basename}", data=fval_x_plate)
+            file.create_dataset(f"field_value_y_{basename}", data=fval_y_plate)
+        '''
