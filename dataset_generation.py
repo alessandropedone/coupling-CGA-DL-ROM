@@ -6,11 +6,11 @@ from mesh_generation import generate_mesh_from_geo
 # generate the mesh from the geometry file
 from pathlib import Path
 
-geo_folder_path = Path('data/meshes')
+""" geo_folder_path = Path('data/meshes')
 for geofile in geo_folder_path.iterdir():
     if geofile.is_file() and geofile.suffix == ".geo":
         generate_mesh_from_geo(geofile)
-
+"""
 # Now solve the problem for each mesh
 from mpi4py import MPI
 from dolfinx.io import gmshio
@@ -117,8 +117,12 @@ for mesh in mesh_folder_path.iterdir():
 
         from dolfinx import io
         from pathlib import Path
+        import os
+        
         results_folder = Path("data/results")
         results_folder.mkdir(exist_ok=True, parents=True)
+        
+        # Save the mesh and solution in VTK format
         filename = results_folder / "fundamentals"
         """ with io.VTXWriter(domain.comm, filename.with_suffix(".bp"), [uh]) as vtx:
             vtx.write(0.0) """
@@ -153,8 +157,10 @@ for mesh in mesh_folder_path.iterdir():
         fval_y = grad_uh.x.array[1::dim]
         fval_x_plate = np.array(fval_x[dofs30])
         fval_y_plate = np.array(fval_y[dofs30])
-
-        with h5py.File("mesh_data.h5", "w") as file:
+    
+        base_name = os.path.splitext(os.path.basename(mesh))[0]
+        filename = results_folder / f"{base_name}_solution.h5"
+        with h5py.File(filename, "w") as file:
             file.create_dataset("coordinates", data=x_dofs)
             file.create_dataset("potential_value", data=fval)
             file.create_dataset("field_value_x", data=fval_x_plate)

@@ -267,7 +267,7 @@ def generate_mesh_from_geo(geo_path):
     # Finalize Gmsh
     gmsh.finalize()
 
-generate_mesh_from_geo("geometry.geo")
+# generate_mesh_from_geo("geometry.geo")
 
 
 import numpy as np
