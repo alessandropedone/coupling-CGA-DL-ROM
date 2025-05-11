@@ -7,9 +7,9 @@ from mesh_generation import generate_mesh_from_geo
 from pathlib import Path
 
 geo_folder_path = Path('data/meshes')
-for file in geo_folder_path.iterdir():
-    if file.is_file() and file.suffix == ".geo":
-        generate_mesh_from_geo(file)
+for geofile in geo_folder_path.iterdir():
+    if geofile.is_file() and geofile.suffix == ".geo":
+        generate_mesh_from_geo(geofile)
 
 # Now solve the problem for each mesh
 from mpi4py import MPI
@@ -112,4 +112,51 @@ for mesh in mesh_folder_path.iterdir():
         grad_x_uh_plate = grad_x_uh_values[dofs10]
         grad_y_uh_plate = grad_y_uh_values[dofs10]
 
-        
+
+        #SAVE RESULTS
+
+        from dolfinx import io
+        from pathlib import Path
+        results_folder = Path("data/results")
+        results_folder.mkdir(exist_ok=True, parents=True)
+        filename = results_folder / "fundamentals"
+        """ with io.VTXWriter(domain.comm, filename.with_suffix(".bp"), [uh]) as vtx:
+            vtx.write(0.0) """
+        with io.VTKFile(domain.comm, filename.with_suffix(".pvd"), "w") as vtk:
+            vtk.write_mesh(domain)
+            vtk.write_function(uh)
+        with io.XDMFFile(domain.comm, filename.with_suffix(".xdmf"), "w") as xdmf:
+            xdmf.write_mesh(domain)
+            xdmf.write_function(uh)
+
+        #Save solution and electric field in h5 file
+        import h5py
+
+        # Step 1: Find facets with tag 30(domain)
+        cells30 = cell_tags.find(30)
+        dofs30 = locate_dofs_topological(V, fdim, cells30)
+        #print(dofs30)
+        # Step 2: Extract the x-coordinates and the y-coordinates of the DOFs
+        dofs = V.tabulate_dof_coordinates()[dofs30]
+
+        x_coords = dofs[:, 0]
+        print(x_coords.size)
+        #print(x_coords)
+        y_coords = dofs[:, 1]
+        print(y_coords.size)
+        #print(y_coords)
+
+        # Step 3: Evaluate the function at those DOFs
+        dim = domain.geometry.dim
+        fval = np.array(uh.x.array[dofs30])
+        fval_x = grad_uh.x.array[0::dim]
+        fval_y = grad_uh.x.array[1::dim]
+        fval_x_plate = np.array(fval_x[dofs30])
+        fval_y_plate = np.array(fval_y[dofs30])
+
+        with h5py.File("mesh_data.h5", "w") as file:
+            file.create_dataset("coordinates", data=x_dofs)
+            file.create_dataset("potential_value", data=fval)
+            file.create_dataset("field_value_x", data=fval_x_plate)
+            file.create_dataset("field_value_y", data=fval_y_plate)
+                
