@@ -239,6 +239,7 @@ def rotate_upper_plate(geometry, new_angle, name):
 
 import gmsh
 import os
+from pathlib import Path
 
 def generate_mesh_from_geo(geo_path):
 
@@ -254,8 +255,13 @@ def generate_mesh_from_geo(geo_path):
     # Generate 2D or 3D mesh depending on your .geo setup
     gmsh.model.mesh.generate(2)
 
-    # Write the mesh to a .msh file
-    msh_path = os.path.splitext(geo_path)[0] + ".msh"
+    # Write the mesh to a .msh file    
+    # Create meshes folder if it doesn't exist
+    msh_output_folder = Path("data/mshfiles")
+    msh_output_folder.mkdir(parents=True, exist_ok=True)
+    base_name = os.path.splitext(os.path.basename(geo_path))[0]
+    msh_path = os.path.join(msh_output_folder, base_name + ".msh")
+
     gmsh.write(msh_path)
 
     # Finalize Gmsh
