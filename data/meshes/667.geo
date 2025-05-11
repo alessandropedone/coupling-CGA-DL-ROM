@@ -59,6 +59,18 @@ Circle(12) = {13, 9, 10};
 Curve Loop(3) = {9, 10, 11, 12};
 Surface(3) = {3};
 
+// Subtract Rectangles from Circle
+BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
+
+//---------------------------------------
+// Transfinite Lines and Surface
+//---------------------------------------
+Transfinite Line {1, 3} = 50 Using Progression 1;
+Transfinite Line {2, 4} = 2 Using Progression 1;
+Transfinite Line {5, 7} = 50 Using Progression 1;
+Transfinite Line {6, 8} = 2 Using Progression 1;
+Transfinite Line {9, 10, 11, 12} = 20 Using Progression 1;
+
 //---------------------------------------
 // Define Physical Groups
 //---------------------------------------                
@@ -70,31 +82,8 @@ Physical Line("upper_plate", 11) = {2, 3, 4};
 Physical Line("lower_plate", 12) = {5, 6, 7, 8};
 Physical Line("boundary", 20) = {9, 10, 11, 12};
 
-// Subtract Rectangles from Circle
-BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
 //--- Physical Surfaces
 Physical Surface("space", 30) = {3};
-
-
-//---------------------------------------
-// Fine mesh near the plates
-//--------------------------------------- 
-
-// Define a distance field for mesh refinement
-Field[1] = Distance;
-Field[1].CurvesList = {1, 2, 3, 4, 5, 6, 7, 8};  // Rectangle curves
-Field[1].NumPointsPerCurve = 200;
-
-c = 0.3;
-// Define threshold field to control mesh size based on distance to attractor
-Field[2] = Threshold;
-Field[2].IField = 1;
-Field[2].LcMin = c; // Minimum element size near the attractor
-Field[2].LcMax = 100*c;  // Maximum element size away from the attractor
-Field[2].DistMin = 0.01;
-Field[2].DistMax = 40;
-
-Background Field = 2;
 
 //---------------------------------------
 // 6. Generate the Mesh
