@@ -65,10 +65,11 @@ BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
 //---------------------------------------
 // Transfinite Lines and Surface
 //---------------------------------------
-Transfinite Line {1, 3} = 50 Using Progression 1;
-Transfinite Line {2, 4} = 2 Using Progression 1;
-Transfinite Line {5, 7} = 50 Using Progression 1;
-Transfinite Line {6, 8} = 2 Using Progression 1;
+r = 7;
+Transfinite Line {1, 3} = 50*r Using Progression 1;
+Transfinite Line {2, 4} = 2*r Using Progression 1;
+Transfinite Line {5, 7} = 50*r Using Progression 1;
+Transfinite Line {6, 8} = 2*r Using Progression 1;
 Transfinite Line {9, 10, 11, 12} = 20 Using Progression 1;
 
 //---------------------------------------
