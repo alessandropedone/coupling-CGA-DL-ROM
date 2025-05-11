@@ -6,10 +6,10 @@ SetFactory("OpenCASCADE");
 //---------------------------------------
 
 // Rectangle 1 (top)
-Point(1) = {-50, 1, 0, 1.0};
-Point(2) = { 50, 1, 0, 1.0};
-Point(3) = { 50, 5, 0, 1.0};
-Point(4) = {-50, 5, 0, 1.0};
+Point(1) = {-49.9, 0.75, 0, 1.0};
+Point(2) = {49.9, 0.75, 0, 1.0};
+Point(3) = {49.9, 4.55, 0, 1.0};
+Point(4) = {-49.9, 4.55, 0, 1.0};
 
 Line(1) = {1, 2};
 Line(2) = {2, 3};
@@ -19,15 +19,15 @@ Line(4) = {4, 1};
 Line Loop(1) = {1, 2, 3, 4};
 Plane Surface(1) = {1};
 
-Rotate {{0, 0, 1}, {-50, 1, 0}, 0} {
+Rotate { {0, 0, 1}, {0,  0.75,  0}, 0.017 } {
   Surface{1};
 }
 
 // Rectangle 2 (bottom)
-Point(5) = {-50, -1, 0, 1.0};
-Point(6) = { 50, -1, 0, 1.0};
-Point(7) = { 50,  -5, 0, 1.0};
-Point(8) = {-50,  -5, 0, 1.0};
+Point(5) = {-49.9, -0.75, 0, 1.0};
+Point(6) = {49.9, -0.75, 0, 1.0};
+Point(7) = {49.9, -4.55, 0, 1.0};
+Point(8) = {-49.9, -4.55, 0, 1.0};
 
 Line(5) = {5, 6};
 Line(6) = {6, 7};
@@ -59,6 +59,19 @@ Circle(12) = {13, 9, 10};
 Curve Loop(3) = {9, 10, 11, 12};
 Surface(3) = {3};
 
+// Subtract Rectangles from Circle
+BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
+
+//---------------------------------------
+// Transfinite Lines and Surface
+//---------------------------------------
+r = 1;
+Transfinite Line {1, 3} = 50*r Using Progression 1;
+Transfinite Line {2, 4} = 2*r Using Progression 1;
+Transfinite Line {5, 7} = 50*r Using Progression 1;
+Transfinite Line {6, 8} = 2*r Using Progression 1;
+Transfinite Line {9, 10, 11, 12} = 20 Using Progression 1;
+
 //---------------------------------------
 // Define Physical Groups
 //---------------------------------------                
@@ -70,31 +83,8 @@ Physical Line("upper_plate", 11) = {2, 3, 4};
 Physical Line("lower_plate", 12) = {5, 6, 7, 8};
 Physical Line("boundary", 20) = {9, 10, 11, 12};
 
-// Subtract Rectangles from Circle
-BooleanDifference{ Surface{3}; Delete; }{ Surface{1}; Surface{2}; Delete; }
 //--- Physical Surfaces
 Physical Surface("space", 30) = {3};
-
-
-//---------------------------------------
-// Fine mesh near the plates
-//--------------------------------------- 
-
-// Define a distance field for mesh refinement
-Field[1] = Distance;
-Field[1].CurvesList = {1, 2, 3, 4, 5, 6, 7, 8};  // Rectangle curves
-Field[1].NumPointsPerCurve = 200;
-
-c = 0.5;
-// Define threshold field to control mesh size based on distance to attractor
-Field[2] = Threshold;
-Field[2].IField = 1;
-Field[2].LcMin = c; // Minimum element size near the attractor
-Field[2].LcMax = 100*c;  // Maximum element size away from the attractor
-Field[2].DistMin = 0.01;
-Field[2].DistMax = 40;
-
-Background Field = 2;
 
 //---------------------------------------
 // 6. Generate the Mesh
