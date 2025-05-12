@@ -99,7 +99,7 @@ def modify_plates_distance(geometry, new_gap, name):
             new_lines.append(line)
     
     # Define the directory and file name for saving the new geometry
-    directory = "data/meshes"
+    directory = "data/geo"
     file_name = str(name) + ".geo"
     
     # Create the directory if it doesn't exist
@@ -180,7 +180,7 @@ def modify_plates_overetch(geometry, overetch, name):
 
     
     # Define the directory and file name for saving the new geometry
-    directory = "data/meshes"
+    directory = "data/geo"
     file_name = str(name) + ".geo"
     
     # Create the directory if it doesn't exist
@@ -224,7 +224,7 @@ def rotate_upper_plate(geometry, new_angle, name):
             new_lines.append(line)
 
     # Define the directory and file name
-    directory = "data/meshes"
+    directory = "data/geo"
     file_name = str(name) + ".geo"
 
     # Create the directory if it doesn't exist
@@ -275,7 +275,7 @@ import numpy as np
 import shutil
 
 def reset_environment():
-    meshes_folder = "data/meshes"
+    meshes_folder = "data/geo"
     parameters_file = "data/parameters.csv"
     # Empty meshes folder
     if os.path.exists(meshes_folder):
@@ -308,8 +308,8 @@ def generate_meshes():
         for d in distances:
             for a in angles:
                 modify_plates_distance("geometry.geo", d, j)
-                modify_plates_overetch("data/meshes/" + str(j) + ".geo", o, j)
-                rotate_upper_plate("data/meshes/" + str(j) + ".geo", a, j)
+                modify_plates_overetch("data/geo/" + str(j) + ".geo", o, j)
+                rotate_upper_plate("data/geo/" + str(j) + ".geo", a, j)
                 with open("data/parameters.csv", "a") as csv_file:
                     csv_file.write(f"{j},{o},{d},{a}\n")
                 j += 1
@@ -317,12 +317,12 @@ def generate_meshes():
 if __name__ == "__main__":
     generate_meshes()
     print("Mesh files generated successfully.")
-
-""" import multiprocessing
+""" 
+import multiprocessing
 
 def generate_mesh(i):
     # Generate the mesh for each geometry
-    geo_path = f"data/meshes/{i}.geo"
+    geo_path = f"data/geo/{i}.geo"
     generate_mesh_from_geo(geo_path)
 
 r = range(1, 1001)
