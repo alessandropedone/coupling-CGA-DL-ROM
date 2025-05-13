@@ -256,6 +256,6 @@ def combine_temp_files():
     dataset_df.to_csv(dataset_file, index=False)
 
     # Clean up temp files and folder
-    """ for temp_file in temp_folder.glob("*.csv"):
+    for temp_file in temp_folder.glob("*.csv"):
         temp_file.unlink()
-    temp_folder.rmdir() """
+    temp_folder.rmdir()
