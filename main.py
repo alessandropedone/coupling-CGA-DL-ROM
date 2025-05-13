@@ -26,6 +26,22 @@ plt.ylabel("grad_y_uh_plate")
 plt.title("Plot of grad_y_uh_plate vs coords")
 plt.legend()
 plt.grid(True)
-plt.show()
+plt.show() 
 
-
+path = 'data/results/1_solution.h5'
+import h5py
+with h5py.File(path, 'r') as file:
+    coordinates_x = file['coordinates_x'][:]
+    coordinates_y = file['coordinates_y'][:]
+    potential_value = file['potential_value'][:]
+    field_value_x = file['field_value_x'][:]
+    field_value_y = file['field_value_y'][:]
+    plt.scatter(coordinates_x, coordinates_y, c=potential_value, cmap='plasma', s=3, alpha=0.7)
+    plt.xlim(-70, 70)
+    plt.ylim(-70, 70)
+    plt.colorbar(label='Potential Value')
+    plt.xlabel('Coordinates X')
+    plt.ylabel('Coordinates Y')
+    plt.title('Potential Value Distribution')
+    plt.grid(True)
+    plt.show()

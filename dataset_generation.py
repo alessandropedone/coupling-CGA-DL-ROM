@@ -192,32 +192,30 @@ def process_mesh(mesh):
 
         # Save solution and electric field in h5 file
 
-        # Step 1: Find facets with tag 30 (domain)
-        cells30 = cell_tags.find(30)
-        dofs30 = locate_dofs_topological(V, fdim, cells30)
+        # Step 1: Find all DOFs in the function space
+        dofs = np.arange(V.dofmap.index_map.size_local)
         # Step 2: Extract the x-coordinates and the y-coordinates of the DOFs
-        dofs = V.tabulate_dof_coordinates()[dofs30]
-        x_coords = dofs[:, 0]
-        print(x_coords.size)
-        y_coords = dofs[:, 1]
-        print(y_coords.size)
+        dofs_c = V.tabulate_dof_coordinates()[dofs]
+        x_coords = np.array(dofs_c[:, 0])
+        y_coords = np.array(dofs_c[:, 1])
         # Step 3: Evaluate the function at those DOFs
         dim = domain.geometry.dim
-        fval = np.array(uh.x.array[dofs30])
+        pval = np.array(uh.x.array[dofs])
         fval_x = grad_uh.x.array[0::dim]
         fval_y = grad_uh.x.array[1::dim]
-        fval_x_plate = np.array(fval_x[dofs30])
-        fval_y_plate = np.array(fval_y[dofs30])
-
+        fval_x = np.array(fval_x[dofs])
+        fval_y = np.array(fval_y[dofs])
+        
         import os
         import h5py
         base_name = os.path.splitext(os.path.basename(mesh))[0]
         filename = results_folder / f"{base_name}_solution.h5"
         with h5py.File(filename, "w") as file:
-            file.create_dataset("coordinates", data=x_dofs)
-            file.create_dataset("potential_value", data=fval)
-            file.create_dataset("field_value_x", data=fval_x_plate)
-            file.create_dataset("field_value_y", data=fval_y_plate)
+            file.create_dataset("coordinates_x", data=x_coords)
+            file.create_dataset("coordinates_y", data=y_coords)
+            file.create_dataset("potential_value", data=pval)
+            file.create_dataset("field_value_x", data=fval_x)
+            file.create_dataset("field_value_y", data=fval_y)
 
 def generate_datasets():
     # Set up the environment
