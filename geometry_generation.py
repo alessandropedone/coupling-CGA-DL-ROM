@@ -2,6 +2,13 @@ import os
 import re
 
 def modify_plates_distance(geometry, new_gap, name):
+    """
+    Modify the geometry file to change the distance between the plates.
+    Args:
+        geometry (str): Path to the geometry file.
+        new_gap (float): New gap distance to set.
+        name (str): Name for the new geometry file.
+    """
     # Open the geometry.geo file to read the lines
     with open(str(geometry), "r") as f:
         lines = f.readlines()
@@ -119,6 +126,14 @@ import os
 import re
 
 def modify_plates_overetch(geometry, overetch, name):
+    """
+    Modify the geometry file to change the overetch of the plates.
+    Attention: this function assumes that the geometry taken as input isn't rotaed.
+    Args:
+        geometry (str): Path to the geometry file.
+        overetch (float): New overetch value to set.
+        name (str): Name for the new geometry file.
+    """
     # Open the geometry.geo file to read the lines
     with open(str(geometry), "r") as f:
         lines = f.readlines()
@@ -202,6 +217,13 @@ import os
 from math import pi
 
 def rotate_upper_plate(geometry, new_angle, name):
+    """
+    Modify the geometry file to change the rotation angle of the upper plate.
+    Args:
+        geometry (str): Path to the geometry file.
+        new_angle (float): New rotation angle to set.
+        name (str): Name for the new geometry file.
+    """
     with open(str(geometry), "r") as f:
         lines = f.readlines()
 
@@ -242,6 +264,9 @@ import shutil
 from remove import reset_environment
 
 def reset_data():
+    """
+    Reset the data folder by removing all contents inside it.
+    """
     reset_environment()
     parameters_file = "data/parameters.csv"
     # Ensure the parameters.csv file is empty
@@ -254,6 +279,10 @@ def reset_data():
             csv_file.write("ID,Overetch,Distance,Angle\n")
 
 def generate_geometries():
+    """
+    Generate geometries by modifying the distance, overetch, and angle of the plates.
+    This function creates a series of geometry files with different parameters.
+    """
     overetches = np.linspace(0.1, 0.6, 10)
     distances = np.linspace(1.5, 2.5, 10)
     angles = np.linspace(1, -1, 10)
