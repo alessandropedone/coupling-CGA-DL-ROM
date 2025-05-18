@@ -1,6 +1,11 @@
 import os
 
 def remove_msh_files(directory):
+    """
+    Remove all .msh files in the specified directory and its subdirectories.
+    Args:
+        directory (str): The directory to search for .msh files.
+    """
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith('.msh'):
@@ -12,10 +17,13 @@ def remove_msh_files(directory):
                     print(f"Error removing {file_path}: {e}")
 
 def reset_environment():
+    """
+    Reset the environment by removing all .msh files and deleting all contents inside the data folder.
+    """
     # Remove all .msh files
     remove_msh_files("data/mshfiles")
     
-    # Delete all contents of the data folder
+    # Delete all contents inside data folder
     data_folder = "data"
     for root, dirs, files in os.walk(data_folder, topdown=False):
         for file in files:

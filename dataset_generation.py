@@ -1,5 +1,8 @@
 
 def empty_results_folder():
+    """
+    Empty the results folder by removing all files inside it.
+    """
     from pathlib import Path
     # Ensure the results folder is empty before running the script
     results_folder = Path("data/results")
@@ -11,6 +14,14 @@ def empty_results_folder():
         results_folder.mkdir(parents=True)
 
 def set_up_environment():
+    """
+    This function is called at the beginning of the generate_datasets function.
+    It sets up the environment by removing all files in the results folder and
+    copying the parameters.csv file to dataset.csv.
+    It also reads the mesh from the first .msh file and prepares the dataset for processing, 
+    writing in the dataset.csv file first line the coordinates of the DOFs (distance from a chosen point).
+    In the end, it creates a temporary folder to store intermediate CSV files.
+    """
     # Set up the environment
     empty_results_folder()
 
@@ -20,6 +31,7 @@ def set_up_environment():
 
     from mpi4py import MPI
     from dolfinx.io import gmshio
+    # Read the mesh from the first .msh file
     domain, cell_tags, facet_tags = gmshio.read_from_msh("data/msh/1.msh", MPI.COMM_WORLD, 0, gdim=2)
 
     # Define finite element function space
@@ -32,18 +44,18 @@ def set_up_environment():
     fdim = tdim - 1
     domain.topology.create_connectivity(fdim, tdim)
 
-    # Step 1: Find facets with tag 10
+    # Find facets with tag 10 (lower horizontal edge of the upper plate)
     facets10 = facet_tags.find(10)
     dofs10 = locate_dofs_topological(V, fdim, facets10)
 
-    # Step 2: Extract the x-coordinates and the y-coordinates of the DOFs
+    # Extract the x-coordinates and the y-coordinates of the DOFs
     x_dofs = V.tabulate_dof_coordinates()[dofs10]
     x_coords = x_dofs[:, 0]
     y_coords = x_dofs[:, 1]
 
     import pandas as pd
     import numpy as np
-    # Step 4: Sort the coordinates
+    # Sort the coordinates
     parameters = pd.read_csv("data/parameters.csv")
     center_y = parameters.iloc[0, 2] / 2
     center_x = 0.0
@@ -51,7 +63,7 @@ def set_up_environment():
     sorted_indices = np.argsort(coords)
     coords = coords[sorted_indices]
 
-    # Step 5: Save the sorted coordinates values to a CSV file
+    # Save the sorted coordinates values to a CSV file
     # Load the existing CSV file into a pandas DataFrame
     df = pd.read_csv("data/dataset.csv")
     # Ensure the DataFrame has enough columns to accommodate the new data
@@ -73,18 +85,26 @@ def set_up_environment():
         temp_folder.mkdir(parents=True, exist_ok=True)
 
 def process_mesh(mesh):
+    """
+    Solves the PDE and saves the gradient of the solution on the lower edge of the upper plate in a specific .csv file.
+    It also saves the solution and the gradient of the solution in a .h5 file.
+    This function is called in parallel for each mesh file.
+    Args:
+        mesh (str): Path to the mesh file.
+    """
     if mesh.is_file() and mesh.suffix == ".msh":
-        # read a mesh from file
+        
+        # Read the mesh from the .msh file
         from mpi4py import MPI
         from dolfinx.io import gmshio
         domain, cell_tags, facet_tags = gmshio.read_from_msh(mesh, MPI.COMM_WORLD, 0, gdim=2)
 
-        # define finite element function space
+        # Define finite element function space
         from dolfinx.fem import functionspace
         import numpy as np
         V = functionspace(domain, ("Lagrange", 1))
 
-        # identify the boundary (create facet to cell connectivity required to determine boundary facets)
+        # Identify the boundary (create facet to cell connectivity required to determine boundary facets)
         from dolfinx import default_scalar_type
         from dolfinx.fem import (Constant, dirichletbc, locate_dofs_topological)
         from dolfinx.fem.petsc import LinearProblem
@@ -92,7 +112,7 @@ def process_mesh(mesh):
         fdim = tdim - 1
         domain.topology.create_connectivity(fdim, tdim)
 
-        # Find facets marked with 2 and 3 (the two rectangles)
+        # Find facets marked with 10, 11, 12 (the two plates)
         facets_rect1 = np.concatenate([facet_tags.find(10), facet_tags.find(11)])
         facets_rect2 = facet_tags.find(12)
 
@@ -110,21 +130,21 @@ def process_mesh(mesh):
 
         bcs = [bc1, bc2]
 
-        # trial and test functions
+        # Trial and test functions
         import ufl
         u = ufl.TrialFunction(V)
         v = ufl.TestFunction(V)
 
-        # source term
+        # Source term
         from dolfinx import default_scalar_type
         from dolfinx import fem
         f = fem.Constant(domain, default_scalar_type(0.0))
 
-        # variational problem
+        # Variational problem
         a = ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
         L = f * v * ufl.dx
 
-        # assemble the system
+        # Assemble the system
         from dolfinx.fem.petsc import LinearProblem
         problem = LinearProblem(a, L, bcs=bcs, petsc_options={"ksp_type": "preonly", "pc_type": "lu"})
         uh = problem.solve()
@@ -151,54 +171,67 @@ def process_mesh(mesh):
         problem_grad = LinearProblem(a_grad, L_grad, petsc_options={"ksp_type": "preonly", "pc_type": "lu"})
         grad_uh = problem_grad.solve()
 
-        # Step 1: Find facets with tag 10
+        # Find facets with tag 10 (lower horizontal edge of the upper plate)
         facets10 = facet_tags.find(10)
         dofs10 = locate_dofs_topological(V, fdim, facets10)
 
-        # Step 2: Extract the x-coordinates and the y-coordinates of the DOFs
+        # Extract the x-coordinates and the y-coordinates of the DOFs
         x_dofs = V.tabulate_dof_coordinates()[dofs10]
         x_coords = x_dofs[:, 0]
         y_coords = x_dofs[:, 1]
 
-        # Step 3: Evaluate grad_uh at those DOFs
+        # Evaluate grad_uh at those DOFs
         dim = domain.geometry.dim
         grad_x_uh_values = grad_uh.x.array[0::dim]
         grad_y_uh_values = grad_uh.x.array[1::dim]
         grad_x_uh_plate = grad_x_uh_values[dofs10]
         grad_y_uh_plate = grad_y_uh_values[dofs10]
 
-        # Step 4: Sort the coordinates and the corresponding grad_uh values, then save grad_y into dataset_{j}.csv
+        
+        # SAVE
+
+        # Save the gradient values in the dataset.csv file
+        
+        # Read the dataset.csv file
         import pandas as pd
         j = int(mesh.stem)
         df = pd.read_csv("data/dataset.csv")
+        # Get the coordinates of center of the lower edge of the upper plate, 
+        # to calculate the coordinates of the points belonging to it
         center_y = df.iloc[j-1, 2] / 2
         print("mesh number: ", j, " center_y: ", center_y)
         center_x = 0.0
+
+        # Sort the coordinates and the corresponding grad_uh values, then save grad_y into dataset_{j}.csv
         coords = np.sign(x_coords) * np.sqrt((x_coords-center_x)**2 + (y_coords-center_y)**2)
         sorted_indices = np.argsort(coords)
         coords = coords[sorted_indices]
         grad_y_uh_plate = grad_y_uh_plate[sorted_indices]
         grad_x_uh_plate = grad_x_uh_plate[sorted_indices]
+
+        # Save the sorted coordinates values to a CSV file
         start_col = 4
         needed_cols = start_col + len(coords)
         df.iloc[j-1, start_col:needed_cols] = grad_y_uh_plate
         # Copy the jth line of dataset.csv into dataset_{j}.csv
         df.iloc[[j-1]].to_csv(f"data/temp/dataset_{j}.csv", index=False)             
 
-        # SAVE RESULTS
+        # Create a folder to save the results if it doesn't exist
         from pathlib import Path
         results_folder = Path("data/results")
         results_folder.mkdir(exist_ok=True, parents=True)
 
-        # Save solution and electric field in h5 file
+        # Save solution and the gradient of the solution in a .h5 file
 
-        # Step 1: Find all DOFs in the function space
+        # Find all DOFs in the function space
         dofs = np.arange(V.dofmap.index_map.size_local)
-        # Step 2: Extract the x-coordinates and the y-coordinates of the DOFs
+
+        # Extract the x-coordinates and the y-coordinates of the DOFs
         dofs_c = V.tabulate_dof_coordinates()[dofs]
         x_coords = np.array(dofs_c[:, 0])
         y_coords = np.array(dofs_c[:, 1])
-        # Step 3: Evaluate the function at those DOFs
+
+        # Evaluate the function at those DOFs
         dim = domain.geometry.dim
         pval = np.array(uh.x.array[dofs])
         fval_x = grad_uh.x.array[0::dim]
@@ -206,6 +239,7 @@ def process_mesh(mesh):
         fval_x = np.array(fval_x[dofs])
         fval_y = np.array(fval_y[dofs])
         
+        # Save the results in a .h5 file
         import os
         import h5py
         base_name = os.path.splitext(os.path.basename(mesh))[0]
@@ -218,6 +252,11 @@ def process_mesh(mesh):
             file.create_dataset("field_value_y", data=fval_y)
 
 def generate_datasets():
+    """
+    Generate datasets by processing all mesh files in parallel.
+    This function sets up the environment, processes each mesh file,
+    and saves the results in a temporary folder.
+    """
     # Set up the environment
     set_up_environment()
 
@@ -231,6 +270,12 @@ def generate_datasets():
         pool.map(process_mesh, meshes)
 
 def combine_temp_files():
+    """
+    Combine all temporary CSV files into the main dataset file.
+    This function reads the main dataset file, updates it with the values from
+    the temporary files, and writes the updated dataset back to the main file.
+    It also cleans up the temporary files and folder.
+    """
     # Define paths
     from pathlib import Path
     temp_folder = Path("data/temp")
