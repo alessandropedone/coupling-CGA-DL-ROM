@@ -1,10 +1,13 @@
+## @package remove
+# @brief Functions to clean up the environment.
+
 import os
 
+## 
+# @param directory (str): The directory to search for .msh files.
 def remove_msh_files(directory):
     """
     Remove all .msh files in the specified directory and its subdirectories.
-    Args:
-        directory (str): The directory to search for .msh files.
     """
     for root, _, files in os.walk(directory):
         for file in files:

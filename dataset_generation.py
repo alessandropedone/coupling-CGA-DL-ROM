@@ -1,8 +1,10 @@
+## @package dataset_generation
+# @brief Functions to generate datasets by processing mesh files in parallel 
+# and then combine the results in a single CSV file (dataset.csv).
 
+##
 def empty_results_folder():
-    """
-    Empty the results folder by removing all files inside it.
-    """
+    """Emtpy the results folder by removing all files inside it."""
     from pathlib import Path
     # Ensure the results folder is empty before running the script
     results_folder = Path("data/results")
@@ -13,6 +15,7 @@ def empty_results_folder():
     else:
         results_folder.mkdir(parents=True)
 
+## 
 def set_up_environment():
     """
     This function is called at the beginning of the generate_datasets function.
@@ -84,13 +87,13 @@ def set_up_environment():
     else:
         temp_folder.mkdir(parents=True, exist_ok=True)
 
+##
+# @param mesh (str): path to the mesh file.
 def process_mesh(mesh):
     """
     Solves the PDE and saves the gradient of the solution on the lower edge of the upper plate in a specific .csv file.
     It also saves the solution and the gradient of the solution in a .h5 file.
     This function is called in parallel for each mesh file.
-    Args:
-        mesh (str): Path to the mesh file.
     """
     if mesh.is_file() and mesh.suffix == ".msh":
         
@@ -251,6 +254,7 @@ def process_mesh(mesh):
             file.create_dataset("field_value_x", data=fval_x)
             file.create_dataset("field_value_y", data=fval_y)
 
+##
 def generate_datasets():
     """
     Generate datasets by processing all mesh files in parallel.
@@ -269,6 +273,7 @@ def generate_datasets():
     with Pool(processes=cpu_count()) as pool:
         pool.map(process_mesh, meshes)
 
+##
 def combine_temp_files():
     """
     Combine all temporary CSV files into the main dataset file.

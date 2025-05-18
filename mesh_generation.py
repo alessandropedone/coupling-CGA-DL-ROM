@@ -1,14 +1,15 @@
 
+## @package mesh_generation
+# @brief Generate meshes from .geo files using gmsh in parallel.
+
 import gmsh
 import os
 from pathlib import Path
 
+##
+# @param geo_path (str): Path to the .geo file.
 def generate_mesh_from_geo(geo_path):
-    """
-    Generate a mesh from a .geo file using gmsh.
-    Args:
-        geo_path (str): Path to the .geo file.
-    """
+    """Generate a mesh from a .geo file using gmsh."""
     # Initialize gmsh
     gmsh.initialize()
 
@@ -33,11 +34,11 @@ def generate_mesh_from_geo(geo_path):
 
 import multiprocessing
 
+##
+# @param i (int): Index of the geometry.
 def generate_mesh(i):
     """
     Generate a mesh for a given geometry index.
-    Args:
-        i (int): Index of the geometry.
     """
     # Generate the mesh for each geometry
     geo_path = f"data/geo/{i}.geo"

@@ -1,14 +1,15 @@
-import os
-import re
+## @package geometry_generation
+# @brief Functions to generate datasets by processing the reference geometry file.
 
+
+import os
+
+##
+# @param geometry (str): Path to the geometry file.
+# @param new_gap (float): New gap distance to set.
+# @param name (str): Name for the new geometry file.
 def modify_plates_distance(geometry, new_gap, name):
-    """
-    Modify the geometry file to change the distance between the plates.
-    Args:
-        geometry (str): Path to the geometry file.
-        new_gap (float): New gap distance to set.
-        name (str): Name for the new geometry file.
-    """
+    """Modify the geometry file to change the distance between the plates."""
     # Open the geometry.geo file to read the lines
     with open(str(geometry), "r") as f:
         lines = f.readlines()
@@ -125,14 +126,14 @@ def modify_plates_distance(geometry, new_gap, name):
 import os
 import re
 
+##
+# @param geometry (str): Path to the geometry file.
+# @param overetch (float): New overetch value to set.
+# @param name (str): Name for the new geometry file.
 def modify_plates_overetch(geometry, overetch, name):
     """
     Modify the geometry file to change the overetch of the plates.
     Attention: this function assumes that the geometry taken as input isn't rotaed.
-    Args:
-        geometry (str): Path to the geometry file.
-        overetch (float): New overetch value to set.
-        name (str): Name for the new geometry file.
     """
     # Open the geometry.geo file to read the lines
     with open(str(geometry), "r") as f:
@@ -216,14 +217,12 @@ import re
 import os
 from math import pi
 
+##
+# @param geometry (str): Path to the geometry file.
+# @param new_angle (float): New rotation angle to set.
+# @param name (str): Name for the new geometry file.
 def rotate_upper_plate(geometry, new_angle, name):
-    """
-    Modify the geometry file to change the rotation angle of the upper plate.
-    Args:
-        geometry (str): Path to the geometry file.
-        new_angle (float): New rotation angle to set.
-        name (str): Name for the new geometry file.
-    """
+    """Modify the geometry file to change the rotation angle of the upper plate."""
     with open(str(geometry), "r") as f:
         lines = f.readlines()
 

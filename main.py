@@ -1,3 +1,6 @@
+## @file main.py
+# @brief Main script to generate geometries, meshes, datasets, and plot results.
+
 # Importing the necessary functions
 from remove import remove_msh_files, reset_environment
 from geometry_generation import generate_geometries

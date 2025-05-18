@@ -1,10 +1,14 @@
+## @file convergence.py
+#  @brief Solves a PDE using FEniCSx and plots the gradient of the solution on the upper plate.
+#  @details This script generates a mesh, solves a Laplace equation, computes the gradient of the solution,
+#           and plots the y-component of the gradient on the lower edge of the upper plate, refining progressively the mesh.
+
+
+## 
+# @param path (str): path to the directory containing the .geo file.
+# @param name (str): name of the .geo file without extension.
 def solve_and_plot_grad(path, name):
-    """
-    Solve the PDE and plot the gradient of the solution on the upper plate.
-    Args:
-        path (str): Path to the directory containing the .geo file.
-        name (str): Name of the .geo file without extension.
-    """
+    """Solve the PDE and plot the gradient of the solution on the upper plate."""
     from mpi4py import MPI
     from dolfinx.io import gmshio
     from mesh_generation import generate_mesh_from_geo
