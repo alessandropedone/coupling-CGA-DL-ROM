@@ -30,7 +30,8 @@ def set_up_environment():
 
     import shutil
     # Duplicate the data/parameters.csv file
-    shutil.copy("data/parameters.csv", "data/dataset.csv")
+    shutil.copy("data/parameters.csv", "data/normal_derivative_potential.csv")
+    shutil.copy("data/parameters.csv", "data/coordinates.csv")
 
     from mpi4py import MPI
     from dolfinx.io import gmshio
@@ -68,14 +69,22 @@ def set_up_environment():
 
     # Save the sorted coordinates values to a CSV file
     # Load the existing CSV file into a pandas DataFrame
-    df = pd.read_csv("data/dataset.csv")
+    # Update normal_derivative_potential.csv
+    df = pd.read_csv("data/normal_derivative_potential.csv")
     # Ensure the DataFrame has enough columns to accommodate the new data
     if len(df.columns) < 4 + len(coords):
         additional_columns = 4 + len(coords) - len(df.columns)
         for i in range(additional_columns):
-            df[f"{coords[i]}"] = 0.0
-    # Save the modified DataFrame back to the CSV file
-    df.to_csv("data/dataset.csv", index=False)
+            df[f"{coords[i]/coords[-1]}"] = 0.0
+    df.to_csv("data/normal_derivative_potential.csv", index=False)
+
+    # Update coordinates.csv
+    df_coords = pd.read_csv("data/coordinates.csv")
+    if len(df_coords.columns) < 4 + len(coords):
+        additional_columns = 4 + len(coords) - len(df_coords.columns)
+        for i in range(additional_columns):
+            df_coords[f"{coords[i]/coords[-1]}"] = coords[i]
+    df_coords.to_csv("data/coordinates.csv", index=False)
 
     from pathlib import Path
     # Create a temporary folder to store intermediate CSV files
@@ -193,31 +202,43 @@ def process_mesh(mesh):
         
         # SAVE
 
-        # Save the gradient values in the dataset.csv file
+        # Save the gradient values in the normal_derivative_potential.csv file
         
-        # Read the dataset.csv file
+        # Read the normal_derivative_potential.csv file
         import pandas as pd
         j = int(mesh.stem)
-        df = pd.read_csv("data/dataset.csv")
+        df = pd.read_csv("data/normal_derivative_potential.csv")
+        df2 = pd.read_csv("data/coordinates.csv")
         # Get the coordinates of center of the lower edge of the upper plate, 
         # to calculate the coordinates of the points belonging to it
         center_y = df.iloc[j-1, 2] / 2
         print("mesh number: ", j, " center_y: ", center_y)
         center_x = 0.0
 
-        # Sort the coordinates and the corresponding grad_uh values, then save grad_y into dataset_{j}.csv
+        # Sort the coordinates and the corresponding grad_uh values, then save grad_y into normal_derivative_potential_{j}.csv
         coords = np.sign(x_coords) * np.sqrt((x_coords-center_x)**2 + (y_coords-center_y)**2)
         sorted_indices = np.argsort(coords)
         coords = coords[sorted_indices]
         grad_y_uh_plate = grad_y_uh_plate[sorted_indices]
         grad_x_uh_plate = grad_x_uh_plate[sorted_indices]
 
-        # Save the sorted coordinates values to a CSV file
+        # Compute the normale derivative of the potential
+        angle = df.iloc[j-1, 3] * np.pi / 180
+        normal_der = - grad_x_uh_plate * np.sin(angle) + grad_y_uh_plate * np.cos(angle) 
+
+        # Save the sorted grad values into a temp CSV file
         start_col = 4
         needed_cols = start_col + len(coords)
-        df.iloc[j-1, start_col:needed_cols] = grad_y_uh_plate
-        # Copy the jth line of dataset.csv into dataset_{j}.csv
-        df.iloc[[j-1]].to_csv(f"data/temp/dataset_{j}.csv", index=False)             
+        df.iloc[j-1, start_col:needed_cols] = normal_der
+        # Copy the jth line of normal_derivative_potential.csv into normal_derivative_potential_{j}.csv
+        df.iloc[[j-1]].to_csv(f"data/temp/normal_derivative_potential_{j}.csv", index=False)             
+
+        # Save the sorted coordinates into a temp CSV file
+        start_col = 4
+        needed_cols = start_col + len(coords)
+        df.iloc[j-1, start_col:needed_cols] = coords
+        # Copy the jth line of normal_derivative_potential.csv into coordinates_{j}.csv
+        df.iloc[[j-1]].to_csv(f"data/temp/coordinates_{j}.csv", index=False)
 
         # Create a folder to save the results if it doesn't exist
         from pathlib import Path
@@ -248,11 +269,13 @@ def process_mesh(mesh):
         base_name = os.path.splitext(os.path.basename(mesh))[0]
         filename = results_folder / f"{base_name}_solution.h5"
         with h5py.File(filename, "w") as file:
-            file.create_dataset("coordinates_x", data=x_coords)
-            file.create_dataset("coordinates_y", data=y_coords)
-            file.create_dataset("potential_value", data=pval)
-            file.create_dataset("field_value_x", data=fval_x)
-            file.create_dataset("field_value_y", data=fval_y)
+            file.create_dataset("coord_x", data=x_coords)
+            file.create_dataset("coord_y", data=y_coords)
+            file.create_dataset("coords", data=coords)
+            file.create_dataset("potential", data=pval)
+            file.create_dataset("grad_x", data=fval_x)
+            file.create_dataset("grad_y", data=fval_y)
+            file.create_dataset("normal_derivative_potential", data=normal_der)
 
 ##
 def generate_datasets():
@@ -274,7 +297,7 @@ def generate_datasets():
         pool.map(process_mesh, meshes)
 
 ##
-def combine_temp_files():
+def combine_temp_files(filename):
     """
     Combine all temporary CSV files into the main dataset file.
     This function reads the main dataset file, updates it with the values from
@@ -284,7 +307,7 @@ def combine_temp_files():
     # Define paths
     from pathlib import Path
     temp_folder = Path("data/temp")
-    dataset_file = Path("data/dataset.csv")
+    dataset_file = Path(filename)
 
     import pandas as pd
     # Read the main dataset once
@@ -304,6 +327,7 @@ def combine_temp_files():
     dataset_df.to_csv(dataset_file, index=False)
 
     # Clean up temp files and folder
-    for temp_file in temp_folder.glob("*.csv"):
+    prefix = dataset_file.stem.split('.')[0]
+    for temp_file in temp_folder.glob(f"{prefix}_*.csv"):
         temp_file.unlink()
     temp_folder.rmdir()

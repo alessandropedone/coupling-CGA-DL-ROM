@@ -8,11 +8,12 @@ from mesh_generation import generate_meshes, generate_mesh_from_geo
 from dataset_generation import generate_datasets, combine_temp_files
 
 # Core of the code that produces the results
-#generate_geometries()
-#generate_meshes()
-#generate_datasets()
-#combine_temp_files()
-#remove_msh_files()
+generate_geometries()
+generate_meshes()
+generate_datasets()
+combine_temp_files("data/normal_derivate_potential.csv") 
+combine_temp_files("data/normal_derivate_potential_temp.csv")
+remove_msh_files()
 
 # Importing the necessary libraries
 import pandas as pd
@@ -69,12 +70,14 @@ plt.show()
 path = 'data/results/1_solution.h5'
 import h5py
 with h5py.File(path, 'r') as file:
-    coordinates_x = file['coordinates_x'][:]
-    coordinates_y = file['coordinates_y'][:]
-    potential_value = file['potential_value'][:]
-    field_value_x = file['field_value_x'][:]
-    field_value_y = file['field_value_y'][:]
-    plt.scatter(coordinates_x, coordinates_y, c=potential_value, cmap='plasma', s=3, alpha=0.7)
+    coordinates_x = file['coord_x'][:]
+    coordinates_y = file['coord_y'][:]
+    coordinates = file['coord'][:]
+    potential = file['potential'][:]
+    grad_x = file['grad_x'][:]
+    grad_y = file['grad_y'][:]
+    normal_derivate = file['normal_derivative_potential'][:]
+    plt.scatter(coordinates_x, coordinates_y, c=normal_derivate, cmap='plasma', s=3, alpha=0.7)
     plt.xlim(-70, 70)
     plt.ylim(-70, 70)
     plt.colorbar(label='Potential Value')

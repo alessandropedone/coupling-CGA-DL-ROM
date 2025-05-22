@@ -133,7 +133,7 @@ import re
 def modify_plates_overetch(geometry, overetch, name):
     """
     Modify the geometry file to change the overetch of the plates.
-    Attention: this function assumes that the geometry taken as input isn't rotaed.
+    Attention: this function assumes that the geometry taken as input isn't rotated.
     """
     # Open the geometry.geo file to read the lines
     with open(str(geometry), "r") as f:
@@ -146,54 +146,31 @@ def modify_plates_overetch(geometry, overetch, name):
         if 'Point(1) =' in line:
             parts = line.split('{')[1].split('}')[0].split(',')
             parts[0] = f"{float(parts[0].strip()) + overetch}"
+            parts[1] = f"{float(parts[1].strip()) + overetch}"
             new_line = f"Point(1) = {{{', '.join(part.strip() for part in parts)}}};\n"
             new_lines.append(new_line)
         elif 'Point(2) =' in line:
             parts = line.split('{')[1].split('}')[0].split(',')
             parts[0] = f"{float(parts[0].strip()) - overetch}"
+            parts[1] = f"{float(parts[1].strip()) + overetch}"
             new_line = f"Point(2) = {{{', '.join(part.strip() for part in parts)}}};\n"
             new_lines.append(new_line)
         elif 'Point(3) =' in line:
             parts = line.split('{')[1].split('}')[0].split(',')
             parts[0] = f"{float(parts[0].strip()) - overetch}"
-            parts[1] = f"{float(parts[1].strip()) - 2 * overetch}"
+            parts[1] = f"{float(parts[1].strip()) - overetch}"
             new_line = f"Point(3) = {{{', '.join(part.strip() for part in parts)}}};\n"
             new_lines.append(new_line)
         elif 'Point(4) =' in line:
             parts = line.split('{')[1].split('}')[0].split(',')
             parts[0] = f"{float(parts[0].strip()) + overetch}"
-            parts[1] = f"{float(parts[1].strip()) - 2 * overetch}"
+            parts[1] = f"{float(parts[1].strip()) - overetch}"
             new_line = f"Point(4) = {{{', '.join(part.strip() for part in parts)}}};\n"
-            new_lines.append(new_line)
-
-        # second rectangle
-        elif 'Point(5) =' in line:
-            parts = line.split('{')[1].split('}')[0].split(',')
-            parts[0] = f"{float(parts[0].strip()) + overetch}"
-            new_line = f"Point(5) = {{{', '.join(part.strip() for part in parts)}}};\n"
-            new_lines.append(new_line)
-        elif 'Point(6) =' in line:
-            parts = line.split('{')[1].split('}')[0].split(',')
-            parts[0] = f"{float(parts[0].strip()) - overetch}"
-            new_line = f"Point(6) = {{{', '.join(part.strip() for part in parts)}}};\n"
-            new_lines.append(new_line)
-        elif 'Point(7) =' in line:
-            parts = line.split('{')[1].split('}')[0].split(',')
-            parts[0] = f"{float(parts[0].strip()) - overetch}"
-            parts[1] = f"{float(parts[1].strip()) + 2 * overetch}"
-            new_line = f"Point(7) = {{{', '.join(part.strip() for part in parts)}}};\n"
-            new_lines.append(new_line)
-        elif 'Point(8) =' in line:
-            parts = line.split('{')[1].split('}')[0].split(',')
-            parts[0] = f"{float(parts[0].strip()) + overetch}"
-            parts[1] = f"{float(parts[1].strip()) + 2 * overetch}"
-            new_line = f"Point(8) = {{{', '.join(part.strip() for part in parts)}}};\n"
             new_lines.append(new_line)
 
         # ignore other lines
         else:
             new_lines.append(line)
-
     
     # Define the directory and file name for saving the new geometry
     directory = "data/geo"
@@ -281,6 +258,8 @@ def generate_geometries():
     """
     Generate geometries by modifying the distance, overetch, and angle of the plates.
     This function creates a series of geometry files with different parameters.
+    Be careful: the order of the performed transformations is important.
+    The order is: distance, overetch, rotation.
     """
     overetches = np.linspace(0.1, 0.6, 10)
     distances = np.linspace(1.5, 2.5, 10)
