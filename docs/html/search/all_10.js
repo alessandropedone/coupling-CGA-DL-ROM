@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['x_0',['x',['../namespaceplot__prediction.html#a07297bd15c08f7414498d755cda48bc9',1,'plot_prediction.x'],['../namespacesurrogate__model.html#a9bbeb15d28fe22ef010c0ffb4241f7b2',1,'surrogate_model.x']]],
-  ['x_5fsample_1',['x_sample',['../namespaceplot__prediction.html#a4b63778ec6965db504d7947dfc82ff8d',1,'plot_prediction']]],
-  ['x_5ftest_2',['x_test',['../namespaceplot__prediction.html#a2fa024d643f57072e48171c660502fb9',1,'plot_prediction.x_test'],['../namespacesurrogate__model.html#acedcbcfa7ad99ab6cdafb13651ce1b60',1,'surrogate_model.x_test']]],
-  ['x_5ftrain_3',['x_train',['../namespaceplot__prediction.html#aec356967822ed3d2bd0d27af9112ad45',1,'plot_prediction.x_train'],['../namespacesurrogate__model.html#a3287de2a633c1d358f7117e5d325c870',1,'surrogate_model.x_train']]],
-  ['x_5ftrainval_4',['x_trainval',['../namespaceplot__prediction.html#ad6185f140235153b41fc0ef9f8a380c4',1,'plot_prediction.x_trainval'],['../namespacesurrogate__model.html#ac9768422e13f0dedc4d6ea04b920273b',1,'surrogate_model.x_trainval']]],
-  ['x_5fval_5',['x_val',['../namespaceplot__prediction.html#a91611bef0c269b98b2af84a5db9fab47',1,'plot_prediction.x_val'],['../namespacesurrogate__model.html#a223b915bf44bfc0f682c0a13be194295',1,'surrogate_model.x_val']]]
+  ['temp_0',['temp',['../namespacetemp.html',1,'']]],
+  ['temp_2epy_1',['temp.py',['../temp_8py.html',1,'']]],
+  ['tensorboard_5fcallback_2',['tensorboard_callback',['../namespacesurrogate__model.html#a439fc3ec551c1d7731c7c4ec5487ca4c',1,'surrogate_model']]],
+  ['test_5fsize_3',['test_size',['../namespacesurrogate__model.html#ae099a7c254d83b1ea855ecd618def651',1,'surrogate_model']]],
+  ['traditional_20solvers_20and_20dl_20roms_4',['Coupling Traditional solvers and DL-ROMs',['../index.html',1,'']]],
+  ['train_5fmodel_5',['train_model',['../classtemp_1_1NN__Model.html#ac5f13f39421c7a1b63188269e42aa34b',1,'temp::NN_Model']]]
 ];

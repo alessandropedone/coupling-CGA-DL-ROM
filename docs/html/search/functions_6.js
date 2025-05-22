@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['set_5fup_5fenvironment_0',['set_up_environment',['../namespacedataset__generation.html#abce3ae7e04a54185f69d33f87ec19664',1,'dataset_generation']]],
-  ['solve_5fand_5fplot_5fgrad_1',['solve_and_plot_grad',['../namespaceconvergence.html#a5c642720623e64ebbbdfaa7e24e476eb',1,'convergence']]]
+  ['modify_5fplates_5fdistance_0',['modify_plates_distance',['../namespacegeometry__generation.html#aef1b31368cf0273219203eb707dae770',1,'geometry_generation']]],
+  ['modify_5fplates_5foveretch_1',['modify_plates_overetch',['../namespacegeometry__generation.html#ae440c792144e522f5f397d3808d645a9',1,'geometry_generation']]]
 ];

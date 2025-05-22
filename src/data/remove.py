@@ -5,7 +5,7 @@ import os
 
 ## 
 # @param directory (str): The directory to search for .msh files.
-def remove_msh_files(directory):
+def remove_msh_files(directory: str):
     """
     Remove all .msh files in the specified directory and its subdirectories.
     """

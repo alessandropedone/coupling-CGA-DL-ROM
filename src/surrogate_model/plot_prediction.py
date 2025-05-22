@@ -1,51 +1,58 @@
 import tensorflow as tf
-import datetime
-import os
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+from model import NN_Model
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Specify which GPU to use
+##
+# @param x (numpy.ndarray): The input data for the model.
+# @param y (numpy.ndarray): The target data for the model.
+# @param model_path (str): The path to the saved model.
+def plot_prediction(x: np.ndarray, y: np.ndarray, model_path: str) -> None:
+    """"
+    Plot the prediction from the surrogate model.
+    """
+    # Load the saved model
+    model = NN_Model()
+    model.load_model(model_path)
 
-# Import coordinates dataset and convert to numpy array
-coordinates = pd.read_csv('data/coordinates.csv')
-x = coordinates.iloc[:, 1:]
-x = x.to_numpy()
+    # Make a prediction
+    y_pred = model.predict(np.expand_dims(x, axis=0))
+    y_pred = y_pred.flatten()
 
-# Import normal derivative potential dataset and convert to numpy array
-normal_derivative = pd.read_csv('data/normal_derivative_potential.csv')
-y = normal_derivative.iloc[:, 4:]
-y = y.to_numpy()
+    # Plot the prediction
+    coords = x[3:]
+    import matplotlib.pyplot as plt
+    plt.plot(coords, y, label="Normale derivative values", color="blue", linestyle="-")
+    plt.plot(coords, y_pred, label=f"Model prediction", color="red", linestyle="--")
+    plt.xlim(-50, 50)
+    plt.xlabel("coords")
+    plt.ylabel("normal_derivative_potential")
+    plt.title("Surrogate model prediction test")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
-# Split into train+val and test sets first
-x_trainval, x_test, y_trainval, y_test = train_test_split(
-    x, y, test_size=0.15, random_state=42
-)
+##
+# @param model_path (str): The path to the saved model.
+def plot_random_prediction(model_path: str):
+    """
+    Plot a random prediction from the surrogate model.
+    """
+    # Import coordinates dataset and convert to numpy array
+    coordinates = pd.read_csv('data/coordinates.csv')
+    x = coordinates.iloc[:, 1:]
+    x = x.to_numpy()
 
-# Split train+val into train and val sets
-x_train, x_val, y_train, y_val = train_test_split(
-    x_trainval, y_trainval, test_size=0.15, random_state=42
-)
+    # Import normal derivative potential dataset and convert to numpy array
+    normal_derivative = pd.read_csv('data/normal_derivative_potential.csv')
+    y = normal_derivative.iloc[:, 4:]
+    y = y.to_numpy()
 
-# Load the saved model
-loaded_model = tf.keras.models.load_model('surrogate_model2.keras')
+    # Predict on a random test element
+    # Select a random test element
+    import random
+    random_index = random.randint(0, len(x) - 1)
+    x_sample = x[random_index]
+    y_sample = y[random_index]
 
-# Predict on a random test element
-# Select a random test element
-import random
-random_index = random.randint(0, len(x_test) - 1)
-x_sample = x_test[random_index]
-y_true = y_test[random_index]
-y_pred = loaded_model.predict(np.expand_dims(x_sample, axis=0))
-y_pred = y_pred.flatten()
-coords = x_sample[3:]
-import matplotlib.pyplot as plt
-plt.plot(coords, y_true, label="Normale derivative values", color="blue", linestyle="-")
-plt.plot(coords, y_pred, label=f"Model prediction", color="red", linestyle="--")
-plt.xlim(-50, 50)
-plt.xlabel("coords")
-plt.ylabel("normal_derivative_potential")
-plt.title("Surrogate model prediction test")
-plt.legend()
-plt.grid(True)
-plt.show()
+    plot_prediction(x_sample, y_sample, model_path=model_path)

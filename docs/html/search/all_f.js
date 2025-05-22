@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['val_5faccuracy_0',['val_accuracy',['../namespacesurrogate__model.html#aea93938e5177536f7d6dc1b682692992',1,'surrogate_model']]],
-  ['val_5floss_1',['val_loss',['../namespacesurrogate__model.html#a47a44ffaf3db0ac259d01bcf43a3385a',1,'surrogate_model']]],
-  ['validation_5fdata_2',['validation_data',['../namespacesurrogate__model.html#a4cd676e0ee5e5dd3adffbce1a9e16202',1,'surrogate_model']]],
-  ['values_3',['values',['../namespacemain.html#ad32592b28f6f86098ef4d5e8e41480b7',1,'main']]]
+  ['s_0',['s',['../namespacemain.html#a774ea7d72ce3cfb50032980875f3d5e9',1,'main']]],
+  ['save_5fmodel_1',['save_model',['../classtemp_1_1NN__Model.html#adbdb57c3d3b25826db40d7f9250ccff8',1,'temp::NN_Model']]],
+  ['set_5fup_5fenvironment_2',['set_up_environment',['../namespacedataset__generation.html#abce3ae7e04a54185f69d33f87ec19664',1,'dataset_generation']]],
+  ['solve_5fand_5fplot_5fgrad_3',['solve_and_plot_grad',['../namespaceconvergence.html#a04c3c25e80923148934a4e1f3ff05e9c',1,'convergence']]],
+  ['solvers_20and_20dl_20roms_4',['Coupling Traditional solvers and DL-ROMs',['../index.html',1,'']]],
+  ['surrogate_5fmodel_5',['surrogate_model',['../namespacesurrogate__model.html',1,'']]],
+  ['surrogate_5fmodel_2epy_6',['surrogate_model.py',['../surrogate__model_8py.html',1,'']]]
 ];

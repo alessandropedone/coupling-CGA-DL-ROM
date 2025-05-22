@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['path_0',['path',['../namespacemain.html#a158c1e3e959d1e70bd19d15e42f317b6',1,'main']]],
-  ['plot_5fprediction_1',['plot_prediction',['../namespaceplot__prediction.html',1,'']]],
-  ['plot_5fprediction_2epy_2',['plot_prediction.py',['../plot__prediction_8py.html',1,'']]],
-  ['policy_3',['policy',['../namespacesurrogate__model.html#a63585a79b672fd160ad2718d92a51d10',1,'surrogate_model']]],
-  ['potential_4',['potential',['../namespacemain.html#abe4c267a63409b1b7cd9c6aaf0779b4a',1,'main']]],
-  ['process_5fmesh_5',['process_mesh',['../namespacedataset__generation.html#a20e9a694f6a79895bfe055ca7720eece',1,'dataset_generation']]]
+  ['nn_5fmodel_0',['NN_Model',['../classtemp_1_1NN__Model.html',1,'temp']]],
+  ['norm_5flayer_1',['norm_layer',['../namespacesurrogate__model.html#a184966ef2414e40f63ecbabbf2c0b925',1,'surrogate_model']]],
+  ['normal_5fderivative_2',['normal_derivative',['../namespacesurrogate__model.html#af9ba194ec45f4e553da1361c210e521e',1,'surrogate_model']]],
+  ['normal_5fderivatives_3',['normal_derivatives',['../namespacemain.html#a6dab7e31254931afb087ec248ea8aff3',1,'main']]]
 ];

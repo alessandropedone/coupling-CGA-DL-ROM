@@ -7,7 +7,7 @@
 ## 
 # @param path (str): path to the directory containing the .geo file.
 # @param name (str): name of the .geo file without extension.
-def solve_and_plot_grad(path, name):
+def solve_and_plot_grad(path: str, name: str):
     """Solve the PDE and plot the gradient of the solution on the upper plate."""
     from mpi4py import MPI
     from dolfinx.io import gmshio

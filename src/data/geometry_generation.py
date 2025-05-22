@@ -8,7 +8,7 @@ import os
 # @param geometry (str): Path to the geometry file.
 # @param new_gap (float): New gap distance to set.
 # @param name (str): Name for the new geometry file.
-def modify_plates_distance(geometry, new_gap, name):
+def modify_plates_distance(geometry: str, new_gap: float, name: str):
     """Modify the geometry file to change the distance between the plates."""
     # Open the geometry.geo file to read the lines
     with open(str(geometry), "r") as f:
@@ -130,7 +130,7 @@ import re
 # @param geometry (str): Path to the geometry file.
 # @param overetch (float): New overetch value to set.
 # @param name (str): Name for the new geometry file.
-def modify_plates_overetch(geometry, overetch, name):
+def modify_plates_overetch(geometry: str, overetch: float, name: str):
     """
     Modify the geometry file to change the overetch of the plates.
     Attention: this function assumes that the geometry taken as input isn't rotated.
@@ -198,7 +198,7 @@ from math import pi
 # @param geometry (str): Path to the geometry file.
 # @param new_angle (float): New rotation angle to set.
 # @param name (str): Name for the new geometry file.
-def rotate_upper_plate(geometry, new_angle, name):
+def rotate_upper_plate(geometry: str, new_angle: float, name: str):
     """Modify the geometry file to change the rotation angle of the upper plate."""
     with open(str(geometry), "r") as f:
         lines = f.readlines()

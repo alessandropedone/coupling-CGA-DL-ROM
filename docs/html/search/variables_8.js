@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['norm_5flayer_0',['norm_layer',['../namespacesurrogate__model.html#a184966ef2414e40f63ecbabbf2c0b925',1,'surrogate_model']]],
-  ['normal_5fderivative_1',['normal_derivative',['../namespaceplot__prediction.html#ae650e95a88e938adca5a3ae401854779',1,'plot_prediction.normal_derivative'],['../namespacesurrogate__model.html#af9ba194ec45f4e553da1361c210e521e',1,'surrogate_model.normal_derivative']]],
-  ['normal_5fderivatives_2',['normal_derivatives',['../namespacemain.html#a6dab7e31254931afb087ec248ea8aff3',1,'main']]]
+  ['metrics_0',['metrics',['../namespacesurrogate__model.html#a7000337e0c579748d16d0d946cbf8747',1,'surrogate_model']]],
+  ['model_1',['model',['../classtemp_1_1NN__Model.html#ae70b673feb442d04b597baebc945422e',1,'temp.NN_Model.model'],['../namespacesurrogate__model.html#a0c8d709c0ab1febfa27ab9df3726a6a9',1,'surrogate_model.model']]]
 ];

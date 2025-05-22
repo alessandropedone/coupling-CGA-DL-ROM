@@ -98,7 +98,7 @@ def set_up_environment():
 
 ##
 # @param mesh (str): path to the mesh file.
-def process_mesh(mesh):
+def process_mesh(mesh: str):
     """
     Solves the PDE and saves the gradient of the solution on the lower edge of the upper plate in a specific .csv file.
     It also saves the solution and the gradient of the solution in a .h5 file.
@@ -298,7 +298,7 @@ def generate_datasets():
 ##
 # @param filename (str): path to the main dataset file.
 # @param clean (bool): whether to clean up temporary files after combining.
-def combine_temp_files(filename, clean = True):
+def combine_temp_files(filename: str, clean: bool = True):
     """
     Combine all temporary CSV files into the main dataset file.
     This function reads the main dataset file, updates it with the values from

@@ -8,7 +8,7 @@ from mesh_generation import generate_meshes, generate_mesh_from_geo
 from dataset_generation import generate_datasets, combine_temp_files
 
 # Core of the code that produces the results
-# generate_geometries()
+#generate_geometries()
 #generate_meshes()
 #generate_datasets()
 #combine_temp_files("data/coordinates.csv")

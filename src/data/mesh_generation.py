@@ -8,7 +8,7 @@ from pathlib import Path
 
 ##
 # @param geo_path (str): Path to the .geo file.
-def generate_mesh_from_geo(geo_path):
+def generate_mesh_from_geo(geo_path: str):
     """Generate a mesh from a .geo file using gmsh."""
     # Initialize gmsh
     gmsh.initialize()
@@ -36,7 +36,7 @@ import multiprocessing
 
 ##
 # @param i (int): Index of the geometry.
-def generate_mesh(i):
+def generate_mesh(i: int):
     """
     Generate a mesh for a given geometry index.
     """
