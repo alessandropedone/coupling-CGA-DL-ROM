@@ -38,65 +38,66 @@ def train_model(model_path: str):
     policy = tf.keras.mixed_precision.Policy('mixed_float16')
     tf.keras.mixed_precision.set_global_policy(policy)
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Specify which GPU to use
-    gpus = tf.config.list_physical_devices('GPU')
-    with tf.device('/GPU:0' if gpus else '/CPU:0'):
-        # Check if the GPU is available
-        gpus = tf.config.list_physical_devices('GPU')
-        if gpus:
-            print("Using GPU for training and evaluation")
-        else:
-            print("No GPU detected, using CPU")
+    model = NN_Model()
 
-        model = NN_Model()
+    model.build_model(
+        X = x_train,
+        input_shape = 353, 
+        n_neurons = [512, 256, 128, 256], 
+        activation = 'relu', 
+        output_neurons = 350, 
+        output_activation = 'linear', 
+        initializer = 'he_normal', 
+        lambda_coeff = 1e-3, 
+        batch_normalization = True, 
+        dropout = True, 
+        dropout_rate = 0.2 
+    )
 
-        model.build_model(
-            X = x_train,
-            input_shape = 353, 
-            n_neurons = [1024, 512, 256, 128], 
-            activation = 'relu',
-            output_neurons = 350,
-            output_activation = 'linear',
-            initializer = 'he_normal',
-            lambda_coeff = 1e-3,
-            batch_normalization = True,
-            dropout = True,
-            dropout_rate = 0.2
-        )
+    model.summary()
 
-        model.summary()
+    lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, verbose=1)
 
-        lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, verbose=1)
+    model.train_model(
+        X = x_train, 
+        y = y_train, 
+        X_val = x_val, 
+        y_val = y_val, 
+        learning_rate = 1e-3, 
+        epochs = 1000, 
+        batch_size = 16, 
+        loss = 'mean_squared_error', 
+        validation_freq = 1, 
+        verbose = 1, 
+        lr_scheduler = lr_scheduler, 
+        metrics = ['mean_absolute_error'],
+        clipnorm = None,
+        early_stopping_patience = 20,
+        log = True
+    )
 
-        model.train_model(
-            X = x_train, 
-            y = y_train, 
-            X_val = x_val, 
-            y_val = y_val, 
-            learning_rate = 1e-3, 
-            epochs = 1000, 
-            batch_size = 8, 
-            loss = 'mean_squared_error', 
-            validation_freq = 1, 
-            verbose = 1,
-            lr_scheduler = lr_scheduler,
-            metrics = ['mae'],
-            clipnorm = 1.0,
-            early_stopping_patience = 20,
-            log = True
-        )
+    print("Evaluating the model on the validation set...")
+    model.evaluate_model(X = x_val, y = y_val)
 
-        print("Evaluating the model on the validation set...")
-        model.evaluate_model(X = x_val, y = y_val)
+    print("Evaluating the model on the test set...")
+    model.evaluate_model(X = x_test, y = y_test)
 
-        print("Evaluating the model on the test set...")
-        model.evaluate_model(X = x_test, y = y_test)
-
-        model.save_model(model_path)
+    model.save_model(model_path)
     
 
 def test_model(model_path: str):
     plot_random_prediction(model_path)
 
-#train_model("surrogate_model.keras")
-test_model("surrogate_model.keras")
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Specify which GPU to use
+gpus = tf.config.list_physical_devices('GPU')
+#with tf.device('/GPU:0' if gpus else '/CPU:0'):
+with tf.device('/CPU:0'):
+    # Check if the GPU is available
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        print("Using GPU for training and evaluation")
+    else:
+        print("No GPU detected, using CPU")
+    #train_model("surrogate_model.keras")
+    test_model("surrogate_model.keras")

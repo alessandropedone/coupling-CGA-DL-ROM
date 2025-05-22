@@ -189,7 +189,6 @@ class NN_Model:
                         y: np.ndarray) -> None:
         loss, accuracy = self.model.evaluate(X, y)
         print(f"Loss: {loss:.4f}")
-        print(f"Accuracy: {accuracy:.4f}")
 
     ##
     def summary(self) -> None:
