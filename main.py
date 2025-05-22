@@ -8,32 +8,32 @@ from mesh_generation import generate_meshes, generate_mesh_from_geo
 from dataset_generation import generate_datasets, combine_temp_files
 
 # Core of the code that produces the results
-generate_geometries()
-generate_meshes()
-generate_datasets()
-combine_temp_files("data/normal_derivate_potential.csv") 
-combine_temp_files("data/normal_derivate_potential_temp.csv")
-remove_msh_files()
+# generate_geometries()
+#generate_meshes()
+#generate_datasets()
+#combine_temp_files("data/coordinates.csv")
+#combine_temp_files("data/normal_derivative_potential.csv") 
+#remove_msh_files()
 
 # Importing the necessary libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Import the dataset containing the field values on the upper plate
-df = pd.read_csv('data/dataset.csv')
+normal_derivatives = pd.read_csv('data/normal_derivative_potential.csv')
+coordinates = pd.read_csv('data/coordinates.csv')
 
-# Extract the relevant columns, i.e. the ones starting from the 5th column
-column_names = df.columns[4:].astype(float)
 
 # Plot the field values making the angle vary
 for i in range(10):
-    row_data = df.iloc[i, 4:].astype(float)
-    plt.plot(column_names, row_data, label=f"Angle {df.iloc[i, 3]}")
+    values = normal_derivatives.iloc[i, 4:].astype(float)
+    coords = coordinates.iloc[i, 4:].astype(float)
+    plt.plot(coords, values, label=f"Angle {normal_derivatives.iloc[i, 3]}")
 
 plt.xlim(-50, 50)
 plt.xlabel("coords")
-plt.ylabel("grad_y_uh_plate")
-plt.title("Plot of grad_y_uh_plate vs coords (first 10 rows)")
+plt.ylabel("normal_derivative_potential")
+plt.title("Angle variation")
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -41,13 +41,15 @@ plt.show()
 
 # Plot the field values making the distance vary
 for i in range(10):
-    row_data = df.iloc[i*10, 4:].astype(float)
-    plt.plot(column_names, row_data, label=f"Distance {df.iloc[i*10, 2]}")
+    idx = i * 10
+    values = normal_derivatives.iloc[idx, 4:].astype(float)
+    coords = coordinates.iloc[idx, 4:].astype(float)
+    plt.plot(coords, values, label=f"Distance {normal_derivatives.iloc[idx, 2]}")
 
 plt.xlim(-50, 50)
 plt.xlabel("coords")
-plt.ylabel("grad_y_uh_plate")
-plt.title("Plot of grad_y_uh_plate vs coords (first 10 rows)")
+plt.ylabel("normal_derivative_potential")
+plt.title("Distance variation")
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -55,13 +57,15 @@ plt.show()
 
 # Plot the field values making the overetch vary
 for i in range(10):
-    row_data = df.iloc[i*100, 4:].astype(float)
-    plt.plot(column_names, row_data, label=f"Overetch {df.iloc[i*100, 1]}")
+    idx = i * 100
+    values = normal_derivatives.iloc[idx, 4:].astype(float)
+    coords = coordinates.iloc[idx, 4:].astype(float)
+    plt.plot(coords, values, label=f"Overetch {normal_derivatives.iloc[idx, 1]}")
 
 plt.xlim(-50, 50)
 plt.xlabel("coords")
-plt.ylabel("grad_y_uh_plate")
-plt.title("Plot of grad_y_uh_plate vs coords (first 10 rows)")
+plt.ylabel("normal_derivative_potential")
+plt.title("Overetch variation")
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -72,12 +76,11 @@ import h5py
 with h5py.File(path, 'r') as file:
     coordinates_x = file['coord_x'][:]
     coordinates_y = file['coord_y'][:]
-    coordinates = file['coord'][:]
+    coordinates = file['coords'][:]
     potential = file['potential'][:]
     grad_x = file['grad_x'][:]
     grad_y = file['grad_y'][:]
-    normal_derivate = file['normal_derivative_potential'][:]
-    plt.scatter(coordinates_x, coordinates_y, c=normal_derivate, cmap='plasma', s=3, alpha=0.7)
+    plt.scatter(coordinates_x, coordinates_y, c=potential, cmap='plasma', s=3, alpha=0.7)
     plt.xlim(-70, 70)
     plt.ylim(-70, 70)
     plt.colorbar(label='Potential Value')

@@ -275,7 +275,6 @@ def process_mesh(mesh):
             file.create_dataset("potential", data=pval)
             file.create_dataset("grad_x", data=fval_x)
             file.create_dataset("grad_y", data=fval_y)
-            file.create_dataset("normal_derivative_potential", data=normal_der)
 
 ##
 def generate_datasets():
@@ -297,7 +296,9 @@ def generate_datasets():
         pool.map(process_mesh, meshes)
 
 ##
-def combine_temp_files(filename):
+# @param filename (str): path to the main dataset file.
+# @param clean (bool): whether to clean up temporary files after combining.
+def combine_temp_files(filename, clean = True):
     """
     Combine all temporary CSV files into the main dataset file.
     This function reads the main dataset file, updates it with the values from
@@ -314,7 +315,8 @@ def combine_temp_files(filename):
     dataset_df = pd.read_csv(dataset_file)
 
     # Collect updates from all temp files
-    for temp_file in sorted(temp_folder.glob("*.csv"), key=lambda x: int(x.stem.split('_')[-1])):
+    prefix = dataset_file.stem
+    for temp_file in sorted(temp_folder.glob(f"{prefix}_*.csv"), key=lambda x: int(x.stem.split('_')[-1])):
         index = int(temp_file.stem.split('_')[-1]) - 1  # Adjust to 0-based index
         temp_df = pd.read_csv(temp_file)
         
@@ -327,7 +329,10 @@ def combine_temp_files(filename):
     dataset_df.to_csv(dataset_file, index=False)
 
     # Clean up temp files and folder
-    prefix = dataset_file.stem.split('.')[0]
-    for temp_file in temp_folder.glob(f"{prefix}_*.csv"):
-        temp_file.unlink()
-    temp_folder.rmdir()
+    if clean:
+        prefix = dataset_file.stem.split('.')[0]
+        for temp_file in temp_folder.glob(f"{prefix}_*.csv"):
+            temp_file.unlink()
+        # Only remove the temp folder if it is empty
+        if not any(temp_folder.iterdir()):
+            temp_folder.rmdir()
