@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['surrogate_5fmodel_2epy_0',['surrogate_model.py',['../surrogate__model_8py.html',1,'']]]
+  ['readme_2emd_0',['README.md',['../README_8md.html',1,'']]],
+  ['remove_2epy_1',['remove.py',['../remove_8py.html',1,'']]]
 ];

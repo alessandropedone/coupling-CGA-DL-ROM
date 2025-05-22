@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['label_0',['label',['../namespacemain.html#aced2f0e5b178381f9f0a0bf045d8b11d',1,'main']]]
+  ['idx_0',['idx',['../namespacemain.html#acd5a73d049a188d4068ab446d75ceba8',1,'main']]],
+  ['initializer_1',['initializer',['../namespacesurrogate__model.html#ae5d82e8c41533085bb9e84b969c09d50',1,'surrogate_model']]]
 ];

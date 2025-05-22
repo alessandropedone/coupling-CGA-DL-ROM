@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['test_0',['test',['../namespacetest.html',1,'']]]
+  ['surrogate_5fmodel_0',['surrogate_model',['../namespacesurrogate__model.html',1,'']]]
 ];

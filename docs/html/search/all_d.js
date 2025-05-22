@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['values_0',['values',['../namespacemain.html#ad32592b28f6f86098ef4d5e8e41480b7',1,'main']]]
+  ['s_0',['s',['../namespacemain.html#a774ea7d72ce3cfb50032980875f3d5e9',1,'main']]],
+  ['set_5fup_5fenvironment_1',['set_up_environment',['../namespacedataset__generation.html#abce3ae7e04a54185f69d33f87ec19664',1,'dataset_generation']]],
+  ['solve_5fand_5fplot_5fgrad_2',['solve_and_plot_grad',['../namespaceconvergence.html#a5c642720623e64ebbbdfaa7e24e476eb',1,'convergence']]],
+  ['solvers_20and_20dl_20roms_3',['Coupling Traditional solvers and DL-ROMs',['../index.html',1,'']]],
+  ['surrogate_5fmodel_4',['surrogate_model',['../namespacesurrogate__model.html',1,'']]],
+  ['surrogate_5fmodel_2epy_5',['surrogate_model.py',['../surrogate__model_8py.html',1,'']]]
 ];

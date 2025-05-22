@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Coupling Traditional solvers and DL-ROMs: /home/ale/pacs-project/surrogate_model.py File Reference</title>
+<title>Coupling Traditional solvers and DL-ROMs: /home/ale/pacs-project/src/surrogate_model/surrogate_model.py File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,11 +67,99 @@ $(function() {
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_19968927cc25cc6824a44cb194267f3a.html">surrogate_model</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">/home/ale/pacs-project/surrogate_model.py File Reference</div></div>
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">surrogate_model.py File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacesurrogate__model" id="r_namespacesurrogate__model"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html">surrogate_model</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8e044be4e62fda4d771f579503f17533" id="r_a8e044be4e62fda4d771f579503f17533"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a8e044be4e62fda4d771f579503f17533">surrogate_model.coordinates</a> = pd.read_csv('data/coordinates.csv')</td></tr>
+<tr class="separator:a8e044be4e62fda4d771f579503f17533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bbeb15d28fe22ef010c0ffb4241f7b2" id="r_a9bbeb15d28fe22ef010c0ffb4241f7b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a9bbeb15d28fe22ef010c0ffb4241f7b2">surrogate_model.x</a> = coordinates.iloc[:, 1:]</td></tr>
+<tr class="separator:a9bbeb15d28fe22ef010c0ffb4241f7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9ba194ec45f4e553da1361c210e521e" id="r_af9ba194ec45f4e553da1361c210e521e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#af9ba194ec45f4e553da1361c210e521e">surrogate_model.normal_derivative</a> = pd.read_csv('data/normal_derivative_potential.csv')</td></tr>
+<tr class="separator:af9ba194ec45f4e553da1361c210e521e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dd44b873e2dfa23b51c9ef5d63170e5" id="r_a1dd44b873e2dfa23b51c9ef5d63170e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a1dd44b873e2dfa23b51c9ef5d63170e5">surrogate_model.y</a> = normal_derivative.iloc[:, 4:]</td></tr>
+<tr class="separator:a1dd44b873e2dfa23b51c9ef5d63170e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9768422e13f0dedc4d6ea04b920273b" id="r_ac9768422e13f0dedc4d6ea04b920273b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#ac9768422e13f0dedc4d6ea04b920273b">surrogate_model.x_trainval</a></td></tr>
+<tr class="separator:ac9768422e13f0dedc4d6ea04b920273b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acedcbcfa7ad99ab6cdafb13651ce1b60" id="r_acedcbcfa7ad99ab6cdafb13651ce1b60"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#acedcbcfa7ad99ab6cdafb13651ce1b60">surrogate_model.x_test</a></td></tr>
+<tr class="separator:acedcbcfa7ad99ab6cdafb13651ce1b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad879e3a5196e4639bacacb1ca7c42adc" id="r_ad879e3a5196e4639bacacb1ca7c42adc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#ad879e3a5196e4639bacacb1ca7c42adc">surrogate_model.y_trainval</a></td></tr>
+<tr class="separator:ad879e3a5196e4639bacacb1ca7c42adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5aaaa8c94934759843fd06d84be77a38" id="r_a5aaaa8c94934759843fd06d84be77a38"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a5aaaa8c94934759843fd06d84be77a38">surrogate_model.y_test</a></td></tr>
+<tr class="separator:a5aaaa8c94934759843fd06d84be77a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae099a7c254d83b1ea855ecd618def651" id="r_ae099a7c254d83b1ea855ecd618def651"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#ae099a7c254d83b1ea855ecd618def651">surrogate_model.test_size</a></td></tr>
+<tr class="separator:ae099a7c254d83b1ea855ecd618def651"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7d930ad2e49fbcb2875d45bf38fd141" id="r_af7d930ad2e49fbcb2875d45bf38fd141"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#af7d930ad2e49fbcb2875d45bf38fd141">surrogate_model.random_state</a></td></tr>
+<tr class="separator:af7d930ad2e49fbcb2875d45bf38fd141"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3287de2a633c1d358f7117e5d325c870" id="r_a3287de2a633c1d358f7117e5d325c870"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a3287de2a633c1d358f7117e5d325c870">surrogate_model.x_train</a></td></tr>
+<tr class="separator:a3287de2a633c1d358f7117e5d325c870"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a223b915bf44bfc0f682c0a13be194295" id="r_a223b915bf44bfc0f682c0a13be194295"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a223b915bf44bfc0f682c0a13be194295">surrogate_model.x_val</a></td></tr>
+<tr class="separator:a223b915bf44bfc0f682c0a13be194295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3e8b3f95434da563dc0ad3de3236bc3" id="r_ad3e8b3f95434da563dc0ad3de3236bc3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#ad3e8b3f95434da563dc0ad3de3236bc3">surrogate_model.y_train</a></td></tr>
+<tr class="separator:ad3e8b3f95434da563dc0ad3de3236bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fa951e2711fc45acb9011f154cbe80c" id="r_a9fa951e2711fc45acb9011f154cbe80c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a9fa951e2711fc45acb9011f154cbe80c">surrogate_model.y_val</a></td></tr>
+<tr class="separator:a9fa951e2711fc45acb9011f154cbe80c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63585a79b672fd160ad2718d92a51d10" id="r_a63585a79b672fd160ad2718d92a51d10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a63585a79b672fd160ad2718d92a51d10">surrogate_model.policy</a> = tf.keras.mixed_precision.Policy('mixed_float16')</td></tr>
+<tr class="separator:a63585a79b672fd160ad2718d92a51d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a1fa7eae7d1a779835677fa495feaab" id="r_a6a1fa7eae7d1a779835677fa495feaab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a6a1fa7eae7d1a779835677fa495feaab">surrogate_model.gpus</a> = tf.config.list_physical_devices('GPU')</td></tr>
+<tr class="separator:a6a1fa7eae7d1a779835677fa495feaab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95697dec915324d1a62097ad81f484b4" id="r_a95697dec915324d1a62097ad81f484b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a95697dec915324d1a62097ad81f484b4">surrogate_model.layers</a> = tf.keras.layers</td></tr>
+<tr class="separator:a95697dec915324d1a62097ad81f484b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a15cd0e5b17023545c87b8427f90507" id="r_a4a15cd0e5b17023545c87b8427f90507"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a4a15cd0e5b17023545c87b8427f90507">surrogate_model.regularizers</a> = tf.keras.regularizers</td></tr>
+<tr class="separator:a4a15cd0e5b17023545c87b8427f90507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5d82e8c41533085bb9e84b969c09d50" id="r_ae5d82e8c41533085bb9e84b969c09d50"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#ae5d82e8c41533085bb9e84b969c09d50">surrogate_model.initializer</a> = 'he_normal'</td></tr>
+<tr class="separator:ae5d82e8c41533085bb9e84b969c09d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bb32cf268bff9a8c2c58d8b1c953e5c" id="r_a3bb32cf268bff9a8c2c58d8b1c953e5c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a3bb32cf268bff9a8c2c58d8b1c953e5c">surrogate_model.regularizer</a> = regularizers.l2(1e-4)</td></tr>
+<tr class="separator:a3bb32cf268bff9a8c2c58d8b1c953e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a184966ef2414e40f63ecbabbf2c0b925" id="r_a184966ef2414e40f63ecbabbf2c0b925"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a184966ef2414e40f63ecbabbf2c0b925">surrogate_model.norm_layer</a> = layers.Normalization(axis=-1)</td></tr>
+<tr class="separator:a184966ef2414e40f63ecbabbf2c0b925"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c8d709c0ab1febfa27ab9df3726a6a9" id="r_a0c8d709c0ab1febfa27ab9df3726a6a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a0c8d709c0ab1febfa27ab9df3726a6a9">surrogate_model.model</a></td></tr>
+<tr class="separator:a0c8d709c0ab1febfa27ab9df3726a6a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ae76e8ac26312159893ab4f2d6286a9" id="r_a3ae76e8ac26312159893ab4f2d6286a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a3ae76e8ac26312159893ab4f2d6286a9">surrogate_model.optimizer</a> = tf.keras.optimizers.Adam(learning_rate=1e-4, clipnorm=1.0)</td></tr>
+<tr class="separator:a3ae76e8ac26312159893ab4f2d6286a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bfe4b0ddc779fb247e68b46da36405e" id="r_a5bfe4b0ddc779fb247e68b46da36405e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a5bfe4b0ddc779fb247e68b46da36405e">surrogate_model.loss</a> = tf.keras.losses.Huber()</td></tr>
+<tr class="separator:a5bfe4b0ddc779fb247e68b46da36405e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7000337e0c579748d16d0d946cbf8747" id="r_a7000337e0c579748d16d0d946cbf8747"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a7000337e0c579748d16d0d946cbf8747">surrogate_model.metrics</a> = [tf.keras.metrics.MeanAbsoluteError()]</td></tr>
+<tr class="separator:a7000337e0c579748d16d0d946cbf8747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a588d5af8f3c99c8e26a0a276e84e27ac" id="r_a588d5af8f3c99c8e26a0a276e84e27ac"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a588d5af8f3c99c8e26a0a276e84e27ac">surrogate_model.log_dir</a> = &quot;logs/&quot; + datetime.datetime.now().strftime(&quot;%Y%m%d-%H%M%S&quot;)</td></tr>
+<tr class="separator:a588d5af8f3c99c8e26a0a276e84e27ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a439fc3ec551c1d7731c7c4ec5487ca4c" id="r_a439fc3ec551c1d7731c7c4ec5487ca4c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a439fc3ec551c1d7731c7c4ec5487ca4c">surrogate_model.tensorboard_callback</a> = tf.keras.callbacks.TensorBoard(<a class="el" href="namespacesurrogate__model.html#a588d5af8f3c99c8e26a0a276e84e27ac">log_dir</a>=<a class="el" href="namespacesurrogate__model.html#a588d5af8f3c99c8e26a0a276e84e27ac">log_dir</a>, write_steps_per_second=True)</td></tr>
+<tr class="separator:a439fc3ec551c1d7731c7c4ec5487ca4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abce5fe0a7623c068f37c184722f423db" id="r_abce5fe0a7623c068f37c184722f423db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#abce5fe0a7623c068f37c184722f423db">surrogate_model.early_stopping</a></td></tr>
+<tr class="separator:abce5fe0a7623c068f37c184722f423db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6e00da5595cd1ec225ddf9b4909f489" id="r_af6e00da5595cd1ec225ddf9b4909f489"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#af6e00da5595cd1ec225ddf9b4909f489">surrogate_model.lr_schedule</a></td></tr>
+<tr class="separator:af6e00da5595cd1ec225ddf9b4909f489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaedbf1d6cbd642783e755fbe8abb1378" id="r_aaedbf1d6cbd642783e755fbe8abb1378"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#aaedbf1d6cbd642783e755fbe8abb1378">surrogate_model.callbacks</a> = [<a class="el" href="namespacesurrogate__model.html#a439fc3ec551c1d7731c7c4ec5487ca4c">tensorboard_callback</a>, <a class="el" href="namespacesurrogate__model.html#abce5fe0a7623c068f37c184722f423db">early_stopping</a>, <a class="el" href="namespacesurrogate__model.html#af6e00da5595cd1ec225ddf9b4909f489">lr_schedule</a>]</td></tr>
+<tr class="separator:aaedbf1d6cbd642783e755fbe8abb1378"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab11f74943d259fca6170e631cf1a6d72" id="r_ab11f74943d259fca6170e631cf1a6d72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#ab11f74943d259fca6170e631cf1a6d72">surrogate_model.batch_size</a> = 32</td></tr>
+<tr class="separator:ab11f74943d259fca6170e631cf1a6d72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98081d88ac88189cad6b85768e2c4d29" id="r_a98081d88ac88189cad6b85768e2c4d29"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a98081d88ac88189cad6b85768e2c4d29">surrogate_model.epochs</a></td></tr>
+<tr class="separator:a98081d88ac88189cad6b85768e2c4d29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cd676e0ee5e5dd3adffbce1a9e16202" id="r_a4cd676e0ee5e5dd3adffbce1a9e16202"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a4cd676e0ee5e5dd3adffbce1a9e16202">surrogate_model.validation_data</a></td></tr>
+<tr class="separator:a4cd676e0ee5e5dd3adffbce1a9e16202"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47a44ffaf3db0ac259d01bcf43a3385a" id="r_a47a44ffaf3db0ac259d01bcf43a3385a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#a47a44ffaf3db0ac259d01bcf43a3385a">surrogate_model.val_loss</a></td></tr>
+<tr class="separator:a47a44ffaf3db0ac259d01bcf43a3385a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea93938e5177536f7d6dc1b682692992" id="r_aea93938e5177536f7d6dc1b682692992"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#aea93938e5177536f7d6dc1b682692992">surrogate_model.val_accuracy</a></td></tr>
+<tr class="separator:aea93938e5177536f7d6dc1b682692992"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef0b3e2df05b659a5f0aff98015d4608" id="r_aef0b3e2df05b659a5f0aff98015d4608"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesurrogate__model.html#aef0b3e2df05b659a5f0aff98015d4608">surrogate_model.accuracy</a></td></tr>
+<tr class="separator:aef0b3e2df05b659a5f0aff98015d4608"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

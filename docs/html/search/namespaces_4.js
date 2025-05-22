@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['remove_0',['remove',['../namespaceremove.html',1,'']]]
+  ['plot_5fprediction_0',['plot_prediction',['../namespaceplot__prediction.html',1,'']]]
 ];

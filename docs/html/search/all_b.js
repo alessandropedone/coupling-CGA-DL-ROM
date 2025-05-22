@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['s_0',['s',['../namespacemain.html#a774ea7d72ce3cfb50032980875f3d5e9',1,'main']]],
-  ['set_5fup_5fenvironment_1',['set_up_environment',['../namespacedataset__generation.html#abce3ae7e04a54185f69d33f87ec19664',1,'dataset_generation']]],
-  ['solve_5fand_5fplot_5fgrad_2',['solve_and_plot_grad',['../namespaceconvergence.html#a5c642720623e64ebbbdfaa7e24e476eb',1,'convergence']]],
-  ['solvers_20and_20dl_20roms_3',['Coupling Traditional solvers and DL-ROMs',['../index.html',1,'']]],
-  ['surrogate_5fmodel_2epy_4',['surrogate_model.py',['../surrogate__model_8py.html',1,'']]]
+  ['path_0',['path',['../namespacemain.html#a158c1e3e959d1e70bd19d15e42f317b6',1,'main']]],
+  ['plot_5fprediction_1',['plot_prediction',['../namespaceplot__prediction.html',1,'']]],
+  ['plot_5fprediction_2epy_2',['plot_prediction.py',['../plot__prediction_8py.html',1,'']]],
+  ['policy_3',['policy',['../namespacesurrogate__model.html#a63585a79b672fd160ad2718d92a51d10',1,'surrogate_model']]],
+  ['potential_4',['potential',['../namespacemain.html#abe4c267a63409b1b7cd9c6aaf0779b4a',1,'main']]],
+  ['process_5fmesh_5',['process_mesh',['../namespacedataset__generation.html#a20e9a694f6a79895bfe055ca7720eece',1,'dataset_generation']]]
 ];
