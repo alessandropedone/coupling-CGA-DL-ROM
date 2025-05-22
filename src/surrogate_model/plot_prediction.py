@@ -31,8 +31,11 @@ x_train, x_val, y_train, y_val = train_test_split(
 loaded_model = tf.keras.models.load_model('surrogate_model.keras')
 
 # Predict on a random test element
-x_sample = x_test[0]
-y_true = y_test[0]
+# Select a random test element
+import random
+random_index = random.randint(0, len(x_test) - 1)
+x_sample = x_test[random_index]
+y_true = y_test[random_index]
 y_pred = loaded_model.predict(np.expand_dims(x_sample, axis=0))
 y_pred = y_pred.flatten()
 coords = x_sample[3:]
