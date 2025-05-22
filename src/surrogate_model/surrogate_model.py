@@ -72,7 +72,7 @@ with tf.device('/GPU:0' if gpus else '/CPU:0'):
     
     # Compile the model
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4, clipnorm=1.0)
-    loss = tf.keras.losses.Huber()
+    loss = tf.keras.losses.MeanSquaredError()
     metrics = [tf.keras.metrics.MeanAbsoluteError()]
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
     

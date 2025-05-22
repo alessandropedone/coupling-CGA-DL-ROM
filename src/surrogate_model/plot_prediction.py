@@ -28,7 +28,7 @@ x_train, x_val, y_train, y_val = train_test_split(
 )
 
 # Load the saved model
-loaded_model = tf.keras.models.load_model('surrogate_model.keras')
+loaded_model = tf.keras.models.load_model('surrogate_model2.keras')
 
 # Predict on a random test element
 # Select a random test element
