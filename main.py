@@ -89,3 +89,4 @@ with h5py.File(path, 'r') as file:
     plt.title('Potential Value Distribution')
     plt.grid(True)
     plt.show()
+ 

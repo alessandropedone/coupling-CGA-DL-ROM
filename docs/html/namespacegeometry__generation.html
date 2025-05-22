@@ -110,6 +110,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <pre class="fragment">Generate geometries by modifying the distance, overetch, and angle of the plates.
 This function creates a series of geometry files with different parameters.
+Be careful: the order of the performed transformations is important.
+The order is: distance, overetch, rotation.
 </pre> 
 </div>
 </div>
@@ -195,7 +197,7 @@ This function creates a series of geometry files with different parameters.
   </dd>
 </dl>
 <pre class="fragment">Modify the geometry file to change the overetch of the plates.
-Attention: this function assumes that the geometry taken as input isn't rotaed.
+Attention: this function assumes that the geometry taken as input isn't rotated.
 </pre> 
 </div>
 </div>

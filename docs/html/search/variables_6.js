@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['row_5fdata_0',['row_data',['../namespacemain.html#aa652c9388d79ca5baca574178ccd0e09',1,'main']]]
+  ['path_0',['path',['../namespacemain.html#a158c1e3e959d1e70bd19d15e42f317b6',1,'main']]],
+  ['potential_1',['potential',['../namespacemain.html#abe4c267a63409b1b7cd9c6aaf0779b4a',1,'main']]]
 ];
