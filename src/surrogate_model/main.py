@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from model import NN_Model
 
-def train_model():
+def train_model(model_path: str):
     # Import coordinates dataset and convert to numpy array
     coordinates = pd.read_csv('data/coordinates.csv')
     x = coordinates.iloc[:, 1:]
@@ -53,12 +53,12 @@ def train_model():
         model.build_model(
             X = x_train,
             input_shape = 353, 
-            n_neurons = [512, 256, 128], 
+            n_neurons = [1024, 512, 256, 128], 
             activation = 'relu',
             output_neurons = 350,
             output_activation = 'linear',
             initializer = 'he_normal',
-            lambda_coeff = 1e-4,
+            lambda_coeff = 1e-3,
             batch_normalization = True,
             dropout = True,
             dropout_rate = 0.2
@@ -73,9 +73,9 @@ def train_model():
             y = y_train, 
             X_val = x_val, 
             y_val = y_val, 
-            learning_rate = 1e-4, 
+            learning_rate = 1e-3, 
             epochs = 1000, 
-            batch_size = 32, 
+            batch_size = 8, 
             loss = 'mean_squared_error', 
             validation_freq = 1, 
             verbose = 1,
@@ -92,10 +92,11 @@ def train_model():
         print("Evaluating the model on the test set...")
         model.evaluate_model(X = x_test, y = y_test)
 
-        model.save_model("surrogate_model.keras")
+        model.save_model(model_path)
     
 
-def test_model():
-    plot_random_prediction("surrogate_model.keras")
+def test_model(model_path: str):
+    plot_random_prediction(model_path)
 
-test_model()
+#train_model("surrogate_model.keras")
+test_model("surrogate_model.keras")

@@ -60,7 +60,7 @@ class NN_Model:
         Dropout = tf.keras.layers.Dropout
         Normalization = tf.keras.layers.Normalization
 
-        self.model.add(tf.keras.layers.InputLayer(shape=(353,)))
+        self.model.add(tf.keras.layers.InputLayer(shape=(input_shape,)))
 
         normalizer = Normalization(axis=-1)
         normalizer.adapt(X)

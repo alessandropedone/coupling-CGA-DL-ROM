@@ -22,7 +22,7 @@ def plot_prediction(x: np.ndarray, y: np.ndarray, model_path: str) -> None:
     # Plot the prediction
     coords = x[3:]
     import matplotlib.pyplot as plt
-    plt.plot(coords, y, label="Normale derivative values", color="blue", linestyle="-")
+    plt.plot(coords, y, label="Normal derivative values", color="blue", linestyle="-")
     plt.plot(coords, y_pred, label=f"Model prediction", color="red", linestyle="--")
     plt.xlim(-50, 50)
     plt.xlabel("coords")
