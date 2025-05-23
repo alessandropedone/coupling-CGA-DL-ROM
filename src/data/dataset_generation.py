@@ -271,7 +271,6 @@ def process_mesh(mesh: str):
         with h5py.File(filename, "w") as file:
             file.create_dataset("coord_x", data=x_coords)
             file.create_dataset("coord_y", data=y_coords)
-            file.create_dataset("coords", data=coords)
             file.create_dataset("potential", data=pval)
             file.create_dataset("grad_x", data=fval_x)
             file.create_dataset("grad_y", data=fval_y)

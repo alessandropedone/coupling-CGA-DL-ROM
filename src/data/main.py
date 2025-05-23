@@ -76,7 +76,6 @@ import h5py
 with h5py.File(path, 'r') as file:
     coordinates_x = file['coord_x'][:]
     coordinates_y = file['coord_y'][:]
-    coordinates = file['coords'][:]
     potential = file['potential'][:]
     grad_x = file['grad_x'][:]
     grad_y = file['grad_y'][:]
