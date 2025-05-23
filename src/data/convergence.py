@@ -3,11 +3,17 @@
 #  @details This script generates a mesh, solves a Laplace equation, computes the gradient of the solution,
 #           and plots the y-component of the gradient on the lower edge of the upper plate, refining progressively the mesh.
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Initialize the plot figure outside the function
+plt.figure(figsize=(12, 8))
 
 ## 
 # @param path (str): path to the directory containing the .geo file.
 # @param name (str): name of the .geo file without extension.
-def solve_and_plot_grad(path: str, name: str):
+# @param plot_style (dict): dictionary containing color, linestyle, and marker for the plot.
+def solve_and_plot_grad(path: str, name: str, plot_style: dict):
     """Solve the PDE and plot the gradient of the solution on the upper plate."""
     from mpi4py import MPI
     from dolfinx.io import gmshio
@@ -22,10 +28,8 @@ def solve_and_plot_grad(path: str, name: str):
     # Read the mesh from the generated .msh file
     domain, cell_tags, facet_tags = gmshio.read_from_msh(str(path)+str(name)+".msh", MPI.COMM_WORLD, 0, gdim=2)
 
-
     # Define finite element function space
     from dolfinx.fem import functionspace
-    import numpy as np
     V = functionspace(domain, ("Lagrange", 1))
 
     # Identify the boundary (create facet to cell connectivity required to determine boundary facets)
@@ -73,10 +77,7 @@ def solve_and_plot_grad(path: str, name: str):
     problem = LinearProblem(a, L, bcs=bcs, petsc_options={"ksp_type": "preonly", "pc_type": "lu"})
     uh = problem.solve()
 
-
-
     # Approximate the gradient of the solution
-
     import ufl
 
     # Define the vector function space for the gradient
@@ -98,7 +99,6 @@ def solve_and_plot_grad(path: str, name: str):
     problem_grad = LinearProblem(a_grad, L_grad, petsc_options={"ksp_type": "preonly", "pc_type": "lu"})
     grad_uh = problem_grad.solve()
 
-
     # PLOTTING THE GRADIENT OF THE SOLUTION ON THE UPPER PLATE
 
     # Step 1: Find facets with tag 10
@@ -117,9 +117,7 @@ def solve_and_plot_grad(path: str, name: str):
     grad_x_uh_plate = grad_x_uh_values[dofs10]
     grad_y_uh_plate = grad_y_uh_values[dofs10]
 
-
-    # Step 4: Plot grad_y_uh_plate vs coords
-    import matplotlib.pyplot as plt
+    # Step 4: Add plot to the existing figure
     center_y = 1.5/2
     center_x = 0.0
     coords = np.sign(x_coords) * np.sqrt((x_coords-center_x)**2 + (y_coords-center_y)**2)
@@ -127,25 +125,45 @@ def solve_and_plot_grad(path: str, name: str):
     coords = coords[sorted_indices]
     grad_y_uh_plate = grad_y_uh_plate[sorted_indices]
     grad_x_uh_plate = grad_x_uh_plate[sorted_indices]
-    plt.plot(coords, grad_y_uh_plate, label="grad_y_uh_plate", color="blue", linestyle="-")
-    plt.xlim(-50, 50)
-    plt.xlabel("coords")
-    plt.ylabel("grad_y_uh_plate")
-    plt.title("Plot of grad_y_uh_plate vs coords")
-    plt.legend()
-    plt.grid(True)
+    
+    # Plot with specified style
+    plt.plot(coords, grad_y_uh_plate, 
+             label=f"{name} (grad_y_uh_plate)", 
+             color=plot_style['color'], 
+             linestyle=plot_style['linestyle'],
+             marker=plot_style['marker'],
+             markersize=4,
+             markevery=len(coords)//20,  # Show markers every 20th point to avoid clutter
+             linewidth=2)
 
-    # Step 5: Save the plot as an image in the convergence folder
-    output_path = os.path.join(path, f"{name}_grad_y_uh_plate_plot.png")
-    plt.savefig(output_path)
-    print(f"Plot saved as {output_path}")
-    plt.show()
+# Define different styles for each refinement level
+plot_styles = {
+    "r1": {"color": "blue", "linestyle": "-", "marker": "o"},
+    "r3": {"color": "red", "linestyle": "--", "marker": "s"},
+    "r5": {"color": "green", "linestyle": "-.", "marker": "^"},
+    "r7": {"color": "purple", "linestyle": ":", "marker": "D"}
+}
 
+# Solve and plot for each refinement level
+solve_and_plot_grad("convergence/", "r1", plot_styles["r1"])
+solve_and_plot_grad("convergence/", "r3", plot_styles["r3"])
+solve_and_plot_grad("convergence/", "r5", plot_styles["r5"])
+solve_and_plot_grad("convergence/", "r7", plot_styles["r7"])
 
-solve_and_plot_grad("convergence/", "r1")
-solve_and_plot_grad("convergence/", "r3")
-solve_and_plot_grad("convergence/", "r5")
-solve_and_plot_grad("convergence/", "r7")
+# Finalize the combined plot
+plt.xlim(-50, 50)
+plt.xlabel("Coordinates", fontsize=12)
+plt.ylabel("grad_y_uh_plate", fontsize=12)
+plt.title("Convergence Study: grad_y_uh_plate vs coordinates for different mesh refinements", fontsize=14)
+plt.legend(loc='best', fontsize=10)
+plt.grid(True, alpha=0.3)
+
+# Save the combined plot
+import os
+output_path = os.path.join("convergence/", "combined_grad_y_uh_plate_convergence.png")
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+print(f"Combined plot saved as {output_path}")
+plt.show()
 
 from remove import remove_msh_files
 remove_msh_files("convergence/")
