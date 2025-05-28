@@ -335,3 +335,68 @@ def combine_temp_files(filename: str, clean: bool = True):
         # Only remove the temp folder if it is empty
         if not any(temp_folder.iterdir()):
             temp_folder.rmdir()
+
+
+##
+def unroll_normal_derivative_potential():
+    """
+    Unroll the normal derivative potential dataset by creating a dataset with 
+    one value of the normal derivative of the potetial one coordinate for each row.
+    Structure of the dataset:
+    - The first column contains the mesh number.
+    - The following three columns contain the geometric parameters: 
+        - the overecth of the upper plate,
+        - the distance between the two plates,
+        - the angle of the upper plate.
+    - The following column contains the coordinate of the point on the lower edge of the upper plate.
+    - The last column contains the normal derivative of the potential at that coordinate.
+    This function reads the normal_derivative_potential.csv file, unrolls it,
+    and saves the unrolled dataset in a new CSV file named unrolled_normal_derivative_potential.csv.
+    """
+    import pandas as pd
+    # Read the normal derivative potential and coordinates datasets
+    normal_df = pd.read_csv("data/normal_derivative_potential.csv")
+    coords_df = pd.read_csv("data/coordinates.csv")
+
+    # Initialize lists to store unrolled data
+    mesh_numbers = []
+    overetches = []
+    distances = []
+    angles = []
+    coordinates = []
+    normal_derivatives = []
+
+    # Iterate through each row in the dataset
+    for index, row in normal_df.iterrows():
+        mesh_num = row.iloc[0] 
+        overetch = row.iloc[1]
+        distance = row.iloc[2]
+        angle = row.iloc[3]
+        
+        # Get coordinate and normal derivative values (starting from column 4)
+        coord_values = coords_df.iloc[index, 4:].values
+        normal_values = row.iloc[4:].values
+        
+        # Add data for each coordinate point
+        for coord, normal in zip(coord_values, normal_values):
+            mesh_numbers.append(mesh_num.astype(int))  # Ensure mesh number is an integer
+            overetches.append(overetch.astype(float))  # Ensure overetch is a float
+            distances.append(distance.astype(float))
+            angles.append(angle.astype(float))
+            coordinates.append(coord.astype(float))  # Ensure coordinate is a float
+            normal_derivatives.append(normal.astype(float))  # Ensure normal derivative is a float
+
+    # Create the unrolled DataFrame
+    unrolled_df = pd.DataFrame({
+        'Mesh ID': mesh_numbers,
+        'Overetch': overetches,
+        'Distance': distances,
+        'Angle': angles,
+        'Coordinate': coordinates,
+        'Normal Derivative': normal_derivatives
+    })
+
+    # Save the unrolled dataset
+    unrolled_df.to_csv("data/unrolled_normal_derivative_potential.csv", index=False)
+
+    

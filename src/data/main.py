@@ -5,7 +5,7 @@
 from remove import remove_msh_files, reset_environment
 from geometry_generation import generate_geometries
 from mesh_generation import generate_meshes, generate_mesh_from_geo
-from dataset_generation import generate_datasets, combine_temp_files
+from dataset_generation import generate_datasets, combine_temp_files, unroll_normal_derivative_potential
 
 # Core of the code that produces the results
 #generate_geometries()
@@ -14,6 +14,7 @@ from dataset_generation import generate_datasets, combine_temp_files
 #combine_temp_files("data/coordinates.csv")
 #combine_temp_files("data/normal_derivative_potential.csv") 
 #remove_msh_files()
+unroll_normal_derivative_potential()
 
 # Importing the necessary libraries
 import pandas as pd
