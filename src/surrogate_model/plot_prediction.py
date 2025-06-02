@@ -16,12 +16,22 @@ def plot_prediction(x: np.ndarray, y: np.ndarray, model_path: str) -> None:
     model.load_model(model_path)
 
     # Make a prediction
-    y_pred = model.predict(np.expand_dims(x, axis=0))
+    y_pred = model.predict(x)
     y_pred = y_pred.flatten()
 
     # Plot the prediction
-    coords = x[3:]
+    # Take x coordinates from the 4th column
+    coords = x[:, 3]
+    print(coords)
+    # Sort the coordinates and corresponding y and y_pred values
+    sorted_indices = np.argsort(coords)
+    coords = coords[sorted_indices]
+    y = y[sorted_indices]
+    y_pred = y_pred[sorted_indices]
+
     import matplotlib.pyplot as plt
+
+    plt.figure()
     plt.plot(coords, y, label="Normal derivative values", color="blue", linestyle="-")
     plt.plot(coords, y_pred, label=f"Model prediction", color="red", linestyle="--")
     plt.xlim(-50, 50)
@@ -30,7 +40,7 @@ def plot_prediction(x: np.ndarray, y: np.ndarray, model_path: str) -> None:
     plt.title("Surrogate model prediction test")
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.show() 
 
 ##
 # @param model_path (str): The path to the saved model.
@@ -38,21 +48,30 @@ def plot_random_prediction(model_path: str):
     """
     Plot a random prediction from the surrogate model.
     """
-    # Import coordinates dataset and convert to numpy array
-    coordinates = pd.read_csv('data/coordinates.csv')
-    x = coordinates.iloc[:, 1:]
+    # Import parameters, coordinates and normal derivative dataset
+    data = pd.read_csv('data/unrolled_normal_derivative_potential.csv')
+
+    # Save parameters and coordinates and convert to numpy array
+    x = data.iloc[:, 1:5]
     x = x.to_numpy()
 
-    # Import normal derivative potential dataset and convert to numpy array
-    normal_derivative = pd.read_csv('data/normal_derivative_potential.csv')
-    y = normal_derivative.iloc[:, 4:]
+    # Save normal derivative potential values and convert to numpy array
+    y = data.iloc[:, 5]
     y = y.to_numpy()
 
     # Predict on a random test element
     # Select a random test element
     import random
+
+    # Select random combination of the 3 geometric parameters
     random_index = random.randint(0, len(x) - 1)
-    x_sample = x[random_index]
-    y_sample = y[random_index]
+    triplet = x[random_index, 0:3]
+
+    # Now retrieve all the coordinates that match this triplet
+    mask = np.all(x[:, 0:3] == triplet, axis=1)
+
+    x_sample = x[mask]
+    print(x_sample.shape)
+    y_sample = y[mask]
 
     plot_prediction(x_sample, y_sample, model_path=model_path)

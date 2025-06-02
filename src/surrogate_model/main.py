@@ -8,13 +8,13 @@ from model import NN_Model
 
 def train_model(model_path: str):
     # Import coordinates dataset and convert to numpy array
-    coordinates = pd.read_csv('data/coordinates.csv')
-    x = coordinates.iloc[:, 1:]
+    coordinates = pd.read_csv('data/unrolled_normal_derivative_potential.csv')
+    x = coordinates.iloc[:, 1:5]
     x = x.to_numpy()
 
     # Import normal derivative potential dataset and convert to numpy array
-    normal_derivative = pd.read_csv('data/normal_derivative_potential.csv')
-    y = normal_derivative.iloc[:, 4:]
+    normal_derivative = pd.read_csv('data/unrolled_normal_derivative_potential.csv')
+    y = normal_derivative.iloc[:, 5]
     y = y.to_numpy()
 
     # Split into train+val and test sets first
@@ -42,10 +42,10 @@ def train_model(model_path: str):
 
     model.build_model(
         X = x_train,
-        input_shape = 353, 
+        input_shape = 4, 
         n_neurons = [512, 256, 128, 256], 
         activation = 'relu', 
-        output_neurons = 350, 
+        output_neurons = 1, 
         output_activation = 'linear', 
         initializer = 'he_normal', 
         lambda_coeff = 1e-3, 
@@ -88,7 +88,6 @@ def train_model(model_path: str):
 def test_model(model_path: str):
     plot_random_prediction(model_path)
 
-
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Specify which GPU to use
 gpus = tf.config.list_physical_devices('GPU')
 #with tf.device('/GPU:0' if gpus else '/CPU:0'):
@@ -99,5 +98,6 @@ with tf.device('/CPU:0'):
         print("Using GPU for training and evaluation")
     else:
         print("No GPU detected, using CPU")
-    #train_model("surrogate_model.keras")
-    test_model("surrogate_model.keras")
+    #train_model("models/new_model.keras")
+    test_model("models/new_model_colab.keras")
+
