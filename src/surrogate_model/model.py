@@ -49,7 +49,9 @@ class NN_Model:
                     lambda_coeff: float = 1e-9,
                     batch_normalization: bool = False,
                     dropout: bool = False,
-                    dropout_rate: float = 0.3) -> None:
+                    dropout_rate: float = 0.3,
+                    layer_normalization: bool = False,
+                    leaky_relu_alpha: float = None) -> None:
         """
         Constructs the neural network model layer by layer.
         """
@@ -59,6 +61,7 @@ class NN_Model:
         BatchNormalization = tf.keras.layers.BatchNormalization
         Dropout = tf.keras.layers.Dropout
         Normalization = tf.keras.layers.Normalization
+        LeakyReLU = tf.keras.layers.LeakyReLU
 
         self.model.add(tf.keras.layers.InputLayer(shape=(input_shape,)))
 
@@ -66,20 +69,39 @@ class NN_Model:
         normalizer.adapt(X)
         self.model.add(normalizer)
 
-        self.model.add(Dense(n_neurons[0], activation=activation, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))    
+        # First layer
+        if leaky_relu_alpha is not None:
+            self.model.add(Dense(n_neurons[0], kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+            self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
+        else:
+            self.model.add(Dense(n_neurons[0], activation=activation, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+        
         if batch_normalization:
             self.model.add(BatchNormalization())  
         if dropout:
             self.model.add(Dropout(dropout_rate))
 
+        # Hidden layers
         for neurons in n_neurons[1:]:
-            self.model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+            if leaky_relu_alpha is not None:
+                self.model.add(Dense(neurons, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+                self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
+            else:
+                self.model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+            
             if batch_normalization:
                 self.model.add(BatchNormalization())  
             if dropout:
                 self.model.add(Dropout(dropout_rate))
+            if layer_normalization:
+                self.model.add(tf.keras.layers.LayerNormalization())
 
-        self.model.add(Dense(output_neurons, activation=output_activation, kernel_regularizer=l2(lambda_coeff)))
+        # Output layer
+        if leaky_relu_alpha is not None:
+            self.model.add(Dense(output_neurons, kernel_regularizer=l2(lambda_coeff)))
+            self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
+        else:
+            self.model.add(Dense(output_neurons, activation=output_activation, kernel_regularizer=l2(lambda_coeff)))
 
     ##
     # @param X (np.ndarray): The input data for training.
@@ -92,6 +114,7 @@ class NN_Model:
     # @param loss (str): The loss function to be used during training.
     # @param validation_freq (int): The frequency of validation during training.
     # @param lr_schedule (Optional[Callable[[int], float]]): A function to adjust the learning rate.
+    # @param optimizer (str): The optimizer to be used for training. Options are 'adam', 'sgd', 'rmsprop'.
     # @return None
     # @throws ValueError: If any of the input arrays are empty.
     def train_model(self, 
@@ -109,7 +132,8 @@ class NN_Model:
                     metrics: list = ['mse'],
                     clipnorm: float = None,
                     early_stopping_patience: int = None,
-                    log: bool = False
+                    log: bool = False,
+                    optimizer: str = 'adam'
                     ) -> None:
         """
         Trains the model on the provided dataset.
@@ -117,12 +141,25 @@ class NN_Model:
         """
         if X.size == 0 or y.size == 0 or X_val.size == 0 or y_val.size == 0:
             raise ValueError("Input arrays must not be empty")
+        if loss == 'huber_loss':
+            loss = tf.keras.losses.Huber(delta=1.0)
 
-        Adam = tf.keras.optimizers.Adam
-        if clipnorm is not None:
-            self.model.compile(loss=loss, metrics=metrics,optimizer=Adam(learning_rate=learning_rate, clipnorm=clipnorm))
-        else:
-            self.model.compile(loss=loss, metrics=metrics,optimizer=Adam(learning_rate=learning_rate))
+        if optimizer not in ['adam', 'sgd', 'rmsprop']:
+            raise ValueError("Unsupported optimizer. Supported optimizers are: 'adam', 'sgd', 'rmsprop'.")
+        if optimizer == 'sgd':
+            optimizer = tf.keras.optimizers.SGD
+            if clipnorm is not None:
+                self.model.compile(loss=loss, metrics=metrics,optimizer=optimizer(learning_rate=learning_rate, momentum=0.9, nesterov=True, clipnorm=clipnorm))
+            else:
+                self.model.compile(loss=loss, metrics=metrics,optimizer=optimizer(learning_rate=learning_rate, momentum=0.9, nesterov=True))
+        elif optimizer == 'rmsprop':
+            self.model.compile(loss=loss, metrics=metrics,optimizer=tf.keras.optimizers.RMSprop(learning_rate=learning_rate, rho=0.9, momentum=0.9, epsilon=1e-07, centered=False))
+        elif optimizer == 'adam':
+            optimizer = tf.keras.optimizers.Adam
+            if clipnorm is not None:
+                self.model.compile(loss=loss, metrics=metrics,optimizer=optimizer(learning_rate=learning_rate, clipnorm=clipnorm))
+            else:
+                self.model.compile(loss=loss, metrics=metrics,optimizer=optimizer(learning_rate=learning_rate))
         
         callbacks = []
         if lr_scheduler is not None:

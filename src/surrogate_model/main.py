@@ -11,6 +11,7 @@ absl.logging.set_verbosity(absl.logging.ERROR)
 from plot_prediction import plot_random_prediction
 import tensorflow as tf
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from model import NN_Model
 
@@ -25,14 +26,16 @@ def train_model(model_path: str):
     y = normal_derivative.iloc[:, 5]
     y = y.to_numpy()
 
+    seed = 40
+
     # Split into train+val and test sets first
     x_trainval, x_test, y_trainval, y_test = train_test_split(
-        x, y, test_size=0.15, random_state=42
+        x, y, test_size=0.2, random_state=seed
     )
 
     # Split train+val into train and val sets
     x_train, x_val, y_train, y_val = train_test_split(
-        x_trainval, y_trainval, test_size=0.15, random_state=42
+        x_trainval, y_trainval, test_size=0.2, random_state=seed
     )
 
     print("x_train shape:", x_train.shape)
@@ -51,37 +54,40 @@ def train_model(model_path: str):
     model.build_model(
         X = x_train, 
         input_shape = 4, 
-        n_neurons = [512, 256, 128, 256], 
+        n_neurons = [128, 64, 32, 16], 
         activation = 'relu', 
         output_neurons = 1, 
         output_activation = 'linear', 
         initializer = 'he_normal', 
-        lambda_coeff = 1e-3, 
-        batch_normalization = True, 
-        dropout = True, 
-        dropout_rate = 0.2 
+        lambda_coeff = 0, 
+        batch_normalization = False, 
+        dropout = False, 
+        dropout_rate = 0.2, 
+        layer_normalization = False,
+        leaky_relu_alpha = None,
     )
 
     model.summary()
 
-    lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, verbose=1)
+    lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, verbose=1)
 
     model.train_model(
         X = x_train, 
         y = y_train, 
         X_val = x_val, 
         y_val = y_val, 
-        learning_rate = 1e-3, 
+        learning_rate = 2e-3, 
         epochs = 1000, 
-        batch_size = 1024, 
-        loss = 'mean_squared_error', 
+        batch_size = 512, 
+        loss = 'mse', 
         validation_freq = 1, 
         verbose = 1, 
         lr_scheduler = lr_scheduler, 
-        metrics = ['mean_absolute_error'],
-        clipnorm = None,
-        early_stopping_patience = 20,
-        log = True
+        metrics = ['mae'],
+        clipnorm = 1, 
+        early_stopping_patience = 15,
+        log = True,
+        optimizer = 'adam'
     )
 
     print("Evaluating the model on the validation set...")
@@ -121,7 +127,7 @@ def run_on_device(func, *args, **kwargs):
         # Call the provided function with arguments
         return func(*args, **kwargs)
 
-run_on_device(train_model, "models/temp.keras")
-run_on_device(test_model, "models/temp.keras")
+#run_on_device(train_model, "models/model7.keras")
+run_on_device(test_model, "models/model6.keras")
 
 

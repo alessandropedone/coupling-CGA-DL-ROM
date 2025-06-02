@@ -39,7 +39,23 @@ def plot_prediction(x: np.ndarray, y: np.ndarray, model_path: str) -> None:
     plt.title("Surrogate model prediction test")
     plt.legend()
     plt.grid(True)
-    plt.show() 
+    plt.show()
+
+    # Plot the absolute difference between prediction and true values
+    abs_diff = np.abs(y - y_pred)
+    mse = np.mean((y - y_pred) ** 2)
+    plt.figure()
+    plt.plot(coords, abs_diff, label="Absolute Error", color="green")
+    plt.xlim(-50, 50)
+    plt.xlabel("coords")
+    plt.ylabel("Absolute Error")
+    plt.title(f"Absolute Error of Surrogate Model Prediction (MSE: {mse:.4f})")
+    mean_abs_error = np.mean(abs_diff)
+    plt.axhline(mean_abs_error, color="orange", linestyle="--", label=f"Mean Abs Error: {mean_abs_error:.4f}")
+    plt.axhline(np.sqrt(mse), color="purple", linestyle="--", label=f"RMSE: {np.sqrt(mse):.4f}")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 ##
 # @param model_path (str): The path to the saved model.
