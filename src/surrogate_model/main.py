@@ -65,7 +65,7 @@ def train_model(model_path: str):
         y_val = y_val, 
         learning_rate = 1e-3, 
         epochs = 1000, 
-        batch_size = 16, 
+        batch_size = 1024, 
         loss = 'mean_squared_error', 
         validation_freq = 1, 
         verbose = 1, 
