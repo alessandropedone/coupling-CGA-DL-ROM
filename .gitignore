@@ -1,2 +1,3 @@
 *.msh
 **/__pycache__/
+libdevice.10.bc
