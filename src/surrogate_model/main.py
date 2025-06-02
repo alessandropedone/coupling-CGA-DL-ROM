@@ -1,7 +1,15 @@
+import os
+# Suppress TensorFlow debug/info logs
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"  # "0" = all logs, "1" = filter INFO, "2" = filter INFO & WARNING, "3" = only ERRORs
+# suppress XLA-related logs
+os.environ["XLA_FLAGS"] = "--xla_gpu_cuda_data_dir="  # Prevent CUDA libdevice warnings
+# disable absl logs
+import absl.logging
+absl.logging.set_verbosity(absl.logging.ERROR)
+
+
 from plot_prediction import plot_random_prediction
 import tensorflow as tf
-import datetime
-import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from model import NN_Model
@@ -41,7 +49,7 @@ def train_model(model_path: str):
     model = NN_Model()
 
     model.build_model(
-        X = x_train,
+        X = x_train, 
         input_shape = 4, 
         n_neurons = [512, 256, 128, 256], 
         activation = 'relu', 
@@ -88,16 +96,32 @@ def train_model(model_path: str):
 def test_model(model_path: str):
     plot_random_prediction(model_path)
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Specify which GPU to use
-gpus = tf.config.list_physical_devices('GPU')
-#with tf.device('/GPU:0' if gpus else '/CPU:0'):
-with tf.device('/CPU:0'):
-    # Check if the GPU is available
+
+def run_on_device(func, *args, **kwargs):
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Use GPU 0 only (optional)
+
+    # List GPUs and set memory growth
     gpus = tf.config.list_physical_devices('GPU')
-    if gpus:
-        print("Using GPU for training and evaluation")
-    else:
-        print("No GPU detected, using CPU")
-    #train_model("models/new_model.keras")
-    test_model("models/new_model_colab.keras")
+    for gpu in gpus:
+        try:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        except:
+            pass  # Already set or not supported
+
+    device = '/GPU:0' if gpus else '/CPU:0'
+
+    with tf.device(device):
+        # Dummy op to check placement
+        a = tf.constant([[1.0]])
+        if 'GPU' in a.device:
+            print("✅ Using GPU for execution")
+        else:
+            print("⚠️ Using CPU for execution")
+
+        # Call the provided function with arguments
+        return func(*args, **kwargs)
+
+run_on_device(train_model, "models/temp.keras")
+run_on_device(test_model, "models/temp.keras")
+
 

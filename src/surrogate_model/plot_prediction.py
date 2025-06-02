@@ -22,7 +22,6 @@ def plot_prediction(x: np.ndarray, y: np.ndarray, model_path: str) -> None:
     # Plot the prediction
     # Take x coordinates from the 4th column
     coords = x[:, 3]
-    print(coords)
     # Sort the coordinates and corresponding y and y_pred values
     sorted_indices = np.argsort(coords)
     coords = coords[sorted_indices]
@@ -71,7 +70,6 @@ def plot_random_prediction(model_path: str):
     mask = np.all(x[:, 0:3] == triplet, axis=1)
 
     x_sample = x[mask]
-    print(x_sample.shape)
     y_sample = y[mask]
 
     plot_prediction(x_sample, y_sample, model_path=model_path)
