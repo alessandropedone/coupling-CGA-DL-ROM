@@ -128,6 +128,6 @@ def run_on_device(func, *args, **kwargs):
         return func(*args, **kwargs)
 
 #run_on_device(train_model, "models/model7.keras")
-run_on_device(test_model, "models/model6.keras")
+run_on_device(test_model, "models/model2.keras")
 
 
