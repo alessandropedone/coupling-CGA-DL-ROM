@@ -35,7 +35,12 @@ class NN_Model:
     # @param output_neurons (int): The number of neurons in the output layer.
     # @param output_activation (str): The activation function for the output layer.
     # @param initializer (str): The initializer for the layer weights.
-    # @param lambda_coeff (float): The coefficient for L2 regularization.
+    # @param l1_coeff (float): The coefficient for L1 regularization.
+    # @param l2_coeff (float): The coefficient for L2 regularization.
+    # @param batch_normalization (bool): Whether to apply batch normalization after each layer.
+    # @param dropout (bool): Whether to apply dropout after each layer.
+    # @param dropout_rate (float): The dropout rate to be applied if dropout is True.
+    # @param layer_normalization (bool): Whether to apply layer normalization after each layer.
     # @return None
     # @throws ValueError: If the length of `n_neurons` and `activations` lists do not match.
     def build_model(self,  
@@ -46,7 +51,8 @@ class NN_Model:
                     output_neurons: int = 1,
                     output_activation: str = 'linear',
                     initializer: str = 'glorot_uniform',
-                    lambda_coeff: float = 1e-9,
+                    l1_coeff: float = 0,
+                    l2_coeff: float = 0,
                     batch_normalization: bool = False,
                     dropout: bool = False,
                     dropout_rate: float = 0.3,
@@ -56,7 +62,7 @@ class NN_Model:
         Constructs the neural network model layer by layer.
         """
 
-        l2 = tf.keras.regularizers.l2
+        l1_l2 = tf.keras.regularizers.l1_l2
         Dense = tf.keras.layers.Dense
         BatchNormalization = tf.keras.layers.BatchNormalization
         Dropout = tf.keras.layers.Dropout
@@ -71,10 +77,10 @@ class NN_Model:
 
         # First layer
         if leaky_relu_alpha is not None:
-            self.model.add(Dense(n_neurons[0], kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+            self.model.add(Dense(n_neurons[0], kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
             self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
         else:
-            self.model.add(Dense(n_neurons[0], activation=activation, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+            self.model.add(Dense(n_neurons[0], activation=activation, kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
         
         if batch_normalization:
             self.model.add(BatchNormalization())  
@@ -84,10 +90,10 @@ class NN_Model:
         # Hidden layers
         for neurons in n_neurons[1:]:
             if leaky_relu_alpha is not None:
-                self.model.add(Dense(neurons, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+                self.model.add(Dense(neurons, kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
                 self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
             else:
-                self.model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, kernel_regularizer=l2(lambda_coeff)))
+                self.model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
             
             if batch_normalization:
                 self.model.add(BatchNormalization())  
@@ -98,10 +104,10 @@ class NN_Model:
 
         # Output layer
         if leaky_relu_alpha is not None:
-            self.model.add(Dense(output_neurons, kernel_regularizer=l2(lambda_coeff)))
+            self.model.add(Dense(output_neurons, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
             self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
         else:
-            self.model.add(Dense(output_neurons, activation=output_activation, kernel_regularizer=l2(lambda_coeff)))
+            self.model.add(Dense(output_neurons, activation=output_activation, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
 
     ##
     # @param X (np.ndarray): The input data for training.
@@ -163,7 +169,8 @@ class NN_Model:
         
         callbacks = []
         if lr_scheduler is not None:
-            callbacks.append(lr_scheduler)
+            for callback in lr_scheduler:
+                callbacks.append(callback)
 
         # Set up TensorBoard callback with profiling
         if log:

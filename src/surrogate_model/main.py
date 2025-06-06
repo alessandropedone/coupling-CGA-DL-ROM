@@ -54,14 +54,15 @@ def train_model(model_path: str):
     model.build_model(
         X = x_train, 
         input_shape = 4, 
-        n_neurons = [128, 64, 32, 16], 
+        n_neurons = [512, 256, 128, 256], 
         activation = 'relu', 
         output_neurons = 1, 
         output_activation = 'linear', 
-        initializer = 'he_normal', 
-        lambda_coeff = 0, 
-        batch_normalization = False, 
-        dropout = False, 
+        initializer = 'he_normal',
+        l1_coeff= 0, 
+        l2_coeff = 1e-3, 
+        batch_normalization = True, 
+        dropout = True, 
         dropout_rate = 0.2, 
         layer_normalization = False,
         leaky_relu_alpha = None,
@@ -69,21 +70,31 @@ def train_model(model_path: str):
 
     model.summary()
 
-    lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, verbose=1)
+    def lr_warmup_schedule(epoch, lr):
+        warmup_epochs = 5
+        base_lr = 5e-4
+        start_lr = 1e-6
+        if epoch <= warmup_epochs:
+            return start_lr + (base_lr - start_lr) * (epoch / warmup_epochs)
+        return lr
+    
+    warmup_callback = tf.keras.callbacks.LearningRateScheduler(lr_warmup_schedule, verbose=0)
+
+    reduce_callback = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=4, verbose=1)
 
     model.train_model(
         X = x_train, 
         y = y_train, 
         X_val = x_val, 
         y_val = y_val, 
-        learning_rate = 2e-3, 
+        learning_rate = 1e-3, 
         epochs = 1000, 
-        batch_size = 512, 
+        batch_size = 2048, 
         loss = 'mse', 
         validation_freq = 1, 
         verbose = 1, 
-        lr_scheduler = lr_scheduler, 
-        metrics = ['mae'],
+        lr_scheduler = [warmup_callback, reduce_callback], 
+        metrics = ['mae', 'mse'],
         clipnorm = 1, 
         early_stopping_patience = 15,
         log = True,
@@ -127,7 +138,7 @@ def run_on_device(func, *args, **kwargs):
         # Call the provided function with arguments
         return func(*args, **kwargs)
 
-#run_on_device(train_model, "models/model7.keras")
-run_on_device(test_model, "models/model2.keras")
+#run_on_device(train_model, "models/model10.keras")
+run_on_device(test_model, "models/model10.keras")
 
 
