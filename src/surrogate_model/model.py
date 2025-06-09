@@ -28,6 +28,47 @@ class PositionalEncodingLayer(tf.keras.layers.Layer):
             "positional_encoding_frequencies": self.positional_encoding_frequencies
         })
         return config
+    
+@register_keras_serializable()
+class FourierFeatures(tf.keras.layers.Layer):
+    def __init__(self, num_frequencies, learnable=True, initializer='glorot_uniform', **kwargs):
+        super().__init__()
+        self.num_frequencies = num_frequencies
+        self.learnable = learnable
+        self.initializer = initializer
+
+    def build(self, input_shape):
+        shape = (1, self.num_frequencies)
+        if self.learnable:
+            self.freqs = self.add_weight(name="freqs", shape=shape,
+                                         initializer=self.initializer,
+                                         trainable=True)
+        else:
+            self.freqs = tf.constant(2.0 ** tf.range(1, self.num_frequencies + 1, dtype=tf.float32)[tf.newaxis, :])
+
+    def call(self, x):
+        # Use the same approach as PositionalEncodingLayer, but with learnable or fixed frequencies
+        x3 = tf.expand_dims(x[:, 3], -1)
+        encoded = [x3]
+        for i in range(self.num_frequencies):
+            freq = self.freqs[0, i]
+            encoded.append(tf.sin(freq * x3))
+            encoded.append(tf.cos(freq * x3))
+        return tf.concat([x[:, :3], *encoded], axis=-1)
+    
+
+class LogUniformFreqInitializer(tf.keras.initializers.Initializer):
+    def __init__(self, min_exp=0.0, max_exp=8.0):
+        self.min_exp = min_exp
+        self.max_exp = max_exp
+        
+    def __call__(self, shape, dtype=None):
+        # Sample uniformly from [min_exp, max_exp]
+        exponents = tf.random.uniform(shape, self.min_exp, self.max_exp, dtype=dtype)
+        return tf.math.pow(2.0, exponents)
+
+    def get_config(self):
+        return {'min_exp': self.min_exp, 'max_exp': self.max_exp}
 
 
 class NN_Model:
@@ -97,21 +138,14 @@ class NN_Model:
 
         inputs = tf.keras.Input(shape=(input_shape,))
 
-        x = PositionalEncodingLayer(positional_encoding_frequencies=positional_encoding_frequencies)(inputs)
-
-        def positional_encoding(x, positional_encoding_frequencies):
-            x3 = tf.expand_dims(x[:, 3], -1)
-            encoded = [x3]
-            for i in range(1, positional_encoding_frequencies + 1):
-                freq = 2.0 ** i * np.pi
-                encoded.append(tf.sin(freq * x3))
-                encoded.append(tf.cos(freq * x3))
-            return tf.concat([x[:, :3], *encoded], axis=-1)
-
         normalizer = Normalization(axis=-1)
-        normalizer.adapt(positional_encoding(X, positional_encoding_frequencies))
-        x = normalizer(x)
+        normalizer.adapt(X)
+        x = normalizer(inputs)
 
+        x = PositionalEncodingLayer(positional_encoding_frequencies=positional_encoding_frequencies)(x)
+
+        #x = FourierFeatures(num_frequencies=positional_encoding_frequencies, learnable=True, initializer=LogUniformFreqInitializer(min_exp=0.0, max_exp=8.0))(x)
+        
         # First layer
         if leaky_relu_alpha is not None:
             x = Dense(n_neurons[0], kernel_initializer=initializer,

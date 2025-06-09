@@ -66,7 +66,7 @@ def train_model(model_path: str):
         dropout_rate = 0.2, 
         leaky_relu_alpha = None,
         layer_normalization = False,
-        positional_encoding_frequencies = 6,
+        positional_encoding_frequencies = 8,
     )
 
     model.summary()
