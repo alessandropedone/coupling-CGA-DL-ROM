@@ -64,6 +64,7 @@ class NN_Model:
     # @param batch_normalization (bool): Whether to apply batch normalization after each layer.
     # @param dropout (bool): Whether to apply dropout after each layer.
     # @param dropout_rate (float): The dropout rate to be applied if dropout is True.
+    # @param layer_normalization (bool): Whether to apply layer normalization after each layer.
     # @param positional_encoding_frequencies (int): The number of frequencies for positional encoding.
     # @return None
     # @throws ValueError: If the length of `n_neurons` and `activations` lists do not match.
@@ -81,6 +82,7 @@ class NN_Model:
                 dropout: bool = False,
                 dropout_rate: float = 0.3,
                 leaky_relu_alpha: float = None,
+                layer_normalization: bool = False,
                 positional_encoding_frequencies: int = 0) -> None:
         """
         Constructs the neural network model layer by layer with optional positional encoding.
@@ -140,6 +142,8 @@ class NN_Model:
                 x = BatchNormalization()(x)
             if dropout:
                 x = Dropout(dropout_rate)(x)
+            if layer_normalization:
+                x = tf.keras.layers.LayerNormalization()(x)
 
         # Output layer
         if leaky_relu_alpha is not None:
