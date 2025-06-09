@@ -4,6 +4,30 @@ import tensorflow as tf
 from typing import List, Optional, Callable, Tuple
 import numpy as np
 import datetime
+from keras.saving import register_keras_serializable
+
+
+@register_keras_serializable()
+class PositionalEncodingLayer(tf.keras.layers.Layer):
+    def __init__(self, positional_encoding_frequencies, **kwargs):
+        super().__init__(**kwargs)
+        self.positional_encoding_frequencies = positional_encoding_frequencies
+
+    def call(self, x):
+        x3 = tf.expand_dims(x[:, 3], -1)
+        encoded = [x3]
+        for i in range(1, self.positional_encoding_frequencies + 1):
+            freq = 2.0 ** i * np.pi
+            encoded.append(tf.sin(freq * x3))
+            encoded.append(tf.cos(freq * x3))
+        return tf.concat([x[:, :3], *encoded], axis=-1)
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "positional_encoding_frequencies": self.positional_encoding_frequencies
+        })
+        return config
 
 
 class NN_Model:
@@ -40,74 +64,94 @@ class NN_Model:
     # @param batch_normalization (bool): Whether to apply batch normalization after each layer.
     # @param dropout (bool): Whether to apply dropout after each layer.
     # @param dropout_rate (float): The dropout rate to be applied if dropout is True.
-    # @param layer_normalization (bool): Whether to apply layer normalization after each layer.
+    # @param positional_encoding_frequencies (int): The number of frequencies for positional encoding.
     # @return None
     # @throws ValueError: If the length of `n_neurons` and `activations` lists do not match.
     def build_model(self,  
-                    X : np.array,
-                    input_shape: (int), 
-                    n_neurons: List[int] = [64, 64, 64, 64, 64, 64, 64, 64], 
-                    activation: str = 'tanh',
-                    output_neurons: int = 1,
-                    output_activation: str = 'linear',
-                    initializer: str = 'glorot_uniform',
-                    l1_coeff: float = 0,
-                    l2_coeff: float = 0,
-                    batch_normalization: bool = False,
-                    dropout: bool = False,
-                    dropout_rate: float = 0.3,
-                    layer_normalization: bool = False,
-                    leaky_relu_alpha: float = None) -> None:
+                X: np.ndarray,
+                input_shape: int, 
+                n_neurons: list = [64, 64, 64, 64, 64, 64, 64, 64], 
+                activation: str = 'tanh',
+                output_neurons: int = 1,
+                output_activation: str = 'linear',
+                initializer: str = 'glorot_uniform',
+                l1_coeff: float = 0,
+                l2_coeff: float = 0,
+                batch_normalization: bool = False,
+                dropout: bool = False,
+                dropout_rate: float = 0.3,
+                leaky_relu_alpha: float = None,
+                positional_encoding_frequencies: int = 0) -> None:
         """
-        Constructs the neural network model layer by layer.
+        Constructs the neural network model layer by layer with optional positional encoding.
         """
 
         l1_l2 = tf.keras.regularizers.l1_l2
         Dense = tf.keras.layers.Dense
         BatchNormalization = tf.keras.layers.BatchNormalization
         Dropout = tf.keras.layers.Dropout
-        Normalization = tf.keras.layers.Normalization
         LeakyReLU = tf.keras.layers.LeakyReLU
+        Normalization = tf.keras.layers.Normalization
 
-        self.model.add(tf.keras.layers.InputLayer(shape=(input_shape,)))
+        inputs = tf.keras.Input(shape=(input_shape,))
+
+        x = PositionalEncodingLayer(positional_encoding_frequencies=positional_encoding_frequencies)(inputs)
+
+        def positional_encoding(x, positional_encoding_frequencies):
+            x3 = tf.expand_dims(x[:, 3], -1)
+            encoded = [x3]
+            for i in range(1, positional_encoding_frequencies + 1):
+                freq = 2.0 ** i * np.pi
+                encoded.append(tf.sin(freq * x3))
+                encoded.append(tf.cos(freq * x3))
+            return tf.concat([x[:, :3], *encoded], axis=-1)
 
         normalizer = Normalization(axis=-1)
-        normalizer.adapt(X)
-        self.model.add(normalizer)
+        normalizer.adapt(positional_encoding(X, positional_encoding_frequencies))
+        x = normalizer(x)
 
         # First layer
         if leaky_relu_alpha is not None:
-            self.model.add(Dense(n_neurons[0], kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
-            self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
+            x = Dense(n_neurons[0], kernel_initializer=initializer,
+                    kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff))(x)
+            x = LeakyReLU(alpha=leaky_relu_alpha)(x)
         else:
-            self.model.add(Dense(n_neurons[0], activation=activation, kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
-        
+            x = Dense(n_neurons[0], activation=activation,
+                    kernel_initializer=initializer,
+                    kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff))(x)
+
         if batch_normalization:
-            self.model.add(BatchNormalization())  
+            x = BatchNormalization()(x)
         if dropout:
-            self.model.add(Dropout(dropout_rate))
+            x = Dropout(dropout_rate)(x)
 
         # Hidden layers
         for neurons in n_neurons[1:]:
             if leaky_relu_alpha is not None:
-                self.model.add(Dense(neurons, kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
-                self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
+                x = Dense(neurons, kernel_initializer=initializer,
+                        kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff))(x)
+                x = LeakyReLU(alpha=leaky_relu_alpha)(x)
             else:
-                self.model.add(Dense(neurons, activation=activation, kernel_initializer=initializer, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
-            
+                x = Dense(neurons, activation=activation,
+                        kernel_initializer=initializer,
+                        kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff))(x)
+
             if batch_normalization:
-                self.model.add(BatchNormalization())  
+                x = BatchNormalization()(x)
             if dropout:
-                self.model.add(Dropout(dropout_rate))
-            if layer_normalization:
-                self.model.add(tf.keras.layers.LayerNormalization())
+                x = Dropout(dropout_rate)(x)
 
         # Output layer
         if leaky_relu_alpha is not None:
-            self.model.add(Dense(output_neurons, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
-            self.model.add(LeakyReLU(alpha=leaky_relu_alpha))
+            x = Dense(output_neurons,
+                    kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff))(x)
+            x = LeakyReLU(alpha=leaky_relu_alpha)(x)
         else:
-            self.model.add(Dense(output_neurons, activation=output_activation, kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff)))
+            x = Dense(output_neurons, activation=output_activation,
+                    kernel_regularizer=l1_l2(l1=l1_coeff, l2=l2_coeff))(x)
+
+        self.model = tf.keras.Model(inputs=inputs, outputs=x)
+
 
     ##
     # @param X (np.ndarray): The input data for training.

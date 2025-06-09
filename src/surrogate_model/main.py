@@ -64,8 +64,8 @@ def train_model(model_path: str):
         batch_normalization = True, 
         dropout = True, 
         dropout_rate = 0.2, 
-        layer_normalization = False,
         leaky_relu_alpha = None,
+        positional_encoding_frequencies = 6,
     )
 
     model.summary()
@@ -98,7 +98,7 @@ def train_model(model_path: str):
         clipnorm = 1, 
         early_stopping_patience = 15,
         log = True,
-        optimizer = 'adam'
+        optimizer = 'adam',
     )
 
     print("Evaluating the model on the validation set...")
@@ -138,7 +138,7 @@ def run_on_device(func, *args, **kwargs):
         # Call the provided function with arguments
         return func(*args, **kwargs)
 
-#run_on_device(train_model, "models/model10.keras")
+run_on_device(train_model, "models/model10.keras")
 run_on_device(test_model, "models/model10.keras")
 
 
