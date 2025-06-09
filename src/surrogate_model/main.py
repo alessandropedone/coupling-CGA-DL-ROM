@@ -66,7 +66,7 @@ def train_model(model_path: str):
         dropout_rate = 0.2, 
         leaky_relu_alpha = None,
         layer_normalization = False,
-        positional_encoding_frequencies = 8,
+        positional_encoding_frequencies = 20,
     )
 
     model.summary()
@@ -139,7 +139,7 @@ def run_on_device(func, *args, **kwargs):
         # Call the provided function with arguments
         return func(*args, **kwargs)
 
-run_on_device(train_model, "models/model10.keras")
-run_on_device(test_model, "models/model10.keras")
+#run_on_device(train_model, "models/model10.keras")
+run_on_device(test_model, "models/model_trainable_positional_encoding.keras")
 
 

@@ -56,7 +56,18 @@ class FourierFeatures(tf.keras.layers.Layer):
             encoded.append(tf.cos(freq * x3))
         return tf.concat([x[:, :3], *encoded], axis=-1)
     
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "num_frequencies": self.num_frequencies,
+            "learnable": self.learnable,
+            # For initializer, save its config dict if possible
+            "initializer": tf.keras.initializers.serialize(self.initializer),
+        })
+        return config
+    
 
+@register_keras_serializable()
 class LogUniformFreqInitializer(tf.keras.initializers.Initializer):
     def __init__(self, min_exp=0.0, max_exp=8.0):
         self.min_exp = min_exp
@@ -142,9 +153,9 @@ class NN_Model:
         normalizer.adapt(X)
         x = normalizer(inputs)
 
-        x = PositionalEncodingLayer(positional_encoding_frequencies=positional_encoding_frequencies)(x)
+        #x = PositionalEncodingLayer(positional_encoding_frequencies=positional_encoding_frequencies)(x)
 
-        #x = FourierFeatures(num_frequencies=positional_encoding_frequencies, learnable=True, initializer=LogUniformFreqInitializer(min_exp=0.0, max_exp=8.0))(x)
+        x = FourierFeatures(num_frequencies=positional_encoding_frequencies, learnable=True, initializer=LogUniformFreqInitializer(min_exp=0.0, max_exp=8.0))(x)
         
         # First layer
         if leaky_relu_alpha is not None:
