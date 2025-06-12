@@ -341,3 +341,93 @@ class NN_Model:
         Makes predictions using the trained model.
         """
         return self.model.predict(X, verbose=0)
+    
+
+
+class DeepONet:
+    """A class to build a DeepONet model for approximating functions using a neural network."""
+    ##
+    # @param 
+    def build_model(self,  
+                X: np.ndarray,
+                input_shape: int, 
+                n_neurons: list = [64, 64, 64, 64, 64, 64, 64, 64], 
+                activation: str = 'tanh',
+                output_neurons: int = 1,
+                output_activation: str = 'linear',
+                initializer: str = 'glorot_uniform',
+                l1_coeff: float = 0,
+                l2_coeff: float = 0,
+                batch_normalization: bool = False,
+                dropout: bool = False,
+                dropout_rate: float = 0.3,
+                leaky_relu_alpha: float = None,
+                layer_normalization: bool = False,
+                positional_encoding_frequencies: int = 0) -> None:
+        """
+        Constructs the neural network model layer by layer with optional positional encoding.
+        """
+        # Spatial dimension
+        dim = 2 
+        # Low rank approximation rank
+        r = 20
+
+        # Number of samples for training
+        n_samples = 1000 
+        # Number of parameters
+        n_geom_param = 3
+        # Geometric parameters for training
+        mu_train = np.random.rand(n_samples, n_geom_param) 
+
+        # Maximum number of degrees of freedom, we perform masking with a point where we not the potential (point on the lower plate)
+        nh = 20000 
+        x_train = np.random.rand(n_samples, nh, dim)
+        y_train = np.random.rand(n_samples, nh, 1)
+
+        branch = NN_Model()
+
+        branch.build_model(
+            X = mu_train, 
+            input_shape = n_geom_param, 
+            n_neurons = [512, 256, 128, 256], 
+            activation = 'leaky_relu', 
+            output_neurons = r, 
+            output_activation = 'linear', 
+            initializer = 'he_normal',
+            l1_coeff= 0, 
+            l2_coeff = 1e-3, 
+            batch_normalization = True, 
+            dropout = True, 
+            dropout_rate = 0.2, 
+            leaky_relu_alpha = 0.1,
+            layer_normalization = False,
+            positional_encoding_frequencies = 0,
+        )
+
+        branch.summary()
+
+        Q = branch(mu_train) # Output shape should be (ns, r)
+
+        trunk = NN_Model()
+
+        trunk.build_model(
+            X = x_train, 
+            input_shape = nh*dim, 
+            n_neurons = [512, 256, 128, 256], 
+            activation = 'leaky_relu', 
+            output_neurons = r, 
+            output_activation = 'linear', 
+            initializer = 'he_normal',
+            l1_coeff= 0, 
+            l2_coeff = 1e-3, 
+            batch_normalization = True, 
+            dropout = True, 
+            dropout_rate = 0.2, 
+            leaky_relu_alpha = 0.1,
+            layer_normalization = False,
+            positional_encoding_frequencies = 0,
+        )
+
+        V = trunk(x_train) # Output shape should be (nh, r)
+
+        S_hat = tf.matmul(Q, V, transpose_b=True)  # Shape should be (ns, nh)
