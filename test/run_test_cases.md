@@ -118,7 +118,7 @@ For the last two commands you can use the following additional flags:
 
 __Visualization.__ You can run the DL multi-physics solver using pre-trained (DeepONet) surrogates for the electrostatic part of the physics with the command
 ```bash
-python -m src.multi_physics.solver --nmodes 4 --template-geo geometries/cantilever1.geo --dt 1e-5 --nsteps 40 --Vdc 0 --Vac 5 --freq 2.5e3 --Vupper 0 --Vouter 0 --omega 6.3e5 3.9e6 1.1e7 2.1e7 --mass 1e-12 1e-12 1e-12 1e-12 --zeta 0.01 0.01 0.01 0.01 --print-every 1 --fail-fast --derivative-nn-path models/derivative1.keras --postprocessing-step 5 --potential-nn-path models/potential1.keras --no-outer-bc --workdir "temp/visualization-dl"
+python -m src.multi_physics.solver --nmodes 4 --template-geo geometries/cantilever1.geo --dt 1e-5 --nsteps 40 --Vdc 0 --Vac 5 --freq 2.5e3 --Vupper 0 --Vouter 0 --omega 6.3e5 3.9e6 1.1e7 2.1e7 --mass 1e-12 1e-12 1e-12 1e-12 --zeta 0.01 0.01 0.01 0.01 --print-every 1 --fail-fast --derivative-nn-path models/derivative1.keras --potential-nn-path models/potential1.keras --no-outer-bc --workdir "temp/visualization-dl"
 ```
 Then, you can visualize the solution using ParaView as in the previous case. This time you can select between three scalar field: `phi`, `phi_pred` and `phi_error`. Results are saved in the `temp/visualization-dl` folder.
 
