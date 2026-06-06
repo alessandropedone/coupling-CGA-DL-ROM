@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import argparse
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+from matplotlib.animation import FFMpegWriter, FuncAnimation
 
 from utils import compute_displacement_from_history
 
@@ -14,13 +14,14 @@ from utils import compute_displacement_from_history
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-simulation", action="store_true")
+    ap.add_argument("--save-frames", action="store_true")
 
     modes_to_test = [1, 2, 3, 4]
 
     if not ap.parse_args().no_simulation:
         for nmodes in modes_to_test:
 
-            workdir = Path(f"temp/run_nmodes_{nmodes}")
+            workdir = Path(f"temp/nmodes/run_nmodes_{nmodes}")
 
             cmd = [
                 "python",
@@ -71,54 +72,13 @@ def main():
 
     # Compare the L2 norms of the displacement fields
     L_m = 1e-4
-
-    # read modal_history.csv and compare the L2 norms of the displacement fields
-    print("")
-    for nmodes in [2, 3, 4]:
-        for ref in range(1, nmodes):
-            x = np.linspace(0, L_m, 100)
-            workdir = Path(f"temp/run_nmodes_{nmodes}")
-            workdir_ref = Path(f"temp/run_nmodes_{ref}")
-            u = compute_displacement_from_history(nmodes, x, L_m, workdir)
-            u_ref = compute_displacement_from_history(ref, x, L_m, workdir_ref)  # Use ref modes as reference
-            diff = u - u_ref
-            # Integrate in L2 the difference over the length of the beam (row-wise)
-            # and then integrate it over time (column-wise)
-            l2_norm = np.sqrt(np.trapezoid(np.trapezoid(diff**2, x), dx=1e-5))
-            # Do the same for the reference solution
-            l2_norm_ref = np.sqrt(np.trapezoid(np.trapezoid(u_ref**2, x), dx=1e-5))
-            print(f"Comparing {nmodes} modes to {ref} (reference) modes:")
-            print("")
-            print("L2 norm of the displacement fields:")
-            print(f"{'L2 norm of difference':35s} {l2_norm:16.6e}")
-            print(f"{'L2 norm of reference':35s} {l2_norm_ref:16.6e}")
-            print(f"{'Relative L2 error':35s} {l2_norm / l2_norm_ref:16.6e}")
-            print("")
-            print("Capacitance difference at final time step:")
-            # Read the capacitance at the final time step for both cases
-            workdir_nmodes = Path(f"temp/run_nmodes_{nmodes}")
-            workdir_ref = Path(f"temp/run_nmodes_{ref}")
-            csv_path_nmodes = workdir_nmodes / "modal_history.csv"
-            csv_path_ref = workdir_ref / "modal_history.csv"
-            data_nmodes = pd.read_csv(csv_path_nmodes)
-            data_ref = pd.read_csv(csv_path_ref)
-            capacity_nmodes = data_nmodes["cap_like_F"].values
-            capacity_ref = data_ref["cap_like_F"].values
-            capacity_nmodes = np.nan_to_num(capacity_nmodes, nan=1e-30)  # Avoid division by zero
-            capacity_ref = np.nan_to_num(capacity_ref, nan=1e-30)  # Avoid division by zero
-            capacity_diff = abs(capacity_nmodes - capacity_ref)
-            print(f"{'Max capacitance (nmodes)':35s}  {capacity_nmodes.max():15.6e}")
-            print(f"{'Max capacitance (reference)':35s}  {capacity_ref.max():15.6e}")
-            print(f"{'Max difference in capacitance':35s}  {capacity_diff.max():15.6e}")
-            print(f"{'Relative difference in capacitance':35s}  {(capacity_diff/capacity_ref).max():15.6e}")
-            print(f"{'-'*60}")
-            print("")
+    x = np.linspace(0, L_m, 100)
 
     # Read data
-    workdir_1 = Path(f"temp/run_nmodes_1")
-    workdir_2 = Path(f"temp/run_nmodes_2")
-    workdir_3 = Path(f"temp/run_nmodes_3")
-    workdir_4 = Path(f"temp/run_nmodes_4")
+    workdir_1 = Path(f"temp/nmodes/run_nmodes_1")
+    workdir_2 = Path(f"temp/nmodes/run_nmodes_2")
+    workdir_3 = Path(f"temp/nmodes/run_nmodes_3")
+    workdir_4 = Path(f"temp/nmodes/run_nmodes_4")
     csv_path_1 = workdir_1 / "modal_history.csv"
     csv_path_2 = workdir_2 / "modal_history.csv"
     csv_path_3 = workdir_3 / "modal_history.csv"
@@ -135,15 +95,19 @@ def main():
 
     # Plot all capacities over time
     plt.figure(figsize=(10, 6))
-    plt.plot(time, capacity_1, label="1 mode", linestyle="-",  linewidth=2)
-    plt.plot(time, capacity_2, label="2 modes", linestyle="--", linewidth=2)
-    plt.plot(time, capacity_3, label="3 modes", linestyle="-.", linewidth=2)
-    plt.plot(time, capacity_4, label="4 modes", linestyle=":",  linewidth=2)
+    plt.plot(time[1:], capacity_1[1:], label="1 mode", linestyle="-",  linewidth=2)
+    plt.plot(time[1:], capacity_2[1:], label="2 modes", linestyle="--", linewidth=2)
+    plt.plot(time[1:], capacity_3[1:], label="3 modes", linestyle="-.", linewidth=2)
+    plt.plot(time[1:], capacity_4[1:], label="4 modes", linestyle=":",  linewidth=2)
     plt.xlabel("Time (s)")
     plt.ylabel("Capacitance (F)")
     plt.title("Capacitance over time for different numbers of modes")
     plt.legend()
     plt.grid()
+
+    # Save this plot
+    if ap.parse_args().save_frames:
+        plt.savefig("temp/nmodes/capacitance_over_time.png", dpi=300)
 
     # Displacement fields: shape = (ntime, nx)
     u_1 = compute_displacement_from_history(1, x, L_m, workdir_1)
@@ -161,7 +125,6 @@ def main():
     line2, = ax.plot([], [], label="2 modes", linestyle="--", linewidth=2)
     line3, = ax.plot([], [], label="3 modes", linestyle="-.", linewidth=2)
     line4, = ax.plot([], [], label="4 modes", linestyle=":",  linewidth=2)
-    line5, = ax.plot([], [], label="2 modes - 1 mode", linestyle="-",  linewidth=2)
 
     ax.set_xlim(x[0], x[-1])
     ax.set_ylim(ymin, ymax)
@@ -177,18 +140,17 @@ def main():
         line2.set_data(x, u_2[frame, :])
         line3.set_data(x, u_3[frame, :])
         line4.set_data(x, u_4[frame, :])
-        line5.set_data(x, u_2[frame, :] - u_1[frame, :])
 
         title.set_text(f"Beam displacement at t = {time[frame]*1e6:.0f} μs")
 
-        return line1, line2, line3, line4, line5, title
+        return line1, line2, line3, line4, title
 
 
     anim = FuncAnimation(
         fig,
         update,
         frames=len(time),
-        interval=200,   # ms between frames
+        interval=100,   # ms between frames
         blit=False,
     )
 
@@ -230,14 +192,16 @@ def main():
         fig2,
         update_err,
         frames=len(time),
-        interval=200,
+        interval=100,
         blit=False,
     )
 
-    plt.show()
+    if ap.parse_args().save_frames:
+        writer = FFMpegWriter(
+            fps=10, codec="libx264", bitrate=2000, extra_args=["-pix_fmt", "yuv420p"]
+        )
+        anim.save("temp/nmodes/simulation.mp4", writer=writer)
 
-    # Save video
-    # anim.save("beam_modes.mp4", fps=20)
     plt.show()
 
 
