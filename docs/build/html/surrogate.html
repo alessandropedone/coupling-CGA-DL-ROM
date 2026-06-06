@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Multi-physics package" href="multi-physics.html"><link rel="prev" title="Data package" href="data.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Multi-physics model" href="multi_physics_solver.html"><link rel="prev" title="Data package" href="data.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
         <title>Surrogate package - deeponet-for-mems 0.1.0 documentation</title>
@@ -190,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="README.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="data.html">Data package</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -236,11 +244,13 @@
         <article role="main" id="furo-main-content">
           <section id="module-src.surrogate">
 <span id="surrogate-package"></span><h1>Surrogate package<a class="headerlink" href="#module-src.surrogate" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">surrogate</span></code> package provides utilities for managing surrogate models.
+It includes functions for training, evaluating, and saving surrogate models.</p>
 <section id="module-src.surrogate.evaluate">
 <span id="src-surrogate-evaluate"></span><h2>src.surrogate.evaluate<a class="headerlink" href="#module-src.surrogate.evaluate" title="Link to this heading">¶</a></h2>
 <p>Evaluate a trained DeepONet surrogate model on a test dataset.</p>
 <p>Example usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">surrogate</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">--</span><span class="n">folder</span> <span class="s2">&quot;test/test1&quot;</span> <span class="o">--</span><span class="n">model_path</span> <span class="s2">&quot;models/potential1.keras&quot;</span> <span class="o">--</span><span class="n">target</span> <span class="s2">&quot;potential&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">--</span><span class="n">folder</span> <span class="s2">&quot;test/test1&quot;</span> <span class="o">--</span><span class="n">model_path</span> <span class="s2">&quot;models/potential1.keras&quot;</span> <span class="o">--</span><span class="n">target</span> <span class="s2">&quot;potential&quot;</span>
 </pre></div>
 </div>
 <p>There are several optional arguments to customize the behavior:</p>
@@ -398,7 +408,7 @@ ignoring NaN values in the true data.</p>
 <span id="src-surrogate-model"></span><h2>src.surrogate.model<a class="headerlink" href="#module-src.surrogate.model" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="src.surrogate.model.DeepONet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.surrogate.model.</span></span><span class="sig-name descname"><span class="pre">DeepONet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunk</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/surrogate/model.html#DeepONet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.surrogate.model.DeepONet" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.surrogate.model.</span></span><span class="sig-name descname"><span class="pre">DeepONet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/surrogate/model.html#DeepONet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.surrogate.model.DeepONet" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
 <div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
@@ -410,12 +420,14 @@ to approximate operators mapping functions to functions.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>branch</strong> (<code class="docutils literal notranslate"><span class="pre">DenseNetwork</span></code>) – The branch network to generate expansion coefficients.</p></li>
 <li><p><strong>trunk</strong> (<code class="docutils literal notranslate"><span class="pre">DenseNetwork</span></code>) – The trunk network to generate the basis functions.</p></li>
+<li><p><strong>rescale_output</strong> (<code class="docutils literal notranslate"><span class="pre">float</span></code>) – The factor by which to rescale the output.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Variables<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>branch</strong> (<code class="docutils literal notranslate"><span class="pre">DenseNetwork</span></code>) – The branch network to generate expansion coefficients.</p></li>
 <li><p><strong>trunk</strong> (<code class="docutils literal notranslate"><span class="pre">DenseNetwork</span></code>) – The trunk network to generate the basis functions.</p></li>
+<li><p><strong>rescale_output</strong> (<code class="docutils literal notranslate"><span class="pre">float</span></code>) – The factor by which to rescale the output.</p></li>
 <li><p><strong>history</strong> (<code class="docutils literal notranslate"><span class="pre">tf.keras.callbacks.History</span></code>) – Training history after model training.</p></li>
 </ul>
 </dd>
@@ -948,7 +960,7 @@ If you are using the model we trained just keep the default value of <span class
 <span id="src-surrogate-summary"></span><h2>src.surrogate.summary<a class="headerlink" href="#module-src.surrogate.summary" title="Link to this heading">¶</a></h2>
 <p>A file to summarize the specified surrogate model.</p>
 <p>Example usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">surrogate</span><span class="o">.</span><span class="n">summary</span> <span class="o">--</span><span class="n">model_path</span> <span class="s2">&quot;models/potential1.keras&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">summary</span> <span class="o">--</span><span class="n">model_path</span> <span class="s2">&quot;models/potential1.keras&quot;</span>
 </pre></div>
 </div>
 <dl class="py function">
@@ -963,7 +975,7 @@ If you are using the model we trained just keep the default value of <span class
 that learns the mapping from geometrical parameters and spatial coordinates
 to the solution of a physical problem.</p>
 <p>Example usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">surrogate</span><span class="o">.</span><span class="n">train</span> <span class="o">--</span><span class="n">folder</span> <span class="s2">&quot;test/test1&quot;</span> <span class="o">--</span><span class="n">model_path</span> <span class="s2">&quot;models/potential.keras&quot;</span> <span class="o">--</span><span class="n">target</span> <span class="s2">&quot;potential&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">train</span> <span class="o">--</span><span class="n">folder</span> <span class="s2">&quot;temp/test1&quot;</span> <span class="o">--</span><span class="n">model_path</span> <span class="s2">&quot;models/potential.keras&quot;</span> <span class="o">--</span><span class="n">target</span> <span class="s2">&quot;potential&quot;</span>
 </pre></div>
 </div>
 <p>There are several optional arguments to customize the behavior:</p>
@@ -973,6 +985,8 @@ to the solution of a physical problem.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--r</span></code>: Low-rank dimension of the DeepONet (default: <span class="math notranslate nohighlight">\(20\)</span>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--seed</span></code>: Random seed for data splitting (default: <span class="math notranslate nohighlight">\(40\)</span>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--target</span></code>: Target quantity to predict, either “potential” or “normal_derivative” (default: “potential”).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--batch_size</span></code>: Batch size for training (default: <span class="math notranslate nohighlight">\(8\)</span>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rescale_output</span></code>: Factor to scale the output during training (default: <span class="math notranslate nohighlight">\(1.0\)</span>, no scaling).</p></li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.surrogate.train.main">
@@ -981,7 +995,7 @@ to the solution of a physical problem.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="src.surrogate.train.train">
-<span class="sig-prename descclassname"><span class="pre">src.surrogate.train.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/surrogate/train.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.surrogate.train.train" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">src.surrogate.train.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/surrogate/train.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.surrogate.train.train" title="Link to this definition">¶</a></dt>
 <dd><div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
 <p>Train a DeepONet surrogate model to learn the mapping from geometrical parameters
@@ -997,6 +1011,7 @@ and spatial coordinates to the solution of the physical problem.</p>
 <li><p><strong>mu</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Geometrical parameters array of shape <code class="docutils literal notranslate"><span class="pre">(ns,</span> <span class="pre">p)</span></code>.</p></li>
 <li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Random seed for data splitting.</p></li>
 <li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Batch size for training.</p></li>
+<li><p><strong>rescale_output</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Factor to scale the output during training (default: 1.0, no scaling).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1013,12 +1028,12 @@ and spatial coordinates to the solution of the physical problem.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="multi-physics.html">
+          <a class="next-page" href="multi_physics_solver.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Multi-physics package</div>
+                <div class="title">Multi-physics model</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1148,6 +1163,7 @@ and spatial coordinates to the solution of the physical problem.</p>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>

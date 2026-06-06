@@ -8,6 +8,7 @@
         <title>src.surrogate.train - deeponet-for-mems 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
@@ -189,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../data.html">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -235,7 +244,7 @@
 
 <span class="sd">Example usage::</span>
 
-<span class="sd">    python -m surrogate.train --folder &quot;test/test1&quot; --model_path &quot;models/potential.keras&quot; --target &quot;potential&quot;</span>
+<span class="sd">    python -m src.surrogate.train --folder &quot;temp/test1&quot; --model_path &quot;models/potential.keras&quot; --target &quot;potential&quot;</span>
 
 <span class="sd">There are several optional arguments to customize the behavior:</span>
 
@@ -244,36 +253,45 @@
 <span class="sd">- ``--r``: Low-rank dimension of the DeepONet (default: :math:`20`).</span>
 <span class="sd">- ``--seed``: Random seed for data splitting (default: :math:`40`).</span>
 <span class="sd">- ``--target``: Target quantity to predict, either &quot;potential&quot; or &quot;normal_derivative&quot; (default: &quot;potential&quot;).</span>
+<span class="sd">- ``--batch_size``: Batch size for training (default: :math:`8`).</span>
+<span class="sd">- ``--rescale_output``: Factor to scale the output during training (default: :math:`1.0`, no scaling).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TF_CPP_MIN_LOG_LEVEL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span> 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TF_ENABLE_ONEDNN_OPTS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span> 
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DenseNetwork</span><span class="p">,</span> <span class="n">DeepONet</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.losses</span><span class="w"> </span><span class="kn">import</span> <span class="n">masked_mse</span><span class="p">,</span> <span class="n">masked_mae</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.gpu</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_on_device</span>
 
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_ENABLE_ONEDNN_OPTS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
 
 
 <div class="viewcode-block" id="train">
 <a class="viewcode-back" href="../../../surrogate.html#src.surrogate.train.train">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-          <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-          <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-          <span class="n">y</span><span class="p">:</span>  <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-          <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-          <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
-          <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="n">rescale_output</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. admonition:: Description</span>
 
-<span class="sd">        Train a DeepONet surrogate model to learn the mapping from geometrical parameters </span>
+<span class="sd">        Train a DeepONet surrogate model to learn the mapping from geometrical parameters</span>
 <span class="sd">        and spatial coordinates to the solution of the physical problem.</span>
 
 <span class="sd">    :param model_path: Path to save the trained model.</span>
@@ -283,14 +301,15 @@
 <span class="sd">    :param mu: Geometrical parameters array of shape ``(ns, p)``.</span>
 <span class="sd">    :param seed: Random seed for data splitting.</span>
 <span class="sd">    :param batch_size: Batch size for training.</span>
+<span class="sd">    :param rescale_output: Factor to scale the output during training (default: 1.0, no scaling).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Hyperparameters setup ----------------------------------------------------------</span>
-    <span class="n">r</span>    <span class="o">=</span> <span class="n">r</span>             <span class="c1"># low-rank dimension</span>
-    <span class="n">p</span>    <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>   <span class="c1"># number of problem parameters = geometrical parameters</span>
-    <span class="n">d</span>    <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>    <span class="c1"># number of spatial dimensions</span>
-    <span class="n">ns</span>   <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   <span class="c1"># number of samples = number of meshes</span>
-    <span class="n">nh</span>   <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>    <span class="c1"># max number of dofs = x-coordinates available for each mesh</span>
-    <span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>          <span class="c1"># random seed for data splitting</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span>  <span class="c1"># low-rank dimension</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># number of problem parameters = geometrical parameters</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># number of spatial dimensions</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># number of samples = number of meshes</span>
+    <span class="n">nh</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># max number of dofs = x-coordinates available for each mesh</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>  <span class="c1"># random seed for data splitting</span>
     <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>  <span class="c1"># batch size for training</span>
     <span class="c1"># --------------------------------------------------------------------------------</span>
 
@@ -303,7 +322,9 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
     <span class="n">idx_trainval</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
     <span class="c1"># Split train+val indices into train and val sets</span>
-    <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx_trainval</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">idx_trainval</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span>
+    <span class="p">)</span>
     <span class="c1"># Use indices to split the arrays along the first dimension</span>
     <span class="n">mu_train</span><span class="p">,</span> <span class="n">mu_val</span><span class="p">,</span> <span class="n">mu_test</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span> <span class="n">mu</span><span class="p">[</span><span class="n">idx_val</span><span class="p">],</span> <span class="n">mu</span><span class="p">[</span><span class="n">idx_test</span><span class="p">]</span>
     <span class="n">x_train</span><span class="p">,</span> <span class="n">x_val</span><span class="p">,</span> <span class="n">x_test</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">idx_val</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">idx_test</span><span class="p">]</span>
@@ -315,48 +336,48 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;y_train shape:&quot;</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
     <span class="c1"># Mixed Precision Setup</span>
-    <span class="n">policy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">mixed_precision</span><span class="o">.</span><span class="n">Policy</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">mixed_precision</span><span class="o">.</span><span class="n">Policy</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
     <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">mixed_precision</span><span class="o">.</span><span class="n">set_global_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
 
     <span class="n">branch</span> <span class="o">=</span> <span class="n">DenseNetwork</span><span class="p">(</span>
         <span class="n">normalization_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">input_neurons</span> <span class="o">=</span> <span class="n">p</span><span class="p">,</span> 
-        <span class="n">n_neurons</span> <span class="o">=</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> 
-        <span class="n">activation</span> <span class="o">=</span> <span class="s1">&#39;relu&#39;</span><span class="p">,</span> 
-        <span class="n">output_neurons</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> 
-        <span class="n">output_activation</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> 
-        <span class="n">initializer</span> <span class="o">=</span> <span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
-        <span class="n">l1_coeff</span><span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
-        <span class="n">l2_coeff</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span> 
-        <span class="n">batch_normalization</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-        <span class="n">dropout</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-        <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
-        <span class="n">leaky_relu_alpha</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">layer_normalization</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">positional_encoding_frequencies</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">input_neurons</span><span class="o">=</span><span class="n">p</span><span class="p">,</span>
+        <span class="n">n_neurons</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+        <span class="n">output_neurons</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">output_activation</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">initializer</span><span class="o">=</span><span class="s2">&quot;he_normal&quot;</span><span class="p">,</span>
+        <span class="n">l1_coeff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">l2_coeff</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">batch_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">dropout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">leaky_relu_alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">layer_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">positional_encoding_frequencies</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">branch</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">mu_train</span><span class="p">)</span>
 
     <span class="n">trunk</span> <span class="o">=</span> <span class="n">DenseNetwork</span><span class="p">(</span>
         <span class="n">normalization_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">input_neurons</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span> 
-        <span class="n">n_neurons</span> <span class="o">=</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> 
-        <span class="n">activation</span> <span class="o">=</span> <span class="s1">&#39;relu&#39;</span><span class="p">,</span> 
-        <span class="n">output_neurons</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> 
-        <span class="n">output_activation</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> 
-        <span class="n">initializer</span> <span class="o">=</span> <span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
-        <span class="n">l1_coeff</span><span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
-        <span class="n">l2_coeff</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span> 
-        <span class="n">batch_normalization</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-        <span class="n">dropout</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-        <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
-        <span class="n">leaky_relu_alpha</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">layer_normalization</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">positional_encoding_frequencies</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">input_neurons</span><span class="o">=</span><span class="n">d</span><span class="p">,</span>
+        <span class="n">n_neurons</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+        <span class="n">output_neurons</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">output_activation</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">initializer</span><span class="o">=</span><span class="s2">&quot;he_normal&quot;</span><span class="p">,</span>
+        <span class="n">l1_coeff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">l2_coeff</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">batch_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">dropout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">leaky_relu_alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">layer_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">positional_encoding_frequencies</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">trunk</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
 
-    <span class="n">model</span> <span class="o">=</span> <span class="n">DeepONet</span><span class="p">(</span><span class="n">branch</span> <span class="o">=</span> <span class="n">branch</span><span class="p">,</span> <span class="n">trunk</span> <span class="o">=</span> <span class="n">trunk</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">DeepONet</span><span class="p">(</span><span class="n">branch</span><span class="o">=</span><span class="n">branch</span><span class="p">,</span> <span class="n">trunk</span><span class="o">=</span><span class="n">trunk</span><span class="p">,</span> <span class="n">rescale_output</span><span class="o">=</span><span class="n">rescale_output</span><span class="p">)</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shape</span><span class="o">=</span><span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">d</span><span class="p">)])</span>
     <span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
@@ -370,34 +391,34 @@
             <span class="k">return</span> <span class="n">start_lr</span> <span class="o">+</span> <span class="p">(</span><span class="n">base_lr</span> <span class="o">-</span> <span class="n">start_lr</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">/</span> <span class="n">warmup_epochs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">lr</span>
 
-    <span class="n">warmup_callback</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">LearningRateScheduler</span><span class="p">(</span><span class="n">lr_warmup_schedule</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">warmup_callback</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">LearningRateScheduler</span><span class="p">(</span>
+        <span class="n">lr_warmup_schedule</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
 
     <span class="n">reduce_callback</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">ReduceLROnPlateau</span><span class="p">(</span>
-        <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span>
-        <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">patience</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">monitor</span><span class="o">=</span><span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
     <span class="p">)</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">,</span>
-        <span class="n">mu</span> <span class="o">=</span> <span class="n">mu_train</span><span class="p">,</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">,</span>
-        <span class="n">X_val</span> <span class="o">=</span> <span class="n">x_val</span><span class="p">,</span>
-        <span class="n">mu_val</span> <span class="o">=</span> <span class="n">mu_val</span><span class="p">,</span>
-        <span class="n">y_val</span> <span class="o">=</span> <span class="n">y_val</span><span class="p">,</span>
-        <span class="n">learning_rate</span><span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span> 
-        <span class="n">epochs</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> 
-        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span><span class="p">,</span> 
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">masked_mse</span><span class="p">,</span> 
-        <span class="n">validation_freq</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
-        <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
-        <span class="n">lr_scheduler</span> <span class="o">=</span> <span class="p">[</span><span class="n">warmup_callback</span><span class="p">,</span> <span class="n">reduce_callback</span><span class="p">],</span> 
-        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">masked_mae</span><span class="p">,</span> <span class="n">masked_mse</span><span class="p">],</span>
-        <span class="n">clipnorm</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
-        <span class="n">early_stopping_patience</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
-        <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">optimizer</span> <span class="o">=</span> <span class="s1">&#39;adam&#39;</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">x_train</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">mu_train</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+        <span class="n">X_val</span><span class="o">=</span><span class="n">x_val</span><span class="p">,</span>
+        <span class="n">mu_val</span><span class="o">=</span><span class="n">mu_val</span><span class="p">,</span>
+        <span class="n">y_val</span><span class="o">=</span><span class="n">y_val</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">loss</span><span class="o">=</span><span class="n">masked_mse</span><span class="p">,</span>
+        <span class="n">validation_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">lr_scheduler</span><span class="o">=</span><span class="p">[</span><span class="n">warmup_callback</span><span class="p">,</span> <span class="n">reduce_callback</span><span class="p">],</span>
+        <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">masked_mae</span><span class="p">,</span> <span class="n">masked_mse</span><span class="p">],</span>
+        <span class="n">clipnorm</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Evaluating the model on the validation set...&quot;</span><span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">([</span><span class="n">mu_val</span><span class="p">,</span> <span class="n">x_val</span><span class="p">],</span> <span class="n">y_val</span><span class="p">)</span>
@@ -416,12 +437,36 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="c1"># Read input arguments</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--folder&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the data folder to delete.&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--model_path&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;models/model.keras&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to save the trained model.&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--r&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Low-rank dimension of the DeepONet.&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--seed&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Random seed for data splitting.&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--target&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="s2">&quot;normal_derivative&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Target quantity to predict.&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--batch_size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Batch size for training.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--folder&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the data folder to delete.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model_path&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;models/model.keras&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to save the trained model.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--r&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Low-rank dimension of the DeepONet.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--seed&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Random seed for data splitting.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--target&quot;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="s2">&quot;normal_derivative&quot;</span><span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Target quantity to predict.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--batch_size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Batch size for training.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--rescale_output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Factor to scale the output during training (default: 1.0, no scaling).&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="n">data_folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">folder</span>
     <span class="n">model_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">model_path</span>
@@ -429,7 +474,9 @@
     <span class="n">seed</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">seed</span>
 
     <span class="c1"># Import coordinates dataset and solutions</span>
-    <span class="n">mu</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">x_plate</span><span class="p">,</span> <span class="n">y_plate</span><span class="p">,</span> <span class="n">normal_derivatives_plate</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">data_folder</span><span class="o">=</span><span class="n">data_folder</span><span class="p">)</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">x_plate</span><span class="p">,</span> <span class="n">y_plate</span><span class="p">,</span> <span class="n">normal_derivatives_plate</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span>
+        <span class="n">data_folder</span><span class="o">=</span><span class="n">data_folder</span>
+    <span class="p">)</span>
 
     <span class="c1"># Define input and output arrays</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;potential&quot;</span><span class="p">:</span>
@@ -440,8 +487,18 @@
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">normal_derivatives_plate</span><span class="p">)</span>
 
     <span class="c1"># Train the model</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.gpu</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_on_device</span>
-    <span class="n">run_on_device</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span></div>
+    <span class="n">run_on_device</span><span class="p">(</span>
+        <span class="n">train</span><span class="p">,</span>
+        <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+        <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+        <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">rescale_output</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">rescale_output</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

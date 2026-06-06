@@ -1,20 +1,9 @@
 """
-Coupled multi-physics solver for electrostatic actuation of a cantilever beam (air electrostatics coupled to modal mechanics), implemented in FEniCSx with remeshing at each time step.
-
-- Mesh template: it uses MICRONS as the unit, then mesh coordinates are converted to meters in the code for SI consistency.
-- Electrostatic force: given number of mode shapes, Maxwell traction is projected onto the first cantilever mode shapes (transverse-only) on tag=10 (`force_segment`).
-- Mechanics (diagonal modal system):
-
-  .. math::
-
-      m_i \\ddot{q}_i + c_i \\dot{q}_i + k_i q_i = F_i, \\quad i = 1 \\ldots 4,
-
-  where :math:`k_i = m_i \\omega_i^2` and :math:`c_i = 2 \\zeta_i \\sqrt{m_i k_i}`,
-  integrated with Newmark average acceleration :math:`(\\beta = 1/4,\\ \\gamma = 1/2)`.
+For details on the theorical formulation and numerical approach, please refer to the accompanying Markdown `Multi-physics model`.
 
 Example usage::
 
-    python -m coupled_modal_electro --template-geo geometry.geo --dt 1e-5 --nsteps 200 --Vdc 0 --Vac 5 --freq 2.5e3 --Vupper 0 --Vouter 0 --omega 6.3e5 3.9e6 1.1e7 2.1e7 --mass 1e-12 1e-12 1e-12 1e-12 --zeta 0.01 0.01 0.01 0.01 --print-every 1 --fail-fast
+    python -m src.multi_physics.solver --nmodes 4 --template-geo geometries/cantilever2.geo --dt 5e-6 --nsteps 80 --Vdc 0 --Vac 230 --freq 2.5e3 --Vupper 0 --Vouter 0 --omega 6.3e5 3.9e6 1.1e7 2.1e7 --mass 1e-12 1e-12 1e-12 1e-12 --zeta 0.01 0.01 0.01 0.01 --print-every 1 --fail-fast --workdir "temp/visualization"
 
 There are several optional arguments to customize the behavior:
 
@@ -561,7 +550,7 @@ def compute_normals_ordered(points: np.ndarray) -> np.ndarray:
 # ------------------------------
 # Force projection
 # ------------------------------
-def _modal_forces_4(
+def modal_forces_4(
     nmodes: int,
     betas: np.ndarray,
     xmin_m: float,
@@ -1121,7 +1110,7 @@ def main():
                 midpoints_m = np.column_stack((x_mid_m, y_mid_m))
                 nodes_m = np.column_stack((x_nodes_m, y_nodes_m))
                 midpoints_um = midpoints_m / UM
-                F = _modal_forces_4(
+                F = modal_forces_4(
                     nmodes=args.nmodes,
                     betas=betas,
                     xmin_m=xmin_m,
@@ -1229,7 +1218,7 @@ def main():
                     domain, facet_tags.find(10)
                 )
                 midpoints_um = midpoints_m / UM
-                F = _modal_forces_4(
+                F = modal_forces_4(
                     nmodes=args.nmodes,
                     betas=betas,
                     xmin_m=xmin_m,

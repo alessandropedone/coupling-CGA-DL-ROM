@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Data package" href="data.html"><link rel="prev" title="Introduction" href="README.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
-        <title>Test cases - deeponet-for-mems 0.1.0 documentation</title>
+        <title>Test Cases - deeponet-for-mems 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -190,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">Introduction</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Test cases</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -234,16 +242,30 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="test-cases">
-<h1>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h1>
-<p>In our test cases we proceed with the following structure in mind:</p>
+          <section class="tex2jax_ignore mathjax_ignore" id="test-cases">
+<h1>Test Cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h1>
+<p>In this document, we make an overview of all the capabilities of the library.
+So, we start recalling that we have three packages in the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder:</p>
 <ol class="arabic simple">
-<li><p>use the data generation pipeline we developed to produce an example of a dataset (smaller compared to the one we used to train the network);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: for static data generation and post-processing;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">surrogate</span></code>: for the surrogate models;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">multi_physics</span></code>: for the electro-mechanical solver.
+For a more detailed explanation of all functionalities, consult <code class="docutils literal notranslate"><span class="pre">report.pdf</span></code> in the main directory, which provides the necessary background information.</p></li>
+</ol>
+<section id="overall-outline">
+<h2>Overall Outline<a class="headerlink" href="#overall-outline" title="Link to this heading">¶</a></h2>
+<p>We first describe how the data and surrogate packages are used to train the surrogate models. We then present and validate the multiphysics solver, and finally assess its performance when integrating the pre-trained surrogate models.</p>
+</section>
+<section id="surrogates">
+<h2>Surrogates<a class="headerlink" href="#surrogates" title="Link to this heading">¶</a></h2>
+<p>We proceed with the following structure in mind:</p>
+<ol class="arabic simple">
+<li><p>use the data generation pipeline to produce an example of a dataset (smaller compared to the one we used to train the models provided for the following tests);</p></li>
 <li><p>evaluate the performance of the models we trained on the new dataset;</p></li>
-<li><p>show the training pipeline building a new (weak) model on the new (small) dataset.</p></li>
+<li><p>show the training pipeline building a new (weak) model on the new (small) dataset;</p></li>
 </ol>
 <section id="test-1-cantilevered-beam">
-<h2>Test 1. Cantilevered beam<a class="headerlink" href="#test-1-cantilevered-beam" title="Link to this heading">¶</a></h2>
+<h3>Test 1. Cantilevered beam<a class="headerlink" href="#test-1-cantilevered-beam" title="Link to this heading">¶</a></h3>
 <blockquote>
 <div><p>In this case the upper plate is clamped at the left end and free at the right one (i.e. it’s a cantilever).</p>
 </div></blockquote>
@@ -267,7 +289,7 @@ If you want you can play with the number of <strong>workers</strong> to make the
 </pre></div>
 </div>
 <p>You can do the same for with the model for the normal derivative of the potential on the boundary of the upper plate.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.surrogate.evalutate<span class="w"> </span>--folder<span class="w"> </span><span class="s2">&quot;test/test1&quot;</span><span class="w"> </span>--model_path<span class="w"> </span><span class="s2">&quot;models/derivative1.keras&quot;</span><span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;normal_derivative&quot;</span><span class="w"> </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.surrogate.evaluate<span class="w"> </span>--folder<span class="w"> </span><span class="s2">&quot;test/test1&quot;</span><span class="w"> </span>--model_path<span class="w"> </span><span class="s2">&quot;models/derivative1.keras&quot;</span><span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;normal_derivative&quot;</span><span class="w"> </span>
 </pre></div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.surrogate.predict<span class="w"> </span>--folder<span class="w"> </span><span class="s2">&quot;test/test1&quot;</span><span class="w"> </span>--model_path<span class="w"> </span><span class="s2">&quot;models/derivative1.keras&quot;</span><span class="w">  </span>--target<span class="w"> </span><span class="s2">&quot;normal_derivative&quot;</span><span class="w"> </span>
@@ -280,7 +302,7 @@ If you want you can play with the number of <strong>workers</strong> to make the
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.surrogate.train<span class="w"> </span>--folder<span class="w"> </span><span class="s2">&quot;test/test1&quot;</span><span class="w"> </span>--model_path<span class="w"> </span><span class="s2">&quot;models/derivative.keras&quot;</span><span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;normal_derivative&quot;</span>
 </pre></div>
 </div>
-<p>You are also able exploit a GPU if you have one, but you need to fulfill the (CUDA) requirements by modifying the environment by yourself (which could not be a straightforward task). For example, you may want to run in the terminal something like:</p>
+<p>You can also use a GPU if available, but you must satisfy the CUDA requirements yourself by properly configuring your environment. This setup may not be straightforward and, if done incorrectly, can lead to warnings. For example, you may want to run in the terminal something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>activate<span class="w"> </span>env-name
 mamba<span class="w"> </span>install<span class="w"> </span>cuda-cudart<span class="w"> </span>cuda-version<span class="o">=</span><span class="m">12</span><span class="w"> </span>-y
 </pre></div>
@@ -291,7 +313,7 @@ mamba<span class="w"> </span>install<span class="w"> </span>cuda-cudart<span cla
 </div>
 </section>
 <section id="test-2-bigger-deformations">
-<h2>Test 2: Bigger Deformations<a class="headerlink" href="#test-2-bigger-deformations" title="Link to this heading">¶</a></h2>
+<h3>Test 2: Bigger Deformations<a class="headerlink" href="#test-2-bigger-deformations" title="Link to this heading">¶</a></h3>
 <p>You can just do the same as above but with the following changes:</p>
 <ul class="simple">
 <li><p>use <code class="docutils literal notranslate"><span class="pre">test2</span></code> instead of <code class="docutils literal notranslate"><span class="pre">test1</span></code>;</p></li>
@@ -300,13 +322,63 @@ mamba<span class="w"> </span>install<span class="w"> </span>cuda-cudart<span cla
 </ul>
 </section>
 <section id="test-3-clamped-clamped-beam">
-<h2>Test 3: Clamped-Clamped Beam<a class="headerlink" href="#test-3-clamped-clamped-beam" title="Link to this heading">¶</a></h2>
+<h3>Test 3: Clamped-Clamped Beam<a class="headerlink" href="#test-3-clamped-clamped-beam" title="Link to this heading">¶</a></h3>
 <p>You can just do the same as above but with the following changes:</p>
 <ul class="simple">
 <li><p>use <code class="docutils literal notranslate"><span class="pre">test3</span></code> instead of <code class="docutils literal notranslate"><span class="pre">test1</span></code>;</p></li>
 <li><p>changing the reference geometry to <code class="docutils literal notranslate"><span class="pre">geometries/clamped.geo</span></code>;</p></li>
 <li><p>consider now the models <code class="docutils literal notranslate"><span class="pre">models/potential3.keras</span></code> and <code class="docutils literal notranslate"><span class="pre">models/derivative3.keras</span></code>.</p></li>
 </ul>
+</section>
+</section>
+<section id="multi-physics">
+<h2>Multi-Physics<a class="headerlink" href="#multi-physics" title="Link to this heading">¶</a></h2>
+<section id="classical-multi-physics-solver">
+<h3>Classical Multi-Physics Solver<a class="headerlink" href="#classical-multi-physics-solver" title="Link to this heading">¶</a></h3>
+<p><strong>Visualization.</strong> First, you can run the classical multi-physics solver in the case of cantilever with big deformations of the upper plate with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span>--template-geo<span class="w"> </span>geometries/cantilever2.geo<span class="w"> </span>--dt<span class="w"> </span>5e-6<span class="w"> </span>--nsteps<span class="w"> </span><span class="m">80</span><span class="w"> </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vac<span class="w"> </span><span class="m">230</span><span class="w"> </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span>--fail-fast<span class="w"> </span>--workdir<span class="w"> </span><span class="s2">&quot;temp/visualization&quot;</span>
+</pre></div>
+</div>
+<p>Then, you can go to the <code class="docutils literal notranslate"><span class="pre">temp/visualization</span></code> folder and visualize the solution by opening the <code class="docutils literal notranslate"><span class="pre">temp/visualization/results</span></code> subfolder in ParaView. Remember to select the scalar field <code class="docutils literal notranslate"><span class="pre">phi</span></code> (electrostatic potential) for coloring.</p>
+<p><strong>Mesh convergence in time.</strong> You can peform a convergence study with respect to the time step in the standard case with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>test/test_convergence.py
+</pre></div>
+</div>
+<p>Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/convergence</span></code> folder.</p>
+<p><strong>Test number of modes.</strong> You can perform a test which compares the results changing the number of modes (ranging from 1 to 4) used to project the mechanical deformation.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>test/test_nmodes.py
+</pre></div>
+</div>
+<p>Indeed, you can observe by yourself that the only relevant mode is the first one. Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/nmodes</span></code> folder.</p>
+<p><strong>Additional flags.</strong>
+For the last two commands you can use the following additional flags:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-simulation</span></code>: visualize the solution again after running test, you can add the flag;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--save-frames</span></code>: save the plot of the capacity over time and the video of the displacement over time;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--clamped</span></code>: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).</p></li>
+</ol>
+</section>
+<section id="dl-multi-physics-solver">
+<h3>DL Multi-Physics Solver<a class="headerlink" href="#dl-multi-physics-solver" title="Link to this heading">¶</a></h3>
+<p><strong>Visualization.</strong> You can run the DL multi-physics solver using pre-trained (DeepONet) surrogates for the electrostatic part of the physics with the command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span>--template-geo<span class="w"> </span>geometries/cantilever1.geo<span class="w"> </span>--dt<span class="w"> </span>1e-5<span class="w"> </span>--nsteps<span class="w"> </span><span class="m">40</span><span class="w"> </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vac<span class="w"> </span><span class="m">5</span><span class="w"> </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span>--fail-fast<span class="w"> </span>--derivative-nn-path<span class="w"> </span>models/derivative1.keras<span class="w"> </span>--postprocessing-step<span class="w"> </span><span class="m">5</span><span class="w"> </span>--potential-nn-path<span class="w"> </span>models/potential1.keras<span class="w"> </span>--no-outer-bc<span class="w"> </span>--workdir<span class="w"> </span><span class="s2">&quot;temp/visualization-dl&quot;</span>
+</pre></div>
+</div>
+<p>Then, you can visualize the solution using ParaView as in the previous case. This time you can select between three scalar field: <code class="docutils literal notranslate"><span class="pre">phi</span></code>, <code class="docutils literal notranslate"><span class="pre">phi_pred</span></code> and <code class="docutils literal notranslate"><span class="pre">phi_error</span></code>. Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/visualization-dl</span></code> folder.</p>
+<p><strong>Performance.</strong> You can evaluate the overall performance of the DL-ROM by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>test/test_performance.py
+</pre></div>
+</div>
+<p>This script compares the DL-ROM with the classical ROM, performing a profiling of execution times and an assessment of accuracy. In particular, the evaluation of the latter focuses on the displacement and the capacitance (quantity of interest).
+Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/performance</span></code> folder.</p>
+<p><strong>Additional flags.</strong>
+For the last command you can use the following additional flags:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-simulation</span></code>: visualize the solution again after running test, you can add the flag;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--save-frames</span></code>: save the plot of the capacity over time and the video of the displacement over time;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--clamped</span></code>: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).</p></li>
+</ol>
+</section>
 </section>
 </section>
 
@@ -365,10 +437,19 @@ mamba<span class="w"> </span>install<span class="w"> </span>cuda-cudart<span cla
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Test cases</a><ul>
+<li><a class="reference internal" href="#">Test Cases</a><ul>
+<li><a class="reference internal" href="#overall-outline">Overall Outline</a></li>
+<li><a class="reference internal" href="#surrogates">Surrogates</a><ul>
 <li><a class="reference internal" href="#test-1-cantilevered-beam">Test 1. Cantilevered beam</a></li>
 <li><a class="reference internal" href="#test-2-bigger-deformations">Test 2: Bigger Deformations</a></li>
 <li><a class="reference internal" href="#test-3-clamped-clamped-beam">Test 3: Clamped-Clamped Beam</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#multi-physics">Multi-Physics</a><ul>
+<li><a class="reference internal" href="#classical-multi-physics-solver">Classical Multi-Physics Solver</a></li>
+<li><a class="reference internal" href="#dl-multi-physics-solver">DL Multi-Physics Solver</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

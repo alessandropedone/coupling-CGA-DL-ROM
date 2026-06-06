@@ -38,9 +38,23 @@ Contents
 
 .. toctree::
    :maxdepth: 1
+   :caption: General information
    
    README
    run_test_cases
+  
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Electrostatics
+
    data
    surrogate
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Multi-physics
+
+   multi_physics_model
    multi-physics

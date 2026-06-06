@@ -1,20 +1,6 @@
 
 # Introduction
 
-## Strucutre of the repository
-```bash
-deeponet-for-mems
-├── README.md
-├── build_docs.sh
-├── data (module)
-├── docs 
-├── environment.yml
-├── geometries 
-├── models 
-├── multi-physics_solver
-├── surrogate (module)
-└── test
-```
 ## Setup
 > Conda (or Mamba) is required.
 
@@ -23,8 +9,25 @@ Create the project environment by running this command (or the equivalent Conda 
 mamba env create -f environment.yml
 ```
 
-## Test cases
-You can find the instruction on how to run them in the readme in the `test` folder, or equivalently in the documentation provided in the `docs` folder.
+## Strucutre of the repository
+```bash
+deeponet-for-mems
+├── README.md
+├── build_docs.sh
+├── docs
+├── environment.yml
+├── geometries
+├── models
+├── report.pdf
+├── src
+│   ├── data
+│   ├── multi_physics
+│   └── surrogate
+└── test
+```
+
+## Report
+For a detailed explanation of all functionalities and the theoretical background, please consult `report.pdf` in the main directory.
 
 ## Documentation
 The documentation is present in the `docs` folder in HTML format, and online [here](https://alessandropedone.github.io/deeponet-for-mems/).
@@ -34,3 +37,7 @@ you can just run the following command, and select the right option, to generate
 ```bash
 ./build_docs.sh
 ```
+
+## Test cases
+You can find the instruction on how to run them in `test/run_test_cases.md`, or equivalently in the documentation.
+

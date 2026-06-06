@@ -1,6 +1,6 @@
-# Electromechanical MEMS beam–electrostatics coupling (2D air domain + 4-mode mechanics)
+# Multi-physics model
 
-This note documents the mathematical model implemented in the coupled solver:
+This note documents the mathematical model implemented in the coupled solver for an electromechanical MEMS beam–electrostatics coupling (2D air domain + 4-mode mechanics).
 
 - **Electrostatics**: FEM on a **2D air domain** with Dirichlet boundary conditions on the electrodes.
 - **Mechanics**: **4-mode reduced-order (modal) model** for the moving cantilever electrode.

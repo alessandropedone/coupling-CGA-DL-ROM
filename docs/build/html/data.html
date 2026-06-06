@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Surrogate package" href="surrogate.html"><link rel="prev" title="Test cases" href="run_test_cases.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Surrogate package" href="surrogate.html"><link rel="prev" title="Test Cases" href="run_test_cases.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
         <title>Data package - deeponet-for-mems 0.1.0 documentation</title>
@@ -190,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="README.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -236,7 +244,7 @@
         <article role="main" id="furo-main-content">
           <section id="module-src.data">
 <span id="data-package"></span><h1>Data package<a class="headerlink" href="#module-src.data" title="Link to this heading">¶</a></h1>
-<p>The <strong>Data</strong> module provides utilities for managing project data.
+<p>The <code class="docutils literal notranslate"><span class="pre">data</span></code> package provides utilities for managing project data.
 It includes functions for generating geometries, meshes, datasets, and deleting data folders.</p>
 <section id="module-src.data.dataset">
 <span id="src-data-dataset"></span><h2>src.data.dataset<a class="headerlink" href="#module-src.data.dataset" title="Link to this heading">¶</a></h2>
@@ -289,7 +297,7 @@ It includes functions for generating geometries, meshes, datasets, and deleting 
 Part of the ‘data’ module as a helper.</p>
 </div>
 <p>Example of usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">data</span><span class="o">.</span><span class="n">delete</span> <span class="o">--</span><span class="n">folder</span> <span class="o">&lt;</span><span class="n">data_folder_path</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">delete</span> <span class="o">--</span><span class="n">folder</span> <span class="o">&lt;</span><span class="n">data_folder_path</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <dl class="py function">
@@ -301,8 +309,28 @@ Part of the ‘data’ module as a helper.</p>
 <section id="module-src.data.fom">
 <span id="src-data-fom"></span><h2>src.data.fom<a class="headerlink" href="#module-src.data.fom" title="Link to this heading">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="src.data.fom._compute_boundary_normals_and_midpoints">
-<span class="sig-prename descclassname"><span class="pre">src.data.fom.</span></span><span class="sig-name descname"><span class="pre">_compute_boundary_normals_and_midpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_facets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data/fom.html#_compute_boundary_normals_and_midpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.fom._compute_boundary_normals_and_midpoints" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.data.fom._get_domain_from_mesh">
+<span class="sig-prename descclassname"><span class="pre">src.data.fom.</span></span><span class="sig-name descname"><span class="pre">_get_domain_from_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data/fom.html#_get_domain_from_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.fom._get_domain_from_mesh" title="Link to this definition">¶</a></dt>
+<dd><div class="admonition-description admonition">
+<p class="admonition-title">Description</p>
+<p>Read the mesh from the .msh file and return the computational domain.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mesh_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the mesh file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>domain</strong> (<code class="docutils literal notranslate"><span class="pre">fem.Domain</span></code>) – The computational domain containing mesh information.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.fom.compute_boundary_normals_and_midpoints">
+<span class="sig-prename descclassname"><span class="pre">src.data.fom.</span></span><span class="sig-name descname"><span class="pre">compute_boundary_normals_and_midpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_facets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data/fom.html#compute_boundary_normals_and_midpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.fom.compute_boundary_normals_and_midpoints" title="Link to this definition">¶</a></dt>
 <dd><div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
 <p>Compute boundary normals and midpoints for the facets of the upper plate (tag 10).</p>
@@ -321,26 +349,6 @@ Part of the ‘data’ module as a helper.</p>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>normals</strong> (<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Normal vectors at the boundary facets.</p></li>
 <li><p><strong>midpoints</strong> (<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Midpoints of the boundary facets.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.fom._get_domain_from_mesh">
-<span class="sig-prename descclassname"><span class="pre">src.data.fom.</span></span><span class="sig-name descname"><span class="pre">_get_domain_from_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/data/fom.html#_get_domain_from_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.fom._get_domain_from_mesh" title="Link to this definition">¶</a></dt>
-<dd><div class="admonition-description admonition">
-<p class="admonition-title">Description</p>
-<p>Read the mesh from the .msh file and return the computational domain.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mesh_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the mesh file.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>domain</strong> (<code class="docutils literal notranslate"><span class="pre">fem.Domain</span></code>) – The computational domain containing mesh information.</p></li>
 </ul>
 </p>
 </dd>
@@ -411,7 +419,7 @@ Part of the ‘data’ module as a helper.</p>
 <span id="src-data-generate"></span><h2>src.data.generate<a class="headerlink" href="#module-src.data.generate" title="Link to this heading">¶</a></h2>
 <p>Script to generate meshes, run simulations, and save results based on geometry parameters.</p>
 <p>Example usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">data</span><span class="o">.</span><span class="n">generate</span> <span class="o">--</span><span class="n">folder</span> <span class="s2">&quot;test/test1&quot;</span> <span class="o">--</span><span class="n">data_file</span> <span class="s2">&quot;test/test1.csv&quot;</span> <span class="o">--</span><span class="n">geometry_input</span> <span class="s2">&quot;geometries/cantilever1.geo&quot;</span> <span class="o">--</span><span class="n">workers</span> <span class="mi">2</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">generate</span> <span class="o">--</span><span class="n">folder</span> <span class="s2">&quot;test/test1&quot;</span> <span class="o">--</span><span class="n">data_file</span> <span class="s2">&quot;test/test1.csv&quot;</span> <span class="o">--</span><span class="n">geometry_input</span> <span class="s2">&quot;geometries/cantilever1.geo&quot;</span> <span class="o">--</span><span class="n">workers</span> <span class="mi">2</span>
 </pre></div>
 </div>
 <p>There are several optional arguments to customize the behavior:</p>
@@ -923,7 +931,7 @@ in that folder avoid touching every file except the “geo” subfolder the para
 <span id="src-data-remove-msh"></span><h2>src.data.remove_msh<a class="headerlink" href="#module-src.data.remove_msh" title="Link to this heading">¶</a></h2>
 <p>Script to remove all .msh files from a specified data folder.
 Example of usage:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">data</span><span class="o">.</span><span class="n">remove_msh</span> <span class="o">--</span><span class="n">folder</span> <span class="o">&lt;</span><span class="n">data_folder_path</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">remove_msh</span> <span class="o">--</span><span class="n">folder</span> <span class="o">&lt;</span><span class="n">data_folder_path</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <dl class="py function">
@@ -994,7 +1002,7 @@ It orchestrates the entire process by calling the relevant functions from other 
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Test cases</div>
+                <div class="title">Test Cases</div>
                 
               </div>
             </a>
@@ -1039,8 +1047,8 @@ It orchestrates the entire process by calling the relevant functions from other 
 </ul>
 </li>
 <li><a class="reference internal" href="#module-src.data.fom">src.data.fom</a><ul>
-<li><a class="reference internal" href="#src.data.fom._compute_boundary_normals_and_midpoints"><code class="docutils literal notranslate"><span class="pre">_compute_boundary_normals_and_midpoints()</span></code></a></li>
 <li><a class="reference internal" href="#src.data.fom._get_domain_from_mesh"><code class="docutils literal notranslate"><span class="pre">_get_domain_from_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#src.data.fom.compute_boundary_normals_and_midpoints"><code class="docutils literal notranslate"><span class="pre">compute_boundary_normals_and_midpoints()</span></code></a></li>
 <li><a class="reference internal" href="#src.data.fom.fom"><code class="docutils literal notranslate"><span class="pre">fom()</span></code></a></li>
 <li><a class="reference internal" href="#src.data.fom.solvensave"><code class="docutils literal notranslate"><span class="pre">solvensave()</span></code></a></li>
 </ul>
@@ -1100,6 +1108,7 @@ It orchestrates the entire process by calling the relevant functions from other 
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>

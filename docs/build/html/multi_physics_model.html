@@ -1,0 +1,716 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Multi-physics package" href="multi-physics.html"><link rel="prev" title="Surrogate package" href="surrogate.html">
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+        <title>Multi-physics model - deeponet-for-mems 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">deeponet-for-mems 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">deeponet-for-mems 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Multi-physics model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multi-physics.html">Multi-physics package</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/multi_physics_model.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="multi-physics-model">
+<h1>Multi-physics model<a class="headerlink" href="#multi-physics-model" title="Link to this heading">¶</a></h1>
+<p>This note documents the mathematical model for an idealized elctromechanical MEMS implemented in the coupled solver in the <code class="docutils literal notranslate"><span class="pre">multi_physics</span></code> package.</p>
+<blockquote>
+<div><p>For more details on the implementation and specific features, please refer to the package documentation.</p>
+</div></blockquote>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The physics of this system is made of two parts:</p>
+<ul class="simple">
+<li><p><strong>Electrostatics</strong>: the electrostatic potential <span class="math notranslate nohighlight">\(\phi\)</span> solves the Laplace equation, with Dirichlet boundary conditions on the electrodes.</p></li>
+<li><p><strong>Mechanics</strong> (of the upper electrode): Euler-Bernoulli beam deformation modeled via a 4-mode reduced-order model.</p></li>
+</ul>
+<blockquote>
+<div><p>The choice of 4 as the number of modes is motivated by the fact that actually only the first mode is actually relevant for these kind of applications. In particular, if you are interested, you can take a look at the test which compares the simulations with 1, 2, 3 and 4 modes.</p>
+</div></blockquote>
+<p>The coupling is due to the <strong>electrostatic force</strong> generated on the upper electrode, which can deform. This force can be computed using Maxwell-stress traction, which depends on the electric field, and we project it onto the modal basis to obtain generalized modal forces.</p>
+<p>The qualitative ideas behind the term <em>reduced-order</em> can be summarized as follows:</p>
+<ul class="simple">
+<li><p><strong>Classical (mechanical)</strong>: we project the mechanical part onto the first 4 modes;</p></li>
+<li><p><strong>DL (electrostatic)</strong>: we speedup the computation of the force replacing the full FEM computation of <span class="math notranslate nohighlight">\(\phi\)</span> with a geometry-aware DL surrogate model that predicts directly the force.</p></li>
+</ul>
+<p>So, this justifies the use of the following terms in the sequel:</p>
+<ul class="simple">
+<li><p><strong>Classical ROM</strong>: solver that uses the modal projection and the full FEM approximation of the electrostatic part;</p></li>
+<li><p><strong>DL-ROM</strong>: solver that uses the modal projection and computes the electrostatic force using a DeepONet.</p></li>
+</ul>
+<blockquote>
+<div><p>The DL-ROM allows us to overcome the main bottleneck of the problem: remeshing at each time step, since the force is just given directly by the neural network. See below and the report for more details.</p>
+</div></blockquote>
+<p>Now we discuss in depth the classical ROM, and at the end we make a brief comment on the differences with the DL-ROM.</p>
+</section>
+<section id="geometry-and-kinematics">
+<h2>Geometry and kinematics<a class="headerlink" href="#geometry-and-kinematics" title="Link to this heading">¶</a></h2>
+<p>The problem is time-dependent, so at each time step, we will need to update the geometry of the domain.</p>
+<section id="reference-2d-geometry">
+<h3>Reference 2D geometry<a class="headerlink" href="#reference-2d-geometry" title="Link to this heading">¶</a></h3>
+<p>Two parallel electrodes are embedded in a circular outer boundary. We recall here the tags related to Gmsh <code class="docutils literal notranslate"><span class="pre">.geo</span></code> template of the reference geometry.
+Typical physical tags in the Gmsh <code class="docutils literal notranslate"><span class="pre">.geo</span></code> template:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">10</span></code>: <code class="docutils literal notranslate"><span class="pre">force_segment</span></code> — portion of moving/upper electrode boundary where forces are evaluated, i.e. the lower edge;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">11</span></code>: <code class="docutils literal notranslate"><span class="pre">upper_plate</span></code> — remaining moving/upper  electrode boundary;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">12</span></code>: <code class="docutils literal notranslate"><span class="pre">lower_plate</span></code> — fixed/lower electrode boundary;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">20</span></code>: <code class="docutils literal notranslate"><span class="pre">boundary</span></code> — outer circular boundary;</p></li>
+</ul>
+<blockquote>
+<div><p>The electrodes are treated as <strong>perfect conductors</strong> and they do not belong to the electrostatic computational domain.</p>
+</div></blockquote>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">.geo</span></code> template is written in microns. The solver converts mesh coordinates to meters (SI) immediately after reading.</p>
+</div></blockquote>
+</section>
+<section id="modal-parametrization">
+<h3>Modal parametrization<a class="headerlink" href="#modal-parametrization" title="Link to this heading">¶</a></h3>
+<p>The moving electrode boundary is parametrized by the first 4 mode shapes <span class="math notranslate nohighlight">\(\{\hat w_n\}_{n=1}^4\)</span>, more specifically we have that the displacement (from the rest configuration) <span class="math notranslate nohighlight">\(w\)</span> is given by</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+w(x,t) = \sum_{n=1}^{4} \hat w_n(x) \, q_n(t),
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(q_n(t)\)</span> are the modal coordinates/coefficients.</p>
+<p>The mode shapes <span class="math notranslate nohighlight">\(\hat w_n\)</span> depend on the choice of boundary condition. Here we discuss the cantilever case and the clamped-clamped case.</p>
+<p><strong>Cantilever.</strong> The mode shapes are</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_n (x)= \cosh\beta_nx - \cos\beta_nx + C_n\ (\sin\beta_nx-\sinh\beta_nx)
+\]</div>
+</div>
+<p>with <span class="math notranslate nohighlight">\(\xi\in[0,L]\)</span> and</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+C_n=\frac{\cos\beta_nL + \cosh\beta_nL}{\sin\beta_nL+\sinh\beta_nL}.
+\]</div>
+</div>
+<p>The wavenumbers are <span class="math notranslate nohighlight">\(\beta_i = \lambda_i/L\)</span>, where <span class="math notranslate nohighlight">\(\lambda_n\)</span> are the roots of</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\cosh(\beta_n L)\cos(\beta_nL)+1 = 0.
+\]</div>
+</div>
+<p>The first roots are</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\lambda_1\approx 1.8751,\quad
+\lambda_2\approx 4.6941,\quad
+\lambda_3\approx 7.8548,\quad
+\lambda_4\approx 10.9955.
+\]</div>
+</div>
+<p><strong>Clamped-Clamped.</strong> The mode shapes are</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_n (x)= \sinh\beta_nx - \sin\beta_nx + C_n (\cosh\beta_nx-\cos\beta_nx).
+\]</div>
+</div>
+<p>with <span class="math notranslate nohighlight">\(\xi\in[0,L]\)</span> and</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+C_n = \frac{\cos\beta_nL - \cosh\beta_nL}{\sin\beta_nL+\sinh\beta_nL}.
+\]</div>
+</div>
+<p>The wavenumbers are <span class="math notranslate nohighlight">\(\beta_n=\lambda_n/L\)</span>, where
+<span class="math notranslate nohighlight">\(\lambda_n\)</span> are the roots of</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\cosh(\lambda)\cos(\lambda)-1=0.
+\]</div>
+</div>
+<p>The first roots are</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\lambda_1\approx 4.7300,\quad
+\lambda_2\approx 7.8532,\quad
+\lambda_3\approx 10.9956,\quad
+\lambda_4\approx 14.1372.
+\]</div>
+</div>
+</section>
+</section>
+<section id="electrostatics">
+<h2>Electrostatics<a class="headerlink" href="#electrostatics" title="Link to this heading">¶</a></h2>
+<p>Let’s formulate more precisely the electrostatic problem:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split} \begin{cases}
+-\nabla\cdot\left(\varepsilon\,\nabla \phi\right) = 0 &amp;\text{in } \Omega(t)\\ 
+\phi = V_u\ &amp;\text{on }\Gamma_u(t)\\
+\phi = V_\ell(t)\ &amp;\text{on }\Gamma_\ell\\
+\varepsilon\nabla\phi\cdot n = 0 \quad \text{or} \quad  \phi = V_o&amp;\text{on } \Gamma_o\\
+\end{cases}
+\end{split}\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon=\varepsilon_0\varepsilon_r\)</span> is the permittivity, <span class="math notranslate nohighlight">\(\Gamma_u(t)\)</span> is the moving/upper conductor boundary, <span class="math notranslate nohighlight">\(\Gamma_\ell\)</span> is the fixed/lower conductor boundary, and <span class="math notranslate nohighlight">\(\Gamma_o\)</span> is the outer boundary.</p>
+<blockquote>
+<div><p>Recall that <span class="math notranslate nohighlight">\(\varepsilon_0 = 8.8541878128\times 10^{-12}\,\mathrm{F/m}\)</span>.</p>
+</div></blockquote>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(\varepsilon_r\)</span> is user-specified (default <span class="math notranslate nohighlight">\(1\)</span>).</p>
+</div></blockquote>
+<blockquote>
+<div><p>The electric field is just <span class="math notranslate nohighlight">\(\mathbf{E} = -\nabla \phi\)</span>.</p>
+</div></blockquote>
+<p><strong>Implementation notes:</strong></p>
+<ol class="arabic simple">
+<li><p>In the solver implementation the following typical driving voltage is used:</p></li>
+</ol>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[ 
+V_\ell(t)=V_{\mathrm{dc}} + V_{\mathrm{ac}}\sin(2\pi f t).
+\]</div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>The conforming finite element space <span class="math notranslate nohighlight">\(\mathbb{P}^1\)</span> of continuous piecewise linear functions is used for the discrete weak formulation of the problem for <span class="math notranslate nohighlight">\(\phi\)</span>.</p></li>
+<li><p>The electric field <span class="math notranslate nohighlight">\(\mathbf{E}\)</span> is obtained by computing exactly the gradient of <span class="math notranslate nohighlight">\(\phi\)</span>, which will belong automatically to the discontinuous finite element space <span class="math notranslate nohighlight">\(\mathbb{P}^0\)</span> of piecewise constant functions.</p></li>
+</ol>
+</section>
+<section id="electrostatic-traction-via-maxwell-stress">
+<h2>Electrostatic traction via Maxwell stress<a class="headerlink" href="#electrostatic-traction-via-maxwell-stress" title="Link to this heading">¶</a></h2>
+<p>In a linear dielectrics, the Maxwell stress tensor is given by</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf{T} = \varepsilon\left(\mathbf{E}\otimes\mathbf{E} - \frac{1}{2}|\mathbf{E}|^2\mathbf{I}\right).
+\]</div>
+</div>
+<p>The traction on the domain can be computed as</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf{t} = \mathbf{T}\,\hat n,
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the outward unit normal with respect to <span class="math notranslate nohighlight">\(\Omega(t)\)</span>, so by action-reaction the force on the moving electrode is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf{t}_u = -\mathbf{T}\,\hat n.
+\]</div>
+</div>
+<blockquote>
+<div><p>This sign convention is essential, since the electrode is represented as a hole in the domain mesh.</p>
+</div></blockquote>
+<p>With this traction, it’s possible to compute the physical force (Newtons) acting on the electrode in this way:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf{F} = b\int_{\Gamma_u}\mathbf{t}_u\,ds,
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(b\)</span> is the out-of-plane thickness (user-specified, with a default value of <span class="math notranslate nohighlight">\(10\,\mu m\)</span>).</p>
+</section>
+<section id="generalized-modal-forces">
+<h2>Generalized modal forces<a class="headerlink" href="#generalized-modal-forces" title="Link to this heading">¶</a></h2>
+<p>Instead of computing the actual force, we want to project the integration of the traction onto the first 4 modes.</p>
+<p>As explained in the report, the modal shape vector is taken as transverse-only:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\hat{\boldsymbol{w}}_n(x) =
+\begin{bmatrix}
+0\\
+\hat w_n(x)
+\end{bmatrix}.
+\end{split}\]</div>
+</div>
+<p>The corresponding generalized modal force is computed by virtual work:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+F_n(t) = b\int_{\Gamma_{10}(t)} \mathbf{t}_u(s,t)\cdot \hat{\boldsymbol{w}}_n(s)\,ds,
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\Gamma_{10}(t) \subseteq \Gamma_u(t)\)</span> is the boundary segment marked by physical tag 10 (<code class="docutils literal notranslate"><span class="pre">force_segment</span></code>), that is the lower edge.</p>
+</section>
+<section id="modal-mechanical-model">
+<h2>Modal mechanical model<a class="headerlink" href="#modal-mechanical-model" title="Link to this heading">¶</a></h2>
+<p>The moving beam is represented by modal coordinates <span class="math notranslate nohighlight">\(\{q_n(t)\}_{n=1}^4\)</span>. Skipping the datails (see report), we know that, since the mode shapes are an orthogonal base of eigenfunctions of the operator <span class="math notranslate nohighlight">\(\partial_x^4\)</span>, the damped equation for the an Euler-Bernoulli beam becomes the following diagonal system of ODEs:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+m_n\ddot q_n(t) + c_n \dot q_n(t) + k_n q_n(t) = F_n(t),
+\]</div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(m_n\)</span> is the modal mass [kg],</p></li>
+<li><p><span class="math notranslate nohighlight">\(c_n\)</span> is the modal damping [kg/s],</p></li>
+<li><p><span class="math notranslate nohighlight">\(k_n\)</span> is the modal stiffness [N/m],</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_n\)</span> is the generalized force [N].</p></li>
+</ul>
+<p>It is standard to express the parameters in terms of the natural frequencies <span class="math notranslate nohighlight">\(\omega_n\)</span> and damping ratios <span class="math notranslate nohighlight">\(\zeta_n\)</span></p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+k_n = m_n\omega_n^2,\qquad c_n = 2\zeta_n\omega_n m_n,
+\]</div>
+</div>
+<p>we therefore adopt this representation.</p>
+</section>
+<section id="time-integration">
+<h2>5. Time integration<a class="headerlink" href="#time-integration" title="Link to this heading">¶</a></h2>
+<p>For time integration, a Newmark scheme with <span class="math notranslate nohighlight">\(\beta=\frac{1}{4}\)</span>, <span class="math notranslate nohighlight">\(\gamma=\frac{1}{2}\)</span> is applied independently to each modal DOF.</p>
+<p>Given <span class="math notranslate nohighlight">\(q^k, \dot q^k, \ddot q^k\)</span>, define predictors:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+q_{\mathrm{pred}} = q^k + \Delta t\,\dot q^k + \frac{\Delta t^2}{2}(1-2\beta)\ddot q^k,
+\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\dot q_{\mathrm{pred}} = \dot q^k + \Delta t(1-\gamma)\ddot q^k.
+\]</div>
+</div>
+<p>Then solve for <span class="math notranslate nohighlight">\(\ddot q^{k+1}\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\ddot q^{k+1} =
+\frac{
+F^{k+1} - c\,\dot q_{\mathrm{pred}} - k\,q_{\mathrm{pred}}
+}{
+m + \gamma\Delta t\,c + \beta\Delta t^2\,k
+}.
+\]</div>
+</div>
+<p>Finally, correct:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+q^{k+1} = q_{\mathrm{pred}} + \beta\Delta t^2 \ddot q^{k+1},\qquad
+\dot q^{k+1} = \dot q_{\mathrm{pred}} + \gamma\Delta t \ddot q^{k+1}.
+\]</div>
+</div>
+<p>In the coupled implementation, <span class="math notranslate nohighlight">\(F^{k+1}\)</span> is approximated from the mesh generated by the current modal coordinates (explicit/partitioned coupling). More accurate schemes would use a fixed-point iteration per time step, but this is deliberately avoided here.</p>
+</section>
+<section id="coupling-algorithm">
+<h2>Coupling algorithm<a class="headerlink" href="#coupling-algorithm" title="Link to this heading">¶</a></h2>
+<p>For time steps <span class="math notranslate nohighlight">\(k=0,\dots,N-1\)</span>:</p>
+<ol class="arabic simple">
+<li><p><strong>Geometry update</strong>: construct moving electrode boundary from <span class="math notranslate nohighlight">\(\{q_n^k\}_{n=1}^4\)</span> and write <code class="docutils literal notranslate"><span class="pre">.geo</span></code>.</p></li>
+<li><p><strong>Remesh</strong>: run Gmsh to generate air mesh <span class="math notranslate nohighlight">\(\Omega(t_k)\)</span>.</p></li>
+<li><p><strong>Electrostatics solve</strong>: compute <span class="math notranslate nohighlight">\(\phi_h^k\)</span>.</p></li>
+<li><p><strong>Maxwell stress</strong>: compute traction <span class="math notranslate nohighlight">\(\mathbf{t}_c^k\)</span> on <span class="math notranslate nohighlight">\(\Gamma_{10}(t_k)\)</span>.</p></li>
+<li><p><strong>Modal projection</strong>: compute generalized forces <span class="math notranslate nohighlight">\(\{F_n^k\}_{n=1}^4\)</span>.</p></li>
+<li><p><strong>Time integration</strong>: update <span class="math notranslate nohighlight">\(q_n^{k+1}, \dot q_n^{k+1}, \ddot q_n^{k+1}\)</span> with Newmark for every <span class="math notranslate nohighlight">\(n\)</span>.</p></li>
+<li><p><strong>Output</strong>: write <span class="math notranslate nohighlight">\(\phi_h^k\)</span> to a ParaView time series, store modal histories and execution times.</p></li>
+</ol>
+<blockquote>
+<div><p>Modal coordinates <span class="math notranslate nohighlight">\(q_n\)</span> are stored internally in meters and converted to microns only when substituting modifying geometries.</p>
+</div></blockquote>
+</section>
+<section id="diagnostic-quantities">
+<h2>Diagnostic quantities<a class="headerlink" href="#diagnostic-quantities" title="Link to this heading">¶</a></h2>
+<p>At each step <span class="math notranslate nohighlight">\(t_k\)</span>, the following quantities are computed, displayed and saved:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{gather*}
+\min_{\Omega(t_k)} \phi_h^k \\[6pt]
+\max_{\Omega(t_k)} \phi_h^k \\[6pt]
+\max_{\Omega(t_k)} |\mathbf{E}| \\[6pt]
+W = \frac12 \varepsilon \int_{\Omega} |\nabla \phi|^2 \, dx &amp;\text{(electrostatic energy)}\\[6pt]
+C \approx \frac{2W}{(V_\ell - V_u)^2} &amp;\text{(capacitance-like estimate)}
+\end{gather*}
+\end{split}\]</div>
+</div>
+</section>
+<section id="dl-rom">
+<h2>DL-ROM<a class="headerlink" href="#dl-rom" title="Link to this heading">¶</a></h2>
+<section id="normal-derivative-prediction">
+<h3>Normal derivative prediction<a class="headerlink" href="#normal-derivative-prediction" title="Link to this heading">¶</a></h3>
+<p>The main difference between the two ROMs lies in the fact that the DL-ROM has access to a neural network that allows us to predict</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial\phi}{\partial \hat n}
+\]</div>
+</div>
+<p>on the lower edge of the upper electrode. In particular, the neural network we propose takes as input the geometric parameters: <span class="math notranslate nohighlight">\(q_n\)</span>, distance between the electrodes and over-etch of the upper electrode.</p>
+<blockquote>
+<div><p>All inputs of the network are in converted microns.</p>
+</div></blockquote>
+<p>Actually you don’t need to specify <span class="math notranslate nohighlight">\(V_l\)</span> (sinusoidal in time). In fact, if you set to a constant <span class="math notranslate nohighlight">\(V_u\)</span> and train the network with the case of <span class="math notranslate nohighlight">\(V_l=1\)</span>, you can derive the normal derivative for a generic <span class="math notranslate nohighlight">\(V_l\)</span> using a simple tranformation. For instance, if we assume for simplicity <span class="math notranslate nohighlight">\(V_u=0\)</span>, we have that</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial\phi}{\partial \hat n} = V_l \, D(\mu)
+\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(D\)</span> is the DeepONet and <span class="math notranslate nohighlight">\(\mu\)</span> is the vector containing the geometric parameters.</p>
+</section>
+<section id="generalized-forces">
+<h3>Generalized forces<a class="headerlink" href="#generalized-forces" title="Link to this heading">¶</a></h3>
+<p>This is useful since the traction can be rewritten in this way:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+\mathbf{t}_u = -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \hat n}\right)^2 \hat n
+\]</div>
+</div>
+<p>and <span class="math notranslate nohighlight">\(\hat n\)</span> can be computed without the mesh in the entire domain. Indeed, it’s sufficient to discretize lower edge and integrate on it to get the generalized force:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[
+F_n(t) = b\int_{\Gamma_{10}(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \hat n}(s)\right)^2 n_2(s) \, \hat w_n(s)\,ds.
+\]</div>
+</div>
+</section>
+<section id="potential-surrogate">
+<h3>Potential surrogate<a class="headerlink" href="#potential-surrogate" title="Link to this heading">¶</a></h3>
+<p>There’s also the possibility to use a surrogate for the potential <span class="math notranslate nohighlight">\(\phi\)</span>. In this repository we only illustrate this possibility and it’s accuracy, while this is not a source of computational speedup, since in any case you need a mesh to visualize the solution. See the two test cases about visualization of the solution.</p>
+</section>
+</section>
+<section id="modelling-assumptions">
+<h2>Modelling assumptions<a class="headerlink" href="#modelling-assumptions" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Quasi-static electrostatics (no displacement currents in time).</p></li>
+<li><p>Perfectly conducting electrodes with prescribed potentials.</p></li>
+<li><p>Domain treated as linear dielectric (constant <span class="math notranslate nohighlight">\(\varepsilon_r\)</span>).</p></li>
+<li><p>Modal mechanics assumes a linear basis and diagonal modal dynamics (no geometric nonlinearity, no contact/pull-in).</p></li>
+<li><p>Coupling is partitioned with remeshing; stability near pull-in may require smaller <span class="math notranslate nohighlight">\(\Delta t\)</span> and/or iterative coupling.</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="multi-physics.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Multi-physics package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="surrogate.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Surrogate package</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Alessandro Pedone, Marta Pignatelli
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Multi-physics model</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#geometry-and-kinematics">Geometry and kinematics</a><ul>
+<li><a class="reference internal" href="#reference-2d-geometry">Reference 2D geometry</a></li>
+<li><a class="reference internal" href="#modal-parametrization">Modal parametrization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#electrostatics">Electrostatics</a></li>
+<li><a class="reference internal" href="#electrostatic-traction-via-maxwell-stress">Electrostatic traction via Maxwell stress</a></li>
+<li><a class="reference internal" href="#generalized-modal-forces">Generalized modal forces</a></li>
+<li><a class="reference internal" href="#modal-mechanical-model">Modal mechanical model</a></li>
+<li><a class="reference internal" href="#time-integration">5. Time integration</a></li>
+<li><a class="reference internal" href="#coupling-algorithm">Coupling algorithm</a></li>
+<li><a class="reference internal" href="#diagnostic-quantities">Diagnostic quantities</a></li>
+<li><a class="reference internal" href="#dl-rom">DL-ROM</a><ul>
+<li><a class="reference internal" href="#normal-derivative-prediction">Normal derivative prediction</a></li>
+<li><a class="reference internal" href="#generalized-forces">Generalized forces</a></li>
+<li><a class="reference internal" href="#potential-surrogate">Potential surrogate</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#modelling-assumptions">Modelling assumptions</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

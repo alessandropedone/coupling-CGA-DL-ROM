@@ -8,6 +8,7 @@
         <title>src.data.fom - deeponet-for-mems 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
@@ -189,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../data.html">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -236,7 +245,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">gmshio</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">fem</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="kn">import</span> <span class="n">functionspace</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">Constant</span><span class="p">,</span> <span class="n">dirichletbc</span><span class="p">,</span> <span class="n">locate_dofs_topological</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">dirichletbc</span><span class="p">,</span> <span class="n">locate_dofs_topological</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearProblem</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_scalar_type</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
@@ -250,7 +259,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_domain_from_mesh</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. admonition:: Description</span>
-<span class="sd">        </span>
+
 <span class="sd">        Read the mesh from the .msh file and return the computational domain.</span>
 
 <span class="sd">    :param mesh_path: Path to the mesh file.</span>
@@ -261,18 +270,22 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">gmshio</span>
 
-    <span class="n">domain</span><span class="p">,</span> <span class="n">cell_tags</span><span class="p">,</span> <span class="n">facet_tags</span> <span class="o">=</span> <span class="n">gmshio</span><span class="o">.</span><span class="n">read_from_msh</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gdim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">domain</span><span class="p">,</span> <span class="n">cell_tags</span><span class="p">,</span> <span class="n">facet_tags</span> <span class="o">=</span> <span class="n">gmshio</span><span class="o">.</span><span class="n">read_from_msh</span><span class="p">(</span>
+        <span class="n">mesh_path</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gdim</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">domain</span></div>
 
 
 
-<div class="viewcode-block" id="_compute_boundary_normals_and_midpoints">
-<a class="viewcode-back" href="../../../data.html#src.data.fom._compute_boundary_normals_and_midpoints">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_compute_boundary_normals_and_midpoints</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">boundary_facets</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="compute_boundary_normals_and_midpoints">
+<a class="viewcode-back" href="../../../data.html#src.data.fom.compute_boundary_normals_and_midpoints">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_boundary_normals_and_midpoints</span><span class="p">(</span>
+    <span class="n">domain</span><span class="p">,</span> <span class="n">boundary_facets</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. admonition:: Description</span>
-<span class="sd">        </span>
+
 <span class="sd">        Compute boundary normals and midpoints for the facets of the upper plate (tag 10).</span>
 
 <span class="sd">    :param domain: The computational domain containing mesh information.</span>
@@ -301,11 +314,11 @@
         <span class="n">n_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
         <span class="n">n_vec</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">n_vec</span><span class="p">)</span>
         <span class="n">normals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_vec</span><span class="p">)</span>
-        <span class="n">midpoints</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p0</span> <span class="o">+</span> <span class="n">p1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">midpoints</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p0</span> <span class="o">+</span> <span class="n">p1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="n">normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">normals</span><span class="p">)</span>
     <span class="n">midpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">midpoints</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># only x and y coordinates</span>
-    
+
     <span class="c1"># Flip normals to point downwards (towards the exterior of the domain)</span>
     <span class="n">normals</span><span class="p">[(</span><span class="n">normals</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
 
@@ -315,16 +328,26 @@
 
 <div class="viewcode-block" id="fom">
 <a class="viewcode-back" href="../../../data.html#src.data.fom.fom">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fom</span><span class="p">(</span><span class="n">mesh</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bc_lower_plate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">bc_upper_plate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fom</span><span class="p">(</span><span class="n">mesh</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bc_lower_plate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">bc_upper_plate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. admonition:: Description</span>
 
-<span class="sd">        Full order model that solves the PDE with given boundary conditions and computes the solutions and its gradient. </span>
-<span class="sd">    </span>
+<span class="sd">        Full order model that solves the PDE with given boundary conditions and computes the solutions and its gradient.</span>
+
 <span class="sd">    :param mesh: Path to the mesh file.</span>
 <span class="sd">    :param bc_lower_plate: Dirichlet BC value for the lower plate.</span>
 <span class="sd">    :param bc_upper_plate: Dirichlet BC value for the upper plate.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :returns:</span>
 <span class="sd">        - **x** (``np.ndarray``) -- x coordinates of all mesh nodes.</span>
 <span class="sd">        - **y** (``np.ndarray``) -- y coordinates of all mesh nodes.</span>
@@ -348,13 +371,15 @@
         <span class="n">devnull</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="n">devnull</span><span class="p">,</span> <span class="n">stdout_fd</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">devnull</span><span class="p">)</span>
-        
-        <span class="n">domain</span><span class="p">,</span> <span class="n">cell_tags</span><span class="p">,</span> <span class="n">facet_tags</span> <span class="o">=</span> <span class="n">gmshio</span><span class="o">.</span><span class="n">read_from_msh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gdim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        
+
+        <span class="n">domain</span><span class="p">,</span> <span class="n">cell_tags</span><span class="p">,</span> <span class="n">facet_tags</span> <span class="o">=</span> <span class="n">gmshio</span><span class="o">.</span><span class="n">read_from_msh</span><span class="p">(</span>
+            <span class="n">mesh</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gdim</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>
+
         <span class="c1"># Restore stdout</span>
         <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="n">saved_stdout</span><span class="p">,</span> <span class="n">stdout_fd</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">saved_stdout</span><span class="p">)</span>
-        
+
         <span class="c1">## SOLVE FOR THE POTENTIAL DISTRIBUTION ##</span>
 
         <span class="c1"># Define finite element function space</span>
@@ -395,15 +420,16 @@
         <span class="n">L</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span>
 
         <span class="c1"># Assemble the system</span>
-         
-        <span class="n">problem</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span> <span class="n">petsc_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span> <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;lu&quot;</span><span class="p">})</span>
-        <span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
 
+        <span class="n">problem</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span> <span class="n">petsc_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span> <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;lu&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
 
         <span class="c1">## COMPUTE THE GRADIENT OF THE SOLUTION ##</span>
 
         <span class="c1"># Define the vector function space for the gradient</span>
-        <span class="n">V_grad</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;DG&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="p">)))</span>
+        <span class="n">V_grad</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;DG&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">dim</span><span class="p">,)))</span>
 
         <span class="c1"># Define the trial and test functions for the vector space</span>
         <span class="n">u_vec</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TrialFunction</span><span class="p">(</span><span class="n">V_grad</span><span class="p">)</span>
@@ -417,9 +443,10 @@
         <span class="n">L_grad</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">grad_u</span><span class="p">,</span> <span class="n">v_vec</span><span class="p">)</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span>
 
         <span class="c1"># Assemble the system</span>
-        <span class="n">problem_grad</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span><span class="n">a_grad</span><span class="p">,</span> <span class="n">L_grad</span><span class="p">,</span> <span class="n">petsc_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span> <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;lu&quot;</span><span class="p">})</span>
+        <span class="n">problem_grad</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span>
+            <span class="n">a_grad</span><span class="p">,</span> <span class="n">L_grad</span><span class="p">,</span> <span class="n">petsc_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span> <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;lu&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
         <span class="n">grad_uh</span> <span class="o">=</span> <span class="n">problem_grad</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-
 
         <span class="c1">## EXTRACT AND RETURN RELEVANT DATA ##</span>
 
@@ -450,9 +477,11 @@
             <span class="n">boundary_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">connected_cell</span><span class="p">)</span>
         <span class="n">grad_x_plate</span> <span class="o">=</span> <span class="n">grad_x</span><span class="p">[</span><span class="n">boundary_cells</span><span class="p">]</span>
         <span class="n">grad_y_plate</span> <span class="o">=</span> <span class="n">grad_y</span><span class="p">[</span><span class="n">boundary_cells</span><span class="p">]</span>
-        
+
         <span class="c1"># Extract cell connectivity</span>
-        <span class="n">cells</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">connectivity</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">connectivity</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+            <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">dim</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">)</span>
 
         <span class="c1"># Plot potential distribution and gradient components</span>
         <span class="c1"># from plot_solutions import plot</span>
@@ -461,12 +490,27 @@
         <span class="c1"># plot(x, y, cells, grad_y, title=&quot;Gradient Y Component&quot;, colorbar_label=&quot;Gradient Y&quot;, sharp_color_range=(-0.7, -0.5))</span>
 
         <span class="c1"># Extract the normal vectors the upper plate boundary with corresponding midpoints</span>
-        <span class="n">normal_vectors_plate</span><span class="p">,</span> <span class="n">midpoints_plate</span> <span class="o">=</span> <span class="n">_compute_boundary_normals_and_midpoints</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">boundary_facets</span><span class="p">)</span>
+        <span class="n">normal_vectors_plate</span><span class="p">,</span> <span class="n">midpoints_plate</span> <span class="o">=</span> <span class="n">compute_boundary_normals_and_midpoints</span><span class="p">(</span>
+            <span class="n">domain</span><span class="p">,</span> <span class="n">boundary_facets</span>
+        <span class="p">)</span>
 
         <span class="c1"># Compute the normal derivative on the plate</span>
-        <span class="n">normal_derivatives_plate</span> <span class="o">=</span> <span class="n">grad_x_plate</span> <span class="o">*</span> <span class="n">normal_vectors_plate</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">grad_y_plate</span> <span class="o">*</span> <span class="n">normal_vectors_plate</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-        
-        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">midpoints_plate</span><span class="p">,</span> <span class="n">normal_derivatives_plate</span><span class="p">,</span> <span class="n">normal_vectors_plate</span></div>
+        <span class="n">normal_derivatives_plate</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">grad_x_plate</span> <span class="o">*</span> <span class="n">normal_vectors_plate</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">grad_y_plate</span> <span class="o">*</span> <span class="n">normal_vectors_plate</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">cells</span><span class="p">,</span>
+            <span class="n">potential</span><span class="p">,</span>
+            <span class="n">grad_x</span><span class="p">,</span>
+            <span class="n">grad_y</span><span class="p">,</span>
+            <span class="n">midpoints_plate</span><span class="p">,</span>
+            <span class="n">normal_derivatives_plate</span><span class="p">,</span>
+            <span class="n">normal_vectors_plate</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 
@@ -475,14 +519,24 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">solvensave</span><span class="p">(</span><span class="n">mesh</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. admonition:: Description</span>
-<span class="sd">        </span>
+
 <span class="sd">        Full order model that solves the PDE and saves the output in an .h5 file.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param mesh: path to the mesh file.</span>
 <span class="sd">    :param data_folder: path to the data folder.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">mesh</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.msh&quot;</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">midpoints_plate</span><span class="p">,</span> <span class="n">normal_derivatives_plate</span><span class="p">,</span> <span class="n">normal_vectors_plate</span> <span class="o">=</span> <span class="n">fom</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span> 
+        <span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">cells</span><span class="p">,</span>
+            <span class="n">potential</span><span class="p">,</span>
+            <span class="n">grad_x</span><span class="p">,</span>
+            <span class="n">grad_y</span><span class="p">,</span>
+            <span class="n">midpoints_plate</span><span class="p">,</span>
+            <span class="n">normal_derivatives_plate</span><span class="p">,</span>
+            <span class="n">normal_vectors_plate</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">fom</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
         <span class="c1"># Save the results in a .h5 file</span>
         <span class="n">results_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_folder</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span>
         <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mesh</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
@@ -494,7 +548,9 @@
             <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">potential</span><span class="p">)</span>
             <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;grad_x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">grad_x</span><span class="p">)</span>
             <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;grad_y&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">grad_y</span><span class="p">)</span>
-            <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">normal_derivatives_plate</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">normal_derivatives_plate</span>
+            <span class="p">)</span>
             <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;midpoints_plate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">midpoints_plate</span><span class="p">)</span>
             <span class="n">file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;normal_vectors_plate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">normal_vectors_plate</span><span class="p">)</span></div>
 

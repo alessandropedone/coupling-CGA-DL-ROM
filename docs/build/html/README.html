@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Test cases" href="run_test_cases.html"><link rel="prev" title="deeponet-for-mems documentation" href="index.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Test Cases" href="run_test_cases.html"><link rel="prev" title="deeponet-for-mems documentation" href="index.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
         <title>Introduction - deeponet-for-mems 0.1.0 documentation</title>
@@ -190,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -234,24 +242,8 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="introduction">
+          <section class="tex2jax_ignore mathjax_ignore" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
-<section id="strucutre-of-the-repository">
-<h2>Strucutre of the repository<a class="headerlink" href="#strucutre-of-the-repository" title="Link to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deeponet-for-mems
-├──<span class="w"> </span>README.md
-├──<span class="w"> </span>build_docs.sh
-├──<span class="w"> </span>data<span class="w"> </span><span class="o">(</span>module<span class="o">)</span>
-├──<span class="w"> </span>docs<span class="w"> </span>
-├──<span class="w"> </span>environment.yml
-├──<span class="w"> </span>geometries<span class="w"> </span>
-├──<span class="w"> </span>models<span class="w"> </span>
-├──<span class="w"> </span>multi-physics_solver
-├──<span class="w"> </span>surrogate<span class="w"> </span><span class="o">(</span>module<span class="o">)</span>
-└──<span class="w"> </span><span class="nb">test</span>
-</pre></div>
-</div>
-</section>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h2>
 <blockquote>
@@ -262,9 +254,27 @@
 </pre></div>
 </div>
 </section>
-<section id="test-cases">
-<h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
-<p>You can find the instruction on how to run them in the readme in the <code class="docutils literal notranslate"><span class="pre">test</span></code> folder, or equivalently in the documentation provided in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder.</p>
+<section id="strucutre-of-the-repository">
+<h2>Strucutre of the repository<a class="headerlink" href="#strucutre-of-the-repository" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deeponet-for-mems
+├──<span class="w"> </span>README.md
+├──<span class="w"> </span>build_docs.sh
+├──<span class="w"> </span>docs
+├──<span class="w"> </span>environment.yml
+├──<span class="w"> </span>geometries
+├──<span class="w"> </span>models
+├──<span class="w"> </span>report.pdf
+├──<span class="w"> </span>src
+│<span class="w">   </span>├──<span class="w"> </span>data
+│<span class="w">   </span>├──<span class="w"> </span>multi_physics
+│<span class="w">   </span>└──<span class="w"> </span>surrogate
+└──<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+</section>
+<section id="report">
+<h2>Report<a class="headerlink" href="#report" title="Link to this heading">¶</a></h2>
+<p>For a detailed explanation of all functionalities and the theoretical background, please consult <code class="docutils literal notranslate"><span class="pre">report.pdf</span></code> in the main directory.</p>
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
@@ -275,6 +285,10 @@ you can just run the following command, and select the right option, to generate
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./build_docs.sh
 </pre></div>
 </div>
+</section>
+<section id="test-cases">
+<h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
+<p>You can find the instruction on how to run them in <code class="docutils literal notranslate"><span class="pre">test/run_test_cases.md</span></code>, or equivalently in the documentation.</p>
 </section>
 </section>
 
@@ -288,7 +302,7 @@ you can just run the following command, and select the right option, to generate
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Test cases</div>
+                <div class="title">Test Cases</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -334,10 +348,11 @@ you can just run the following command, and select the right option, to generate
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Introduction</a><ul>
-<li><a class="reference internal" href="#strucutre-of-the-repository">Strucutre of the repository</a></li>
 <li><a class="reference internal" href="#setup">Setup</a></li>
-<li><a class="reference internal" href="#test-cases">Test cases</a></li>
+<li><a class="reference internal" href="#strucutre-of-the-repository">Strucutre of the repository</a></li>
+<li><a class="reference internal" href="#report">Report</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#test-cases">Test cases</a></li>
 </ul>
 </li>
 </ul>

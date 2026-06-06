@@ -8,6 +8,7 @@
         <title>src.surrogate.summary - deeponet-for-mems 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
@@ -189,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../data.html">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -232,38 +241,55 @@
 <span class="sd">A file to summarize the specified surrogate model.</span>
 
 <span class="sd">Example usage::</span>
-<span class="sd">    </span>
-<span class="sd">    python -m surrogate.summary --model_path &quot;models/potential1.keras&quot;</span>
+
+<span class="sd">    python -m src.surrogate.summary --model_path &quot;models/potential1.keras&quot;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.model</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DenseNetwork</span><span class="p">,</span>
+    <span class="n">FourierFeatures</span><span class="p">,</span>
+    <span class="n">LogUniformFreqInitializer</span><span class="p">,</span>
+    <span class="n">EinsumLayer</span><span class="p">,</span>
+    <span class="n">DeepONet</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.losses</span><span class="w"> </span><span class="kn">import</span> <span class="n">masked_mse</span><span class="p">,</span> <span class="n">masked_mae</span>
 
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../surrogate.html#src.surrogate.summary.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="c1"># Read input arguments</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--model_path&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;models/model.keras&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to save the trained model.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model_path&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;models/model.keras&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to save the trained model.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="n">model_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">model_path</span>
 
     <span class="c1"># Load the trained model</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">DenseNetwork</span><span class="p">,</span> <span class="n">FourierFeatures</span><span class="p">,</span> <span class="n">LogUniformFreqInitializer</span><span class="p">,</span> <span class="n">EinsumLayer</span><span class="p">,</span> <span class="n">DeepONet</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.losses</span><span class="w"> </span><span class="kn">import</span> <span class="n">masked_mse</span><span class="p">,</span> <span class="n">masked_mae</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
-        <span class="n">model_path</span><span class="p">,</span> 
+        <span class="n">model_path</span><span class="p">,</span>
         <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;DenseNetwork&quot;</span><span class="p">:</span> <span class="n">DenseNetwork</span><span class="p">,</span> 
-            <span class="s1">&#39;FourierFeatures&#39;</span><span class="p">:</span> <span class="n">FourierFeatures</span><span class="p">,</span> 
-            <span class="s1">&#39;LogUniformFreqInitializer&#39;</span><span class="p">:</span> <span class="n">LogUniformFreqInitializer</span><span class="p">,</span> 
-            <span class="s1">&#39;EinsumLayer&#39;</span><span class="p">:</span> <span class="n">EinsumLayer</span><span class="p">,</span> 
-            <span class="s1">&#39;DeepONet&#39;</span><span class="p">:</span> <span class="n">DeepONet</span><span class="p">,</span>
-            <span class="s1">&#39;masked_mse&#39;</span><span class="p">:</span> <span class="n">masked_mse</span><span class="p">,</span>
-            <span class="s1">&#39;masked_mae&#39;</span><span class="p">:</span> <span class="n">masked_mae</span><span class="p">,</span>
-            <span class="p">})</span>
+            <span class="s2">&quot;DenseNetwork&quot;</span><span class="p">:</span> <span class="n">DenseNetwork</span><span class="p">,</span>
+            <span class="s2">&quot;FourierFeatures&quot;</span><span class="p">:</span> <span class="n">FourierFeatures</span><span class="p">,</span>
+            <span class="s2">&quot;LogUniformFreqInitializer&quot;</span><span class="p">:</span> <span class="n">LogUniformFreqInitializer</span><span class="p">,</span>
+            <span class="s2">&quot;EinsumLayer&quot;</span><span class="p">:</span> <span class="n">EinsumLayer</span><span class="p">,</span>
+            <span class="s2">&quot;DeepONet&quot;</span><span class="p">:</span> <span class="n">DeepONet</span><span class="p">,</span>
+            <span class="s2">&quot;masked_mse&quot;</span><span class="p">:</span> <span class="n">masked_mse</span><span class="p">,</span>
+            <span class="s2">&quot;masked_mae&quot;</span><span class="p">:</span> <span class="n">masked_mae</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Loaded surrogate model summary.</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span></div>
 

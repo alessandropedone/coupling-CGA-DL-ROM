@@ -8,6 +8,7 @@
         <title>src.data.plot - deeponet-for-mems 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
@@ -189,11 +190,19 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <p class="caption" role="heading"><span class="caption-text">General information</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../run_test_cases.html">Test Cases</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Electrostatics</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../data.html">Data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../surrogate.html">Surrogate package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../multi_physics_solver.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -876,11 +885,11 @@
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Derivative modulus&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pred</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Predicted normal derivative (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Predicted normal derivative&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Predicted $\frac</span><span class="se">{{</span><span class="s2">\partial V</span><span class="se">}}{{</span><span class="s2">\partial n</span><span class="se">}}</span><span class="s2">$ (zoom </span><span class="si">{</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">rf</span><span class="s2">&quot;Predicted $</span><span class="se">\\</span><span class="s2">frac</span><span class="se">{{\\</span><span class="s2">partial V</span><span class="se">}}{{\\</span><span class="s2">partial n</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Normal derivative error rescaled (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Normal derivative error rescaled&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Relative error (zoom </span><span class="si">{}</span><span class="s2">) (RMSE = </span><span class="si">{:.0e}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivative_pred&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivatives_plate&#39;</span><span class="p">][:])</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Relative error (RMSE = </span><span class="si">{:.0e}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivative_pred&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivatives_plate&#39;</span><span class="p">][:])</span><span class="o">**</span><span class="mi">2</span><span class="p">))))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Normal derivative (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Normal derivative&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\frac</span><span class="se">{{</span><span class="s2">\partial V</span><span class="se">}}{{</span><span class="s2">\partial n</span><span class="se">}}</span><span class="s2">$ (zoom </span><span class="si">{</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">rf</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">frac</span><span class="se">{{\\</span><span class="s2">partial V</span><span class="se">}}{{\\</span><span class="s2">partial n</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">postpone_show</span><span class="p">:</span>
@@ -905,11 +914,6 @@
     <span class="n">plot_normal_derivative</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)])</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;temp/test1/results/1.h5&quot;</span>
-    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-        <span class="n">summary_plot</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 </pre></div>
         </article>
       </div>
