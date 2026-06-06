@@ -24,12 +24,13 @@ def main():
             "The --big-deformation and --clamped options cannot be used together, as the current clamped beam model is not designed for large deformations."
         )
 
-    # ----------------------------------------------------------------
-    # Run the simulation with 4 modes with dt = 1e-4, 1e-5, 5e-6, 1e-6
-    # ----------------------------------------------------------------
-    dt = [1e-5, 5e-6, 1e-6]
+    # ----------------------------------------------------------------------
+    # Run the simulation with 4 modes with dt = 1e-4, 1e-5, 5e-6, 1e-6, 1e-7
+    # ----------------------------------------------------------------------
+    dt = [1e-5, 5e-6, 1e-6, 1e-7]
     steps = [4 * int(1e-4 / dt_i) for dt_i in dt]
-    for dt_i, steps_i in zip(dt, steps):
+    post_processing_step = [int(dt[0] / dt_i) for dt_i in dt]
+    for dt_i, steps_i, post_processing_step_i in zip(dt, steps, post_processing_step):
         workdir = (
             Path(f"temp/convergence/run_nmodes_4")
             if not ap.parse_args().big_deformation
@@ -88,89 +89,24 @@ def main():
             "--print-every",
             "1",
             "--fail-fast",
+            "--derivative-nn-path",
+            (
+                "models/derivative1.keras"
+                if not ap.parse_args().big_deformation and not ap.parse_args().clamped
+                else (
+                    "models/derivative3.keras"
+                    if ap.parse_args().clamped
+                    else "models/derivative2.keras"
+                )
+            ),
+            "--postprocessing-step",
+            str(post_processing_step_i),
         ]
         if ap.parse_args().clamped:
             cmd.append("--clamped")
         if not ap.parse_args().no_simulation:
             print(f"Running simulation with dt = {dt_i:.0e}...")
             subprocess.run(cmd, check=True)
-
-    workdir = (
-        Path(f"temp/convergence/run_nmodes_4")
-        if not ap.parse_args().big_deformation
-        else Path(f"temp/convergence/run_nmodes_4_big_deformation")
-    )
-    workdir = workdir.with_name(workdir.name + f"_dt_" + str(1e-7))
-    if ap.parse_args().clamped:
-        workdir = workdir.with_name(workdir.name + "_clamped")
-    cmd = [
-        "python",
-        "-m",
-        "src.multi_physics.solver",
-        "--template-geo",
-        (
-            "geometries/cantilever1.geo"
-            if not ap.parse_args().big_deformation and not ap.parse_args().clamped
-            else (
-                "geometries/clamped.geo"
-                if ap.parse_args().clamped
-                else "geometries/cantilever2.geo"
-            )
-        ),
-        "--workdir",
-        str(workdir),
-        "--nmodes",
-        "4",
-        "--dt",
-        "1e-7",
-        "--nsteps",
-        str(4 * int(1e-4 / 1e-7)),
-        "--Vdc",
-        "0",
-        "--Vac",
-        "5" if not ap.parse_args().big_deformation else "230",
-        "--freq",
-        "2.5e3",
-        "--Vupper",
-        "0",
-        "--Vouter",
-        "0",
-        "--omega",
-        "6.3e5",
-        "3.9e6",
-        "1.1e7",
-        "2.1e7",
-        "--mass",
-        "1e-12",
-        "1e-12",
-        "1e-12",
-        "1e-12",
-        "--zeta",
-        "0.01",
-        "0.01",
-        "0.01",
-        "0.01",
-        "--print-every",
-        "1",
-        "--fail-fast",
-        "--derivative-nn-path",
-        (
-            "models/derivative1.keras"
-            if not ap.parse_args().big_deformation and not ap.parse_args().clamped
-            else (
-                "models/derivative3.keras"
-                if ap.parse_args().clamped
-                else "models/derivative2.keras"
-            )
-        ),
-        "--no-postprocessing",
-    ]
-    if ap.parse_args().clamped:
-        cmd.append("--clamped")
-
-    if not ap.parse_args().no_simulation:
-        print(f"Running DL-ROM simulation with 4 modes...")
-        subprocess.run(cmd, check=True)
 
     # ---------------------------------------------------------
     # Compare the displacement fields and capacitance over time
@@ -208,7 +144,7 @@ def main():
         4,
         x,
         L_m,
-        workdir.with_name(workdir.name + f"_dt_" + str(1e-7)),
+        workdir.with_name(workdir.name + f"_dt_" + str(dt[3])),
         clamped=ap.parse_args().clamped,
     )
 
@@ -218,48 +154,52 @@ def main():
         workdir.with_name(workdir.name + f"_dt_" + str(dt[0])) / "modal_history.csv"
     )
     data = pd.read_csv(csv_path)
-    capacity1 = thickness_m * data["cap_like_F"].values
+    capacity1 = thickness_m * data["cap_like_F"].values[::post_processing_step[0]]
     time1 = data["t_s"].values
+    time1_cap = time1[::post_processing_step[0]]
     csv_path = (
         workdir.with_name(workdir.name + f"_dt_" + str(dt[1])) / "modal_history.csv"
     )
     data = pd.read_csv(csv_path)
-    capacity2 = thickness_m * data["cap_like_F"].values
+    capacity2 = thickness_m * data["cap_like_F"].values[::post_processing_step[1]]
     time2 = data["t_s"].values
+    time2_cap = time2[::post_processing_step[1]]
     csv_path = (
         workdir.with_name(workdir.name + f"_dt_" + str(dt[2])) / "modal_history.csv"
     )
     data = pd.read_csv(csv_path)
-    capacity3 = thickness_m * data["cap_like_F"].values
+    capacity3 = thickness_m * data["cap_like_F"].values[::post_processing_step[2]]
     time3 = data["t_s"].values
+    time3_cap = time3[::post_processing_step[2]]
     csv_path = (
-        workdir.with_name(workdir.name + f"_dt_" + str(1e-7)) / "modal_history.csv"
+        workdir.with_name(workdir.name + f"_dt_" + str(dt[3])) / "modal_history.csv"
     )
     data = pd.read_csv(csv_path)
-    capacity4 = thickness_m * data["cap_like_F_approx"].values
+    capacity4 = thickness_m * data["cap_like_F"].values[::post_processing_step[3]]
     time4 = data["t_s"].values
+    time4_cap = time4[::post_processing_step[3]]
 
     # ------------------------------
     # Plot the capacitance over time
     # ------------------------------
     plt.figure(figsize=(10, 6))
     plt.plot(
-        time1[1:], capacity1[1:], label="dt = " + str(dt[0]), linestyle="-", linewidth=2
+        time1_cap[1:], capacity1[1:], label="dt = " + str(dt[0]), linestyle="-", linewidth=2
     )
     plt.plot(
-        time2[1:],
+        time2_cap[1:],
         capacity2[1:],
         label="dt = " + str(dt[1]),
         linestyle="--",
         linewidth=2,
     )
     plt.plot(
-        time3[1:], capacity3[1:], label="dt = " + str(dt[2]), linestyle=":", linewidth=2
+        time3_cap[1:], capacity3[1:], label="dt = " + str(dt[2]), linestyle=":", linewidth=2
     )
     plt.plot(
-        time4[1:],
+        time4_cap[1:],
         capacity4[1:],
-        label="dt = " + str(1e-7),
+        label="dt = " + str(dt[3]),
         linestyle="-.",
         linewidth=2,
     )
@@ -282,7 +222,7 @@ def main():
     (line1,) = ax.plot([], [], label="dt = " + str(dt[0]), linestyle="-", linewidth=2)
     (line2,) = ax.plot([], [], label="dt = " + str(dt[1]), linestyle="--", linewidth=2)
     (line3,) = ax.plot([], [], label="dt = " + str(dt[2]), linestyle=":", linewidth=2)
-    (line4,) = ax.plot([], [], label="dt = " + str(1e-7), linestyle="-.", linewidth=2)
+    (line4,) = ax.plot([], [], label="dt = " + str(dt[3]), linestyle="-.", linewidth=2)
 
     ax.set_xlim(x[0], x[-1])
     ax.set_ylim(ymin, ymax)
@@ -292,12 +232,10 @@ def main():
     ax.grid()
     ax.legend(loc="lower left")
 
-    step = 4 * int(1e-4 / 1e-7)
-
     def update(frame):
         i1 = int(frame * steps[0] / steps[2])
         i2 = int(frame * steps[1] / steps[2])
-        i4 = int(frame * step / steps[2])
+        i4 = int(frame * steps[3] / steps[2])
         line1.set_data(x, u1[i1, :])
         line2.set_data(x, u2[i2, :])
         line3.set_data(x, u3[frame, :])
