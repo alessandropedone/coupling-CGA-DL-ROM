@@ -69,7 +69,6 @@ from src.surrogate.model import (
 
 UM = 1e-6  # micron -> meter
 
-
 # ----------------------------
 # Utilities
 # ----------------------------

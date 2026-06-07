@@ -12,15 +12,17 @@ The physics of this system is made of two parts:
 
 > The choice of 4 as the number of modes is motivated by the fact that actually only the first mode is actually relevant for these kind of applications. In particular, if you are interested, you can take a look at the test which compares the simulations with 1, 2, 3 and 4 modes.
 
-The coupling is due to the __electrostatic force__ generated on the upper electrode, which can deform. This force can be computed using Maxwell-stress traction, which depends on the electric field, and we project it onto the modal basis to obtain generalized modal forces.
+The coupling is due to the __electrostatic force__ which can deform the upper electrode. This force can be computed using Maxwell-stress traction, which depends on the electric field, and we project it onto the modal basis to obtain generalized modal forces.
 
-The qualitative ideas behind the term *reduced-order* can be summarized as follows: 
+*Reduced-order modeling* comes into play with two main approaches:
 - __Classical (mechanical)__: we project the mechanical part onto the first 4 modes;
 - __DL (electrostatic)__: we speedup the computation of the force replacing the full FEM computation of $\phi$ with a geometry-aware DL surrogate model that predicts directly the force.
 
 So, this justifies the use of the following terms in the sequel:
 - __Classical ROM__: solver that uses the modal projection and the full FEM approximation of the electrostatic part;
 - __DL-ROM__: solver that uses the modal projection and computes the electrostatic force using a DeepONet.
+
+> DL-ROM uses __both__ reduced-order modeling approaches.
 
 > The DL-ROM allows us to overcome the main bottleneck of the problem: remeshing at each time step, since the force is just given directly by the neural network. See below and the report for more details.
 
@@ -45,10 +47,10 @@ Typical physical tags in the Gmsh `.geo` template:
 > The `.geo` template is written in microns. The solver converts mesh coordinates to meters (SI) immediately after reading.
 
 ### Modal parametrization
-The moving electrode boundary is parametrized by the first 4 mode shapes $\{\hat w_n\}_{n=1}^4$, more specifically we have that the displacement (from the rest configuration) $w$ is given by
+The moving electrode boundary is parametrized by the first 4 mode shapes $\{v\}_{n=1}^4$, more specifically we have that the displacement (from the rest configuration) $w$ is given by
 
 $$
-w(x,t) = \sum_{n=1}^{4} \hat w_n(x) \, q_n(t),
+w(x,t) = \sum_{n=1}^{4} \hat v_n(x) \, q_n(t),
 $$
 
 where $q_n(t)$ are the modal coordinates/coefficients.
@@ -58,7 +60,7 @@ The mode shapes $\hat w_n$ depend on the choice of boundary condition. Here we d
 __Cantilever.__ The mode shapes are
 
 $$
-\hat{w}_n (x)= \cosh\beta_nx - \cos\beta_nx + C_n\ (\sin\beta_nx-\sinh\beta_nx)
+v_n (x)= \cosh\beta_nx - \cos\beta_nx + C_n\ (\sin\beta_nx-\sinh\beta_nx)
 $$
 
 with $\xi\in[0,L]$ and 
@@ -85,7 +87,7 @@ $$
 __Clamped-Clamped.__ The mode shapes are
 
 $$
-\hat{w}_n (x)= \sinh\beta_nx - \sin\beta_nx + C_n (\cosh\beta_nx-\cos\beta_nx).
+v_n (x)= \sinh\beta_nx - \sin\beta_nx + C_n (\cosh\beta_nx-\cos\beta_nx).
 $$
 
 with $\xi\in[0,L]$ and
@@ -126,7 +128,7 @@ $$
 
 where $\varepsilon=\varepsilon_0\varepsilon_r$ is the permittivity, $\Gamma_u(t)$ is the moving/upper conductor boundary, $\Gamma_\ell$ is the fixed/lower conductor boundary, and $\Gamma_o$ is the outer boundary. 
 
-> Recall that $\varepsilon_0 = 8.8541878128\times 10^{-12}\,\mathrm{F/m}$. 
+> Recall that $\varepsilon_0 = 8.8541878128\times 10^{-12}\,\mathrm{F/m}$.
 
 > $\varepsilon_r$ is user-specified (default $1$).
 
@@ -156,13 +158,13 @@ $$
 The traction on the domain can be computed as
 
 $$
-\mathbf{t} = \mathbf{T}\,\hat n,
+\mathbf{t} = \mathbf{T}\,\boldsymbol{n},
 $$
 
 where $n$ is the outward unit normal with respect to $\Omega(t)$, so by action-reaction the force on the moving electrode is
 
 $$
-\mathbf{t}_u = -\mathbf{T}\,\hat n.
+\mathbf{t}_u = -\mathbf{T}\,\boldsymbol{n}.
 $$
 
 > This sign convention is essential, since the electrode is represented as a hole in the domain mesh.
@@ -185,11 +187,11 @@ $$
 \hat{\boldsymbol{w}}_n(x) =
 \begin{bmatrix}
 0\\
-\hat w_n(x)
+v_n(x)
 \end{bmatrix}.
 $$
 
-The corresponding generalized modal force is computed by virtual work:
+Then the corresponding generalized modal force is computed by virtual work:
 
 $$
 F_n(t) = b\int_{\Gamma_{10}(t)} \mathbf{t}_u(s,t)\cdot \hat{\boldsymbol{w}}_n(s)\,ds,
@@ -291,17 +293,17 @@ $$
 The main difference between the two ROMs lies in the fact that the DL-ROM has access to a neural network that allows us to predict 
 
 $$
-\frac{\partial\phi}{\partial \hat n}
+\frac{\partial\phi}{\partial \boldsymbol{n}}
 $$ 
 
 on the lower edge of the upper electrode. In particular, the neural network we propose takes as input the geometric parameters: $q_n$, distance between the electrodes and over-etch of the upper electrode.
 
 > All inputs of the network are in converted microns.
 
-Actually you don't need to specify $V_l$ (sinusoidal in time). In fact, if you set to a constant $V_u$ and train the network with the case of $V_l=1$, you can derive the normal derivative for a generic $V_l$ using a simple tranformation. For instance, if we assume for simplicity $V_u=0$, we have that
+Actually you don't need to specify $V_l$ (sinusoidal in time). In fact, if you set $V_u=0$ and $V_l=1$ and train the network, you can derive the normal derivative for a generic couple of voltages using a simple tranformation:
 
 $$
-\frac{\partial\phi}{\partial \hat n} = V_l \, D(\mu)
+\frac{\partial\phi}{\partial \boldsymbol{n}} = (V_l - V_u) \, \mathcal{D}(\mu)
 $$
 
 where $D$ is the DeepONet and $\mu$ is the vector containing the geometric parameters.
@@ -312,13 +314,13 @@ where $D$ is the DeepONet and $\mu$ is the vector containing the geometric param
 This is useful since the traction can be rewritten in this way:
 
 $$
-\mathbf{t}_u = -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \hat n}\right)^2 \hat n
+\mathbf{t}_u = -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \boldsymbol{n}}\right)^2 \boldsymbol{n}
 $$
 
-and $\hat n$ can be computed without the mesh in the entire domain. Indeed, it's sufficient to discretize lower edge and integrate on it to get the generalized force:
+and $\boldsymbol{n}$ can be computed without the mesh in the entire domain. Indeed, it's sufficient to discretize lower edge and integrate on it to get the generalized force:
 
 $$
-F_n(t) = b\int_{\Gamma_{10}(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \hat n}(s)\right)^2 n_2(s) \, \hat w_n(s)\,ds.
+F_n(t) = b\int_{\Gamma_{10}(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \boldsymbol{n}}(s)\right)^2 n_2(s) \, \hat w_n(s)\,ds.
 $$
 
 ### Potential surrogate
