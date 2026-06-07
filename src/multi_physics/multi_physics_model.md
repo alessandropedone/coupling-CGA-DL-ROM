@@ -308,6 +308,8 @@ $$
 
 where $D$ is the DeepONet and $\mu$ is the vector containing the geometric parameters.
 
+> Here the assumption of linear dielectric becomes crucial.
+
 
 ### Generalized forces
 
