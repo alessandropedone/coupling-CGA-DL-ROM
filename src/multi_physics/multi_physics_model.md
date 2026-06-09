@@ -47,15 +47,15 @@ Typical physical tags in the Gmsh `.geo` template:
 > The `.geo` template is written in microns. The solver converts mesh coordinates to meters (SI) immediately after reading.
 
 ### Modal parametrization
-The moving electrode boundary is parametrized by the first 4 mode shapes $\{v\}_{n=1}^4$, more specifically we have that the displacement (from the rest configuration) $w$ is given by
+The moving electrode boundary is parametrized by the first 4 mode shapes $\{v_n\}_{n=1}^4$, more specifically we have that the displacement (from the rest configuration) $w$ is given by
 
 $$
-w(x,t) = \sum_{n=1}^{4} \hat v_n(x) \, q_n(t),
+w(x,t) = \sum_{n=1}^{4} v_n(x) \, q_n(t),
 $$
 
 where $q_n(t)$ are the modal coordinates/coefficients.
 
-The mode shapes $\hat w_n$ depend on the choice of boundary condition. Here we discuss the cantilever case and the clamped-clamped case.
+The mode shapes $v_n$ depend on the choice of boundary condition. Here we discuss the cantilever case and the clamped-clamped case.
 
 __Cantilever.__ The mode shapes are
 
@@ -161,7 +161,7 @@ $$
 \mathbf{t} = \mathbf{T}\,\boldsymbol{n},
 $$
 
-where $n$ is the outward unit normal with respect to $\Omega(t)$, so by action-reaction the force on the moving electrode is
+where $n$ is the outward unit normal with respect to $\Omega(t)$, so by action-reaction the traction on the moving electrode is
 
 $$
 \mathbf{t}_u = -\mathbf{T}\,\boldsymbol{n}.
@@ -169,7 +169,7 @@ $$
 
 > This sign convention is essential, since the electrode is represented as a hole in the domain mesh.
 
-With this traction, it's possible to compute the physical force (Newtons) acting on the electrode in this way:
+Thanks to this, it's possible to compute the physical force (Newtons) acting on the electrode in this way:
 
 $$
 \mathbf{F} = b\int_{\Gamma_u}\mathbf{t}_u\,ds,
@@ -184,7 +184,7 @@ Instead of computing the actual force, we want to project the integration of the
 As explained in the report, the modal shape vector is taken as transverse-only:
 
 $$
-\hat{\boldsymbol{w}}_n(x) =
+\hat{\boldsymbol{v}}_n(x) =
 \begin{bmatrix}
 0\\
 v_n(x)
@@ -194,10 +194,10 @@ $$
 Then the corresponding generalized modal force is computed by virtual work:
 
 $$
-F_n(t) = b\int_{\Gamma_{10}(t)} \mathbf{t}_u(s,t)\cdot \hat{\boldsymbol{w}}_n(s)\,ds,
+F_n(t) = b\int_{\tilde\Gamma(t)} \mathbf{t}_u(s,t)\cdot \hat{\boldsymbol{v}}_n(s)\,ds,
 $$
 
-where $\Gamma_{10}(t) \subseteq \Gamma_u(t)$ is the boundary segment marked by physical tag 10 (`force_segment`), that is the lower edge.
+where $\tilde\Gamma(t) \subseteq \Gamma_u(t)$ is the boundary segment marked by physical tag 10 (`force_segment`), that is the lower edge.
 
 
 ## Modal mechanical model
@@ -263,9 +263,9 @@ In the coupled implementation, $F^{k+1}$ is approximated from the mesh generated
 For time steps $k=0,\dots,N-1$:
 
 1. **Geometry update**: construct moving electrode boundary from $\{q_n^k\}_{n=1}^4$ and write `.geo`.
-2. **Remesh**: run Gmsh to generate air mesh $\Omega(t_k)$.
+2. **Remesh**: run ``gmsh`` to generate the mesh for $\Omega(t_k)$.
 3. **Electrostatics solve**: compute $\phi_h^k$.
-4. **Maxwell stress**: compute traction $\mathbf{t}_c^k$ on $\Gamma_{10}(t_k)$.
+4. **Maxwell stress**: compute traction $\mathbf{t}_c^k$ on $\tilde\Gamma(t_k)$.
 5. **Modal projection**: compute generalized forces $\{F_n^k\}_{n=1}^4$.
 6. **Time integration**: update $q_n^{k+1}, \dot q_n^{k+1}, \ddot q_n^{k+1}$ with Newmark for every $n$.
 7. **Output**: write $\phi_h^k$ to a ParaView time series, store modal histories and execution times.
@@ -300,10 +300,10 @@ on the lower edge of the upper electrode. In particular, the neural network we p
 
 > All inputs of the network are in converted microns.
 
-Actually you don't need to specify $V_l$ (sinusoidal in time). In fact, if you set $V_u=0$ and $V_l=1$ and train the network, you can derive the normal derivative for a generic couple of voltages using a simple tranformation:
+Actually you don't need to specify $V_u$ and $V_l$ (sinusoidal in time). In fact, if you set $V_u=0$ and $V_l=1$ and train the network, you can compute the normal derivative for a generic couple of voltages using the following simple tranformation:
 
 $$
-\frac{\partial\phi}{\partial \boldsymbol{n}} = (V_l - V_u) \, \mathcal{D}(\mu)
+\frac{\partial\phi}{\partial \boldsymbol{n}} = (V_l - V_u) \, \mathcal{D}(\boldsymbol{\mu})
 $$
 
 where $D$ is the DeepONet and $\mu$ is the vector containing the geometric parameters.
@@ -322,7 +322,7 @@ $$
 and $\boldsymbol{n}$ can be computed without the mesh in the entire domain. Indeed, it's sufficient to discretize lower edge and integrate on it to get the generalized force:
 
 $$
-F_n(t) = b\int_{\Gamma_{10}(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \boldsymbol{n}}(s)\right)^2 n_2(s) \, \hat w_n(s)\,ds.
+F_n(t) = b\int_{\tilde\Gamma(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \boldsymbol{n}}(s)\right)^2 n_2(s) \, v_n(s)\,ds.
 $$
 
 ### Potential surrogate
