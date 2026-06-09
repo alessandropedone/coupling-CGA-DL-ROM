@@ -284,7 +284,7 @@ def main():
     )
     plt.xlabel("Time (s)")
     plt.ylabel("Capacitance (F)")
-    plt.title("Capacitance over time for different numbers of modes")
+    plt.title("Capacitance over time")
     plt.legend()
     plt.grid()
 
