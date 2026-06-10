@@ -202,7 +202,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Multi-physics</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="multi_physics_solver.html">Multi-physics model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multi_physics_model.html">Multi-physics model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi-physics.html">Multi-physics package</a></li>
 </ul>
 
@@ -312,8 +312,8 @@ mamba<span class="w"> </span>install<span class="w"> </span>cuda-cudart<span cla
 </pre></div>
 </div>
 </section>
-<section id="test-2-bigger-deformations">
-<h3>Test 2: Bigger Deformations<a class="headerlink" href="#test-2-bigger-deformations" title="Link to this heading">¶</a></h3>
+<section id="test-2-bigger-deformation">
+<h3>Test 2: Bigger Deformation<a class="headerlink" href="#test-2-bigger-deformation" title="Link to this heading">¶</a></h3>
 <p>You can just do the same as above but with the following changes:</p>
 <ul class="simple">
 <li><p>use <code class="docutils literal notranslate"><span class="pre">test2</span></code> instead of <code class="docutils literal notranslate"><span class="pre">test1</span></code>;</p></li>
@@ -335,7 +335,7 @@ mamba<span class="w"> </span>install<span class="w"> </span>cuda-cudart<span cla
 <h2>Multi-Physics<a class="headerlink" href="#multi-physics" title="Link to this heading">¶</a></h2>
 <section id="classical-multi-physics-solver">
 <h3>Classical Multi-Physics Solver<a class="headerlink" href="#classical-multi-physics-solver" title="Link to this heading">¶</a></h3>
-<p><strong>Visualization.</strong> First, you can run the classical multi-physics solver in the case of cantilever with big deformations of the upper plate with</p>
+<p><strong>Visualization.</strong> First, you can run the classical multi-physics solver in the case of cantilever with big deformation of the upper plate with</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span>--template-geo<span class="w"> </span>geometries/cantilever2.geo<span class="w"> </span>--dt<span class="w"> </span>5e-6<span class="w"> </span>--nsteps<span class="w"> </span><span class="m">80</span><span class="w"> </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vac<span class="w"> </span><span class="m">230</span><span class="w"> </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span>--fail-fast<span class="w"> </span>--workdir<span class="w"> </span><span class="s2">&quot;temp/visualization&quot;</span>
 </pre></div>
 </div>
@@ -360,8 +360,8 @@ For the last two commands you can use the following additional flags:</p>
 </section>
 <section id="dl-multi-physics-solver">
 <h3>DL Multi-Physics Solver<a class="headerlink" href="#dl-multi-physics-solver" title="Link to this heading">¶</a></h3>
-<p><strong>Visualization.</strong> You can run the DL multi-physics solver using pre-trained (DeepONet) surrogates for the electrostatic part of the physics with the command</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span>--template-geo<span class="w"> </span>geometries/cantilever1.geo<span class="w"> </span>--dt<span class="w"> </span>1e-5<span class="w"> </span>--nsteps<span class="w"> </span><span class="m">40</span><span class="w"> </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vac<span class="w"> </span><span class="m">5</span><span class="w"> </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span>--fail-fast<span class="w"> </span>--derivative-nn-path<span class="w"> </span>models/derivative1.keras<span class="w"> </span>--postprocessing-step<span class="w"> </span><span class="m">5</span><span class="w"> </span>--potential-nn-path<span class="w"> </span>models/potential1.keras<span class="w"> </span>--no-outer-bc<span class="w"> </span>--workdir<span class="w"> </span><span class="s2">&quot;temp/visualization-dl&quot;</span>
+<p><strong>Visualization.</strong> You can run the DL multi-physics solver (this time considering realistic deformation scales) using pre-trained (DeepONet) surrogates for the electrostatic part of the physics through the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span>--template-geo<span class="w"> </span>geometries/cantilever1.geo<span class="w"> </span>--dt<span class="w"> </span>1e-5<span class="w"> </span>--nsteps<span class="w"> </span><span class="m">40</span><span class="w"> </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vac<span class="w"> </span><span class="m">5</span><span class="w"> </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span>--fail-fast<span class="w"> </span>--derivative-nn-path<span class="w"> </span>models/derivative1.keras<span class="w"> </span>--potential-nn-path<span class="w"> </span>models/potential1.keras<span class="w"> </span>--no-outer-bc<span class="w"> </span>--workdir<span class="w"> </span><span class="s2">&quot;temp/visualization-dl&quot;</span>
 </pre></div>
 </div>
 <p>Then, you can visualize the solution using ParaView as in the previous case. This time you can select between three scalar field: <code class="docutils literal notranslate"><span class="pre">phi</span></code>, <code class="docutils literal notranslate"><span class="pre">phi_pred</span></code> and <code class="docutils literal notranslate"><span class="pre">phi_error</span></code>. Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/visualization-dl</span></code> folder.</p>
@@ -441,7 +441,7 @@ For the last command you can use the following additional flags:</p>
 <li><a class="reference internal" href="#overall-outline">Overall Outline</a></li>
 <li><a class="reference internal" href="#surrogates">Surrogates</a><ul>
 <li><a class="reference internal" href="#test-1-cantilevered-beam">Test 1. Cantilevered beam</a></li>
-<li><a class="reference internal" href="#test-2-bigger-deformations">Test 2: Bigger Deformations</a></li>
+<li><a class="reference internal" href="#test-2-bigger-deformation">Test 2: Bigger Deformation</a></li>
 <li><a class="reference internal" href="#test-3-clamped-clamped-beam">Test 3: Clamped-Clamped Beam</a></li>
 </ul>
 </li>

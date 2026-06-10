@@ -18,9 +18,9 @@ This project tackles the simulation of coupled electrostatic and mechanical phen
 
 Full-order numerical solvers quickly become computationally prohibitive for realistic geometries, and in such cases one of the possible solutions could be relying on reduced-order modeling.
 
-Indeed, we choose to do so: we construct an idealized test case that preserves the key physical features, then we develop a reduced-order model based on recent Deep Learning–based ROM (DL-ROM) techniques, in particular DeepONets, exploiting an approximation of mechanical deformation grounded in Euler–Bernoulli beam theory in order to design it to interface with a finite-element solver for the mechanical response.
+Indeed, we choose to do so: we construct an idealized test case that preserves the key physical features, then we develop a reduced-order model based on recent Deep Learning-based ROM (DL-ROM) techniques, in particular DeepONets, exploiting an approximation of mechanical deformation grounded in Euler–Bernoulli beam theory in order to design it to interface with a finite-element solver for the mechanical response.
 
-A brief literature review frames our methodology within current trends in MEMS modeling and data-driven model reduction.
+A brief review frames our methodology within current trends in MEMS modeling and data-driven model reduction, together with classical foundations such as modal approximation techniques.
 
 **Tools:**
 
@@ -29,9 +29,9 @@ A brief literature review frames our methodology within current trends in MEMS m
 - TensorFlow/Keras for the network architecture
 - Sphinx for the documentation
 
-**Keywords:** DeepONet, DL-ROM, MEMS, Euler-Bernoulli beam theory
+**Keywords:** MEMS, multi-physics, DeepONet, DL-ROM, reduced-order modeling, Euler-Bernoulli beam theory, modal approximation.
 
-**Authors:** Alessandro Pedone, Marta Pignatelli
+**Authors:** Alessandro Pedone, Marta Pignatelli.
 
 Contents
 --------

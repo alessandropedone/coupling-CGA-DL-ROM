@@ -5,7 +5,8 @@ So, we start recalling that we have three packages in the `src` folder:
 1. `data`: for static data generation and post-processing;
 2. `surrogate`: for the surrogate models;
 3. `multi_physics`: for the electro-mechanical solver.
-For a more detailed explanation of all functionalities, consult `report.pdf` in the main directory, which provides the necessary background information.
+
+> Consult report.pdf in the main directory for a detailed background explanation, test cases, and results, including images and videos.
 
 ## Overall Outline
 

@@ -307,7 +307,6 @@
 
 <span class="n">UM</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># micron -&gt; meter</span>
 
-
 <span class="c1"># ----------------------------</span>
 <span class="c1"># Utilities</span>
 <span class="c1"># ----------------------------</span>
@@ -1590,7 +1589,7 @@
                     <span class="p">[</span><span class="n">_cantilever_shape_np</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">betas</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">L_m</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
                 <span class="p">)</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">q</span> <span class="o">@</span> <span class="n">modes</span>
-            <span class="n">Cap_approx</span> <span class="o">=</span> <span class="n">eps0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">distance_m</span> <span class="o">+</span> <span class="n">u</span><span class="p">)),</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">Cap_approx</span> <span class="o">=</span> <span class="n">eps0</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">epsr</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">distance_m</span> <span class="o">+</span> <span class="n">u</span><span class="p">)),</span> <span class="n">x</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_postprocessing</span> <span class="ow">and</span> <span class="p">(</span><span class="n">k</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">postprocessing_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
             <span class="p">)</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>

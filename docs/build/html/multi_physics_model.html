@@ -258,8 +258,8 @@
 <blockquote>
 <div><p>The choice of 4 as the number of modes is motivated by the fact that actually only the first mode is actually relevant for these kind of applications. In particular, if you are interested, you can take a look at the test which compares the simulations with 1, 2, 3 and 4 modes.</p>
 </div></blockquote>
-<p>The coupling is due to the <strong>electrostatic force</strong> generated on the upper electrode, which can deform. This force can be computed using Maxwell-stress traction, which depends on the electric field, and we project it onto the modal basis to obtain generalized modal forces.</p>
-<p>The qualitative ideas behind the term <em>reduced-order</em> can be summarized as follows:</p>
+<p>The coupling is due to the <strong>electrostatic force</strong> which can deform the upper electrode. This force can be computed using Maxwell-stress traction, which depends on the electric field, and we project it onto the modal basis to obtain generalized modal forces.</p>
+<p><em>Reduced-order modeling</em> comes into play with two main approaches:</p>
 <ul class="simple">
 <li><p><strong>Classical (mechanical)</strong>: we project the mechanical part onto the first 4 modes;</p></li>
 <li><p><strong>DL (electrostatic)</strong>: we speedup the computation of the force replacing the full FEM computation of <span class="math notranslate nohighlight">\(\phi\)</span> with a geometry-aware DL surrogate model that predicts directly the force.</p></li>
@@ -269,6 +269,9 @@
 <li><p><strong>Classical ROM</strong>: solver that uses the modal projection and the full FEM approximation of the electrostatic part;</p></li>
 <li><p><strong>DL-ROM</strong>: solver that uses the modal projection and computes the electrostatic force using a DeepONet.</p></li>
 </ul>
+<blockquote>
+<div><p>DL-ROM uses <strong>both</strong> reduced-order modeling approaches.</p>
+</div></blockquote>
 <blockquote>
 <div><p>The DL-ROM allows us to overcome the main bottleneck of the problem: remeshing at each time step, since the force is just given directly by the neural network. See below and the report for more details.</p>
 </div></blockquote>
@@ -296,20 +299,20 @@ Typical physical tags in the Gmsh <code class="docutils literal notranslate"><sp
 </section>
 <section id="modal-parametrization">
 <h3>Modal parametrization<a class="headerlink" href="#modal-parametrization" title="Link to this heading">¶</a></h3>
-<p>The moving electrode boundary is parametrized by the first 4 mode shapes <span class="math notranslate nohighlight">\(\{\hat w_n\}_{n=1}^4\)</span>, more specifically we have that the displacement (from the rest configuration) <span class="math notranslate nohighlight">\(w\)</span> is given by</p>
+<p>The moving electrode boundary is parametrized by the first 4 mode shapes <span class="math notranslate nohighlight">\(\{v_n\}_{n=1}^4\)</span>, more specifically we have that the displacement (from the rest configuration) <span class="math notranslate nohighlight">\(w\)</span> is given by</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-w(x,t) = \sum_{n=1}^{4} \hat w_n(x) \, q_n(t),
+w(x,t) = \sum_{n=1}^{4} v_n(x) \, q_n(t),
 \]</div>
 </div>
 <p>where <span class="math notranslate nohighlight">\(q_n(t)\)</span> are the modal coordinates/coefficients.</p>
-<p>The mode shapes <span class="math notranslate nohighlight">\(\hat w_n\)</span> depend on the choice of boundary condition. Here we discuss the cantilever case and the clamped-clamped case.</p>
+<p>The mode shapes <span class="math notranslate nohighlight">\(v_n\)</span> depend on the choice of boundary condition. Here we discuss the cantilever case and the clamped-clamped case.</p>
 <p><strong>Cantilever.</strong> The mode shapes are</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\hat{w}_n (x)= \cosh\beta_nx - \cos\beta_nx + C_n\ (\sin\beta_nx-\sinh\beta_nx)
+v_n (x)= \cosh\beta_nx - \cos\beta_nx + C_n\ (\sin\beta_nx-\sinh\beta_nx)
 \]</div>
 </div>
 <p>with <span class="math notranslate nohighlight">\(\xi\in[0,L]\)</span> and</p>
@@ -340,7 +343,7 @@ C_n=\frac{\cos\beta_nL + \cosh\beta_nL}{\sin\beta_nL+\sinh\beta_nL}.
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\hat{w}_n (x)= \sinh\beta_nx - \sin\beta_nx + C_n (\cosh\beta_nx-\cos\beta_nx).
+v_n (x)= \sinh\beta_nx - \sin\beta_nx + C_n (\cosh\beta_nx-\cos\beta_nx).
 \]</div>
 </div>
 <p>with <span class="math notranslate nohighlight">\(\xi\in[0,L]\)</span> and</p>
@@ -421,20 +424,20 @@ V_\ell(t)=V_{\mathrm{dc}} + V_{\mathrm{ac}}\sin(2\pi f t).
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\mathbf{t} = \mathbf{T}\,\hat n,
+\mathbf{t} = \mathbf{T}\,\boldsymbol{n},
 \]</div>
 </div>
-<p>where <span class="math notranslate nohighlight">\(n\)</span> is the outward unit normal with respect to <span class="math notranslate nohighlight">\(\Omega(t)\)</span>, so by action-reaction the force on the moving electrode is</p>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the outward unit normal with respect to <span class="math notranslate nohighlight">\(\Omega(t)\)</span>, so by action-reaction the traction on the moving electrode is</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\mathbf{t}_u = -\mathbf{T}\,\hat n.
+\mathbf{t}_u = -\mathbf{T}\,\boldsymbol{n}.
 \]</div>
 </div>
 <blockquote>
 <div><p>This sign convention is essential, since the electrode is represented as a hole in the domain mesh.</p>
 </div></blockquote>
-<p>With this traction, it’s possible to compute the physical force (Newtons) acting on the electrode in this way:</p>
+<p>Thanks to this, it’s possible to compute the physical force (Newtons) acting on the electrode in this way:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
@@ -450,21 +453,21 @@ V_\ell(t)=V_{\mathrm{dc}} + V_{\mathrm{ac}}\sin(2\pi f t).
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\begin{split}
-\hat{\boldsymbol{w}}_n(x) =
+\hat{\boldsymbol{v}}_n(x) =
 \begin{bmatrix}
 0\\
-\hat w_n(x)
+v_n(x)
 \end{bmatrix}.
 \end{split}\]</div>
 </div>
-<p>The corresponding generalized modal force is computed by virtual work:</p>
+<p>Then the corresponding generalized modal force is computed by virtual work:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-F_n(t) = b\int_{\Gamma_{10}(t)} \mathbf{t}_u(s,t)\cdot \hat{\boldsymbol{w}}_n(s)\,ds,
+F_n(t) = b\int_{\tilde\Gamma(t)} \mathbf{t}_u(s,t)\cdot \hat{\boldsymbol{v}}_n(s)\,ds,
 \]</div>
 </div>
-<p>where <span class="math notranslate nohighlight">\(\Gamma_{10}(t) \subseteq \Gamma_u(t)\)</span> is the boundary segment marked by physical tag 10 (<code class="docutils literal notranslate"><span class="pre">force_segment</span></code>), that is the lower edge.</p>
+<p>where <span class="math notranslate nohighlight">\(\tilde\Gamma(t) \subseteq \Gamma_u(t)\)</span> is the boundary segment marked by physical tag 10 (<code class="docutils literal notranslate"><span class="pre">force_segment</span></code>), that is the lower edge.</p>
 </section>
 <section id="modal-mechanical-model">
 <h2>Modal mechanical model<a class="headerlink" href="#modal-mechanical-model" title="Link to this heading">¶</a></h2>
@@ -534,9 +537,9 @@ q^{k+1} = q_{\mathrm{pred}} + \beta\Delta t^2 \ddot q^{k+1},\qquad
 <p>For time steps <span class="math notranslate nohighlight">\(k=0,\dots,N-1\)</span>:</p>
 <ol class="arabic simple">
 <li><p><strong>Geometry update</strong>: construct moving electrode boundary from <span class="math notranslate nohighlight">\(\{q_n^k\}_{n=1}^4\)</span> and write <code class="docutils literal notranslate"><span class="pre">.geo</span></code>.</p></li>
-<li><p><strong>Remesh</strong>: run Gmsh to generate air mesh <span class="math notranslate nohighlight">\(\Omega(t_k)\)</span>.</p></li>
+<li><p><strong>Remesh</strong>: run <code class="docutils literal notranslate"><span class="pre">gmsh</span></code> to generate the mesh for <span class="math notranslate nohighlight">\(\Omega(t_k)\)</span>.</p></li>
 <li><p><strong>Electrostatics solve</strong>: compute <span class="math notranslate nohighlight">\(\phi_h^k\)</span>.</p></li>
-<li><p><strong>Maxwell stress</strong>: compute traction <span class="math notranslate nohighlight">\(\mathbf{t}_c^k\)</span> on <span class="math notranslate nohighlight">\(\Gamma_{10}(t_k)\)</span>.</p></li>
+<li><p><strong>Maxwell stress</strong>: compute traction <span class="math notranslate nohighlight">\(\mathbf{t}_c^k\)</span> on <span class="math notranslate nohighlight">\(\tilde\Gamma(t_k)\)</span>.</p></li>
 <li><p><strong>Modal projection</strong>: compute generalized forces <span class="math notranslate nohighlight">\(\{F_n^k\}_{n=1}^4\)</span>.</p></li>
 <li><p><strong>Time integration</strong>: update <span class="math notranslate nohighlight">\(q_n^{k+1}, \dot q_n^{k+1}, \ddot q_n^{k+1}\)</span> with Newmark for every <span class="math notranslate nohighlight">\(n\)</span>.</p></li>
 <li><p><strong>Output</strong>: write <span class="math notranslate nohighlight">\(\phi_h^k\)</span> to a ParaView time series, store modal histories and execution times.</p></li>
@@ -569,21 +572,24 @@ C \approx \frac{2W}{(V_\ell - V_u)^2} &amp;\text{(capacitance-like estimate)}
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\frac{\partial\phi}{\partial \hat n}
+\frac{\partial\phi}{\partial \boldsymbol{n}}
 \]</div>
 </div>
 <p>on the lower edge of the upper electrode. In particular, the neural network we propose takes as input the geometric parameters: <span class="math notranslate nohighlight">\(q_n\)</span>, distance between the electrodes and over-etch of the upper electrode.</p>
 <blockquote>
 <div><p>All inputs of the network are in converted microns.</p>
 </div></blockquote>
-<p>Actually you don’t need to specify <span class="math notranslate nohighlight">\(V_l\)</span> (sinusoidal in time). In fact, if you set to a constant <span class="math notranslate nohighlight">\(V_u\)</span> and train the network with the case of <span class="math notranslate nohighlight">\(V_l=1\)</span>, you can derive the normal derivative for a generic <span class="math notranslate nohighlight">\(V_l\)</span> using a simple tranformation. For instance, if we assume for simplicity <span class="math notranslate nohighlight">\(V_u=0\)</span>, we have that</p>
+<p>Actually you don’t need to specify <span class="math notranslate nohighlight">\(V_u\)</span> and <span class="math notranslate nohighlight">\(V_l\)</span> (sinusoidal in time). In fact, if you set <span class="math notranslate nohighlight">\(V_u=0\)</span> and <span class="math notranslate nohighlight">\(V_l=1\)</span> and train the network, you can compute the normal derivative for a generic couple of voltages using the following simple tranformation:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\frac{\partial\phi}{\partial \hat n} = V_l \, D(\mu)
+\frac{\partial\phi}{\partial \boldsymbol{n}} = (V_l - V_u) \, \mathcal{D}(\boldsymbol{\mu})
 \]</div>
 </div>
 <p>where <span class="math notranslate nohighlight">\(D\)</span> is the DeepONet and <span class="math notranslate nohighlight">\(\mu\)</span> is the vector containing the geometric parameters.</p>
+<blockquote>
+<div><p>Here the assumption of linear dielectric becomes crucial.</p>
+</div></blockquote>
 </section>
 <section id="generalized-forces">
 <h3>Generalized forces<a class="headerlink" href="#generalized-forces" title="Link to this heading">¶</a></h3>
@@ -591,14 +597,14 @@ C \approx \frac{2W}{(V_\ell - V_u)^2} &amp;\text{(capacitance-like estimate)}
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-\mathbf{t}_u = -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \hat n}\right)^2 \hat n
+\mathbf{t}_u = -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \boldsymbol{n}}\right)^2 \boldsymbol{n}
 \]</div>
 </div>
-<p>and <span class="math notranslate nohighlight">\(\hat n\)</span> can be computed without the mesh in the entire domain. Indeed, it’s sufficient to discretize lower edge and integrate on it to get the generalized force:</p>
+<p>and <span class="math notranslate nohighlight">\(\boldsymbol{n}\)</span> can be computed without the mesh in the entire domain. Indeed, it’s sufficient to discretize lower edge and integrate on it to get the generalized force:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
-F_n(t) = b\int_{\Gamma_{10}(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \hat n}(s)\right)^2 n_2(s) \, \hat w_n(s)\,ds.
+F_n(t) = b\int_{\tilde\Gamma(t)} -\frac{1}{2}\varepsilon\left(\frac{\partial\phi}{\partial \boldsymbol{n}}(s)\right)^2 n_2(s) \, v_n(s)\,ds.
 \]</div>
 </div>
 </section>
