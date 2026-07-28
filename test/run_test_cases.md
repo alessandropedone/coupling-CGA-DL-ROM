@@ -130,8 +130,15 @@ python test/test_performance.py
 This script compares the DL-ROM with the classical ROM, performing a profiling of execution times and an assessment of accuracy. In particular, the evaluation of the latter focuses on the displacement and the capacitance (quantity of interest).
 Results are saved in the `temp/performance` folder.
 
+__Geometry parameters.__ You can test the robustness of the DL-ROM over a grid of geometric parameters by running:
+```bash
+python test/test_geometry.py
+```
+By default, this test compares the DL-ROM with the classical ROM on a 3-by-3 grid, varying the overetch from $0$ to $0.5$ and the distance between the plates from $1.5$ to $2.5$. For every geometry, it evaluates the speedup and the normalized L-infinity errors of the capacitance and displacement, then reports their mean and standard deviation. The `--grid-refinement` option changes the number of values used for each parameter, while `--big-deformation` changes the distance range to $[20,30]$.
+Results are saved in the `temp/geometry` folder.
+
 __Additional flags.__
-For the last command you can use the following additional flags:
+For the performance and geometry tests, you can use the following additional flags:
 1. `--no-simulation`: visualize the solution again after running test, you can add the flag;
 2. `--save-frames`: save the plot of the capacity over time and the video of the displacement over time;
 3. `--clamped`: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).

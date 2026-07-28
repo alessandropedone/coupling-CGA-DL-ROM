@@ -1298,7 +1298,7 @@ def main():
                     [_cantilever_shape_np(x, betas[i], L_m) for i in range(4)]
                 )
             u = q @ modes
-            Cap_approx = eps0 * args.epsr * np.trapezoid((1 / (distance_m + u)), x)
+            Cap_approx = eps0 * args.epsr * np.trapezoid((1 / (distance_m + overetch_m + u)), x)
             if (
                 not args.no_postprocessing and (k % args.postprocessing_step == 0)
             ) or k == 1:
