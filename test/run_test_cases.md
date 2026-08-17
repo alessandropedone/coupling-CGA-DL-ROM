@@ -144,11 +144,12 @@ For the performance and geometry tests, you can use the following additional fla
 3. `--clamped`: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).
 
 
-### Memory tests (optional)
+### Memory profiling (optional)
 
-You can use [Memray](https://bloomberg.github.io/memray/), which is already present in the provided environment, to run a memory inspection and compare the classical ROM against the DL-ROM.
+You can use [Memray](https://bloomberg.github.io/memray/), which is already present in the provided environment, to run a memory inspection and compare the DL-ROM against the classical ROM.
 
-For the classical ROM:
+For the classical ROM you can run
+
 ```bash
 mkdir -p temp/memory && python -m memray run --native -o temp/memory/classical_rom.bin -m src.multi_physics.solver \
   --template-geo geometries/cantilever1.geo \
@@ -169,11 +170,13 @@ mkdir -p temp/memory && python -m memray run --native -o temp/memory/classical_r
 ```
 
 and
+
 ```bash
 python -m memray flamegraph --temporal -o temp/memory/classical_rom.html temp/memory/classical_rom.bin
 ```
 
-For the DL-ROM
+For the DL-ROM you can run
+
 ```bash
 mkdir -p temp/memory && python -m memray run --native -o temp/memory/dl_rom.bin -m src.multi_physics.solver \
   --template-geo geometries/cantilever1.geo \
