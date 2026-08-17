@@ -142,3 +142,63 @@ For the performance and geometry tests, you can use the following additional fla
 1. `--no-simulation`: visualize the solution again after running test, you can add the flag;
 2. `--save-frames`: save the plot of the capacity over time and the video of the displacement over time;
 3. `--clamped`: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).
+
+
+### Memory tests (optional)
+
+You can use [Memray](https://bloomberg.github.io/memray/), which is already present in the provided environment, to run a memory inspection and compare the classical ROM against the DL-ROM.
+
+For the classical ROM:
+```bash
+mkdir -p temp/memory && python -m memray run --native -o temp/memory/classical_rom.bin -m src.multi_physics.solver \
+  --template-geo geometries/cantilever1.geo \
+  --workdir temp/memory/classical_rom_run \
+  --nmodes 4 \
+  --dt 1e-5 \
+  --nsteps 40 \
+  --Vdc 0 \
+  --Vac 5 \
+  --freq 2.5e3 \
+  --Vupper 0 \
+  --Vouter 0 \
+  --omega 6.3e5 3.9e6 1.1e7 2.1e7 \
+  --mass 1e-12 1e-12 1e-12 1e-12 \
+  --zeta 0.01 0.01 0.01 0.01 \
+  --print-every 1 \
+  --fail-fast
+```
+
+and
+```bash
+python -m memray flamegraph --temporal -o temp/memory/classical_rom.html temp/memory/classical_rom.bin
+```
+
+For the DL-ROM
+```bash
+mkdir -p temp/memory && python -m memray run --native -o temp/memory/dl_rom.bin -m src.multi_physics.solver \
+  --template-geo geometries/cantilever1.geo \
+  --workdir temp/memory/dl_rom_run \
+  --nmodes 4 \
+  --dt 1e-5 \
+  --nsteps 40 \
+  --Vdc 0 \
+  --Vac 5 \
+  --freq 2.5e3 \
+  --Vupper 0 \
+  --Vouter 0 \
+  --omega 6.3e5 3.9e6 1.1e7 2.1e7 \
+  --mass 1e-12 1e-12 1e-12 1e-12 \
+  --zeta 0.01 0.01 0.01 0.01 \
+  --print-every 1 \
+  --fail-fast \
+  --derivative-nn-path models/derivative1.keras \
+  --no-postprocessing
+```
+
+and
+
+```bash
+python -m memray flamegraph --temporal -o temp/memory/dl_rom.html temp/memory/dl_rom.bin
+```
+
+Then you can take a look at the output HTML files.
