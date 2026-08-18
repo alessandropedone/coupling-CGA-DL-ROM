@@ -26,13 +26,9 @@ def _get_domain_from_mesh(mesh_path: str):
     :returns:
         - **domain** (``fem.Domain``) -- The computational domain containing mesh information.
     """
-    from mpi4py import MPI
-    from dolfinx.io import gmshio
-
     domain, cell_tags, facet_tags = gmshio.read_from_msh(
         mesh_path, MPI.COMM_WORLD, 0, gdim=2
     )
-
     return domain
 
 
