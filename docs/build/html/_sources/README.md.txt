@@ -2,6 +2,12 @@
 # Introduction
 
 ## Setup
+
+Clone the repository with
+```bash
+git clone git@github.com:alessandropedone/deeponet-for-mems.git
+```
+
 > Conda (or Mamba) is required.
 
 Create the project environment by running this command (or the equivalent Conda command):
@@ -9,7 +15,7 @@ Create the project environment by running this command (or the equivalent Conda 
 mamba env create -f environment.yml
 ```
 
-## Strucutre of the repository
+## Structure of the repository
 ```bash
 deeponet-for-mems
 ├── README.md
@@ -38,6 +44,6 @@ you can just run the following command, and select the right option, to generate
 ./build_docs.sh
 ```
 
-## Test cases
+## Numerical results
 You can find the instruction on how to run them in `test/run_test_cases.md`, or equivalently in the documentation.
 

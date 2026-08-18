@@ -331,7 +331,7 @@ def plot_domain(file: h5py.File,
             y0=center_points[i][1] if center_points is not None else 0,
             zoom=zoom[i] if zoom is not None else 1
         )
-        axes[i].set_aspect('equal', adjustable='datalim')
+        axes[i].set_aspect("equal", adjustable="box")
 
     plt.tight_layout()
     if not postpone_show:
@@ -401,7 +401,7 @@ def plot_potential(file: h5py.File,
             # specifcy its a prediction
             if pred:
                 axes[i].set_title("Predicted electrostatic potential (zoom {})".format(zoom[i]) if zoom is not None else "Predicted potential")
-            axes[i].set_aspect('equal', adjustable='datalim')
+            axes[i].set_aspect('equal', adjustable='box')
     else:
         if n > 1:
             rows = max(1, math.floor(math.sqrt(n) * 0.75))
@@ -438,7 +438,7 @@ def plot_potential(file: h5py.File,
                     y0=center_points[i][1] if center_points is not None else 0,
                     zoom=zoom[i] if zoom is not None else 1
                 )
-                axes[i].set_aspect('equal', adjustable='datalim')
+                axes[i].set_aspect('equal', adjustable='box')
         else:
             for i in range(n):
                 plt.sca(axes[i])
@@ -462,7 +462,7 @@ def plot_potential(file: h5py.File,
                     y0=center_points[i][1] if center_points is not None else 0,
                     zoom=zoom[i] if zoom is not None else 1
                 )
-                axes[i].set_aspect('equal', adjustable='datalim')
+                axes[i].set_aspect('equal', adjustable='box')
 
     plt.tight_layout()
     if not postpone_show:
@@ -534,7 +534,7 @@ def plot_grad(file: h5py.File,
             y0=center_points[i][1] if center_points is not None else 0,
             zoom=zoom[i] if zoom is not None else 1
         )
-        axes[i].set_aspect('equal', adjustable='datalim')
+        axes[i].set_aspect('equal', adjustable='box')
     plt.tight_layout()
     if not postpone_show:
         plt.show()
@@ -588,7 +588,7 @@ def plot_normal_derivative(file, postpone_show=False, pred=False, error=False, z
             y0=center_points[i][1] if center_points is not None else 0,
             zoom=zoom[i] if zoom is not None else 1
         )
-        axes[i].set_aspect('equal', adjustable='datalim')
+        axes[i].set_aspect('equal', adjustable='box')
         if pred and error:
             raise ValueError("Cannot set both pred and error to True.")
         if pred:

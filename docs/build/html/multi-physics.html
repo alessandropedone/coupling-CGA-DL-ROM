@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
     
     
 
@@ -248,7 +249,8 @@
 It includes functions for setting up and running multi-physics simulations, as well as post-processing results.</p>
 <section id="module-src.multi_physics.solver">
 <span id="src-multi-physics-solver"></span><h2>src.multi_physics.solver<a class="headerlink" href="#module-src.multi_physics.solver" title="Link to this heading">¶</a></h2>
-<p>For details on the theorical formulation and numerical approach, please refer to the accompanying Markdown <cite>Multi-physics model</cite>.</p>
+<p>Script to solve the coupled electro-mechanical problem of a beam under electrostatic actuation using a modal decomposition approach together with Deep Learning techniques.
+For details on the theoretical formulation and numerical approach, please refer to the accompanying Markdown <code class="docutils literal notranslate"><span class="pre">multi_physics_model.md</span></code>.</p>
 <p>Example usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">multi_physics</span><span class="o">.</span><span class="n">solver</span> <span class="o">--</span><span class="n">nmodes</span> <span class="mi">4</span> <span class="o">--</span><span class="n">template</span><span class="o">-</span><span class="n">geo</span> <span class="n">geometries</span><span class="o">/</span><span class="n">cantilever2</span><span class="o">.</span><span class="n">geo</span> <span class="o">--</span><span class="n">dt</span> <span class="mf">5e-6</span> <span class="o">--</span><span class="n">nsteps</span> <span class="mi">80</span> <span class="o">--</span><span class="n">Vdc</span> <span class="mi">0</span> <span class="o">--</span><span class="n">Vac</span> <span class="mi">230</span> <span class="o">--</span><span class="n">freq</span> <span class="mf">2.5e3</span> <span class="o">--</span><span class="n">Vupper</span> <span class="mi">0</span> <span class="o">--</span><span class="n">Vouter</span> <span class="mi">0</span> <span class="o">--</span><span class="n">omega</span> <span class="mf">6.3e5</span> <span class="mf">3.9e6</span> <span class="mf">1.1e7</span> <span class="mf">2.1e7</span> <span class="o">--</span><span class="n">mass</span> <span class="mf">1e-12</span> <span class="mf">1e-12</span> <span class="mf">1e-12</span> <span class="mf">1e-12</span> <span class="o">--</span><span class="n">zeta</span> <span class="mf">0.01</span> <span class="mf">0.01</span> <span class="mf">0.01</span> <span class="mf">0.01</span> <span class="o">--</span><span class="nb">print</span><span class="o">-</span><span class="n">every</span> <span class="mi">1</span> <span class="o">--</span><span class="n">fail</span><span class="o">-</span><span class="n">fast</span> <span class="o">--</span><span class="n">workdir</span> <span class="s2">&quot;temp/visualization&quot;</span>
 </pre></div>
@@ -258,13 +260,14 @@ It includes functions for setting up and running multi-physics simulations, as w
 <li><p><code class="docutils literal notranslate"><span class="pre">--template-geo</span></code>: Path to the Gmsh geometry template file (required). This file should contain placeholders <code class="docutils literal notranslate"><span class="pre">__COEFF1__</span></code>, <code class="docutils literal notranslate"><span class="pre">__COEFF2__</span></code>, <code class="docutils literal notranslate"><span class="pre">__COEFF3__</span></code>, and <code class="docutils literal notranslate"><span class="pre">__COEFF4__</span></code> which will be replaced by the current modal coefficients (in microns) at each time step.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--workdir</span></code>: Base directory for output files (default: “coupled_work”). Meshes will be saved in <code class="docutils literal notranslate"><span class="pre">workdir/meshes</span></code> and results in <code class="docutils literal notranslate"><span class="pre">workdir/results</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--derivative-nn-path</span></code>: Optional path to a neural network model that can be used to predict the normal derivative of the potential on the force segment (tag 10) instead of computing it from the gradient. If provided, the code will call the model at each time step with appropriate input features to get the predicted dphi/dn values for use in the force computation.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--no-postprocessing</span></code>: If set, the code will not run post-processing steps (i.e., saving the potential field to a ParaView file and writing the modal history CSV).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--postprocessing-step</span></code>: Frequency of post-processing steps in terms of time steps (default: every step). For example, if set to 10, the code will save results and write to CSV every 10 time steps.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--potential-nn-path</span></code>: Optional path to a neural network model that can be used to predict the potential field instead of solving the electrostatic problem with FEniCSx. If provided, the code will call the model at each time step with appropriate input features to get the predicted potential field for use in diagnostics and force computation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-postprocessing</span></code>: If set, the code will not run post-processing steps (i.e. saving the potential field to a ParaView file). Useful only if you want to run the simulation with <code class="docutils literal notranslate"><span class="pre">--derivative-nn-path</span></code> and don’t care about the potential field output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--postprocessing-step</span></code>: Frequency of post-processing steps in terms of time steps (default: every step). For example, if set to 10, the code will compute and save the FE solution for the potential field only every 10 time steps.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--gmsh</span></code>: Path to the Gmsh executable (default: “gmsh”).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--mshver</span></code>: Gmsh mesh format version to use (“2.2” or “4.1”, default: “4.1”). Note that the code currently expects physical tags to be integers, which is the case in both versions, but the internal handling of tags differs between versions. Version 4.1 is recommended for better performance and support for larger meshes.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--dt</span></code>: Time step size for the Newmark integration (default: 1e-6 seconds).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--nsteps</span></code>: Total number of time steps to simulate (default: 200).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--nmodes</span></code>: Number of modes to compute and include in the simulation (default: 4). The current implementation supports up to 4 modes, and the mode shapes are hardcoded for a cantilever beam. If you want to use more modes or different geometries, the code would need to be generalized.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--nmodes</span></code>: Number of modes for which modal forces are computed (default: 4). The current implementation supports up to 4 modes and provides hardcoded mode shapes for both cantilever and clamped-clamped beams; select the latter with <code class="docutils literal notranslate"><span class="pre">--clamped</span></code>. The internal mechanical state and geometry template always retain four modal coefficients, with unused force entries left at zero when fewer than four modes are requested. More modes or other boundary conditions require generalizing the implementation and the geometry-template placeholders.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--xmin-um</span></code>, <code class="docutils literal notranslate"><span class="pre">--L-um</span></code>, <code class="docutils literal notranslate"><span class="pre">--thickness-um</span></code>: Geometric parameters of the cantilever beam in microns (default: -50, 100, 10).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--Vupper</span></code>, <code class="docutils literal notranslate"><span class="pre">--Vouter</span></code>: Voltages for the upper conductor and outer boundary (default: 0.0 V). Use <code class="docutils literal notranslate"><span class="pre">--no-outer-bc</span></code> to apply natural Neumann conditions on the outer boundary instead of a Dirichlet condition.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--epsr</span></code>: Relative permittivity of the medium (default: 1.0).</p></li>
@@ -274,6 +277,13 @@ It includes functions for setting up and running multi-physics simulations, as w
 <li><p><code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code>: If set, the simulation will check for basic mesh quality and tag presence at each step and will abort if the mesh looks broken (e.g., too few nodes/cells or missing critical tags). This can help catch issues early in the remeshing process.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--min-nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">--min-cells</span></code>: Thresholds for the minimum number of nodes and cells in the mesh when <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> is enabled (default: 2000 each).</p></li>
 </ul>
+<div class="tip admonition">
+<p class="admonition-title">Outputs</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">results/electro_series.pvd</span></code>: ParaView time series.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">modal_history.csv</span></code>: Modal-history CSV.</p></li>
+</ul>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.multi_physics.solver.V_lower_time">
 <span class="sig-prename descclassname"><span class="pre">src.multi_physics.solver.</span></span><span class="sig-name descname"><span class="pre">V_lower_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Vdc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Vac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq_hz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multi_physics/solver.html#V_lower_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.multi_physics.solver.V_lower_time" title="Link to this definition">¶</a></dt>
@@ -389,7 +399,7 @@ The mode shape is given by</p>
 </div>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[C_i = \frac{\cosh(\beta_i L) - \cos(\beta_i L)}{\sinh(\beta_i L) + \sin(\beta_i L)}.\]</div>
+\[C_i = \frac{\cos(\beta_i L) - \cosh(\beta_i L)}{\sinh(\beta_i L) + \sin(\beta_i L)}.\]</div>
 </div>
 </div>
 <dl class="field-list simple">
@@ -425,7 +435,7 @@ The mode shape is given by</p>
 </div>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[C_i = \frac{\cosh(\beta_i L) - \cos(\beta_i L)}{\sinh(\beta_i L) + \sin(\beta_i L)}.\]</div>
+\[C_i = \frac{\cos(\beta_i L) - \cosh(\beta_i L)}{\sinh(\beta_i L) + \sin(\beta_i L)}.\]</div>
 </div>
 </div>
 <dl class="field-list simple">
@@ -453,14 +463,14 @@ The mode shape is given by</p>
 <span class="sig-prename descclassname"><span class="pre">src.multi_physics.solver.</span></span><span class="sig-name descname"><span class="pre">_compute_displacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamped</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multi_physics/solver.html#_compute_displacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.multi_physics.solver._compute_displacement" title="Link to this definition">¶</a></dt>
 <dd><div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
-<p>Compute the displacement field along the beam by superposing the first 4 modes weighted by their modal coefficients. The mode shapes are evaluated at the spatial coordinates <cite>x</cite> along the beam. The mode parameters <cite>beta_i</cite> are computed from the known roots of the cantilever beam characteristic equation divided by the beam length <cite>L_m</cite>.</p>
+<p>Compute the displacement field along the beam by superposing four modes weighted by their modal coefficients. The mode shapes are evaluated at the spatial coordinates <code class="docutils literal notranslate"><span class="pre">x</span></code> along the beam. Depending on <code class="docutils literal notranslate"><span class="pre">clamped</span></code>, the mode parameters <code class="docutils literal notranslate"><span class="pre">beta_i</span></code> are computed from the hardcoded roots of either the cantilever or clamped-clamped characteristic equation, divided by the beam length <code class="docutils literal notranslate"><span class="pre">L</span></code>.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The spatial coordinates along the beam where the displacement is evaluated (1D array).</p></li>
 <li><p><strong>L</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The length of the cantilever beam (used to compute the mode parameters).</p></li>
-<li><p><strong>q</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The modal coefficients for the first <cite>nmodes</cite> modes (array of shape (nmodes,)).</p></li>
+<li><p><strong>q</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Four modal coefficients, as an array of shape <code class="docutils literal notranslate"><span class="pre">(4,)</span></code>.</p></li>
 <li><p><strong>clamped</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – A boolean indicating whether the beam is clamped at both ends.</p></li>
 </ul>
 </dd>
@@ -469,7 +479,7 @@ The mode shape is given by</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p>u (<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The computed displacement field along the beam at the coordinates <cite>x</cite>, resulting from the superposition of the first <cite>nmodes</cite> mode shapes weighted by their coefficients <cite>q</cite>.</p></li>
+<li><p>u (<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The computed displacement field at <code class="docutils literal notranslate"><span class="pre">x</span></code>, obtained by weighting and summing the four mode shapes with <code class="docutils literal notranslate"><span class="pre">q</span></code>.</p></li>
 </ul>
 </p>
 </dd>
@@ -481,7 +491,8 @@ The mode shape is given by</p>
 <span class="sig-prename descclassname"><span class="pre">src.multi_physics.solver.</span></span><span class="sig-name descname"><span class="pre">_energy_and_cap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Vdiff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8.8541878128e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multi_physics/solver.html#_energy_and_cap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.multi_physics.solver._energy_and_cap" title="Link to this definition">¶</a></dt>
 <dd><div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
-<p>Compute the electrostatic energy <cite>W</cite> stored in the system and an effective capacitance <cite>C=2W/Vdiff^2</cite> based on the potential distribution <cite>phi</cite> and the voltage difference <cite>Vdiff</cite>.</p>
+<p>Compute the electrostatic energy <code class="docutils literal notranslate"><span class="pre">W</span></code> stored in the system and an effective capacitance <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">2W</span> <span class="pre">/</span> <span class="pre">Vdiff**2</span></code> based on the potential distribution <code class="docutils literal notranslate"><span class="pre">phi</span></code> and the voltage difference <code class="docutils literal notranslate"><span class="pre">Vdiff</span></code>.</p>
+<p>The integration domain is two-dimensional and no out-of-plane thickness is applied. Consequently, <code class="docutils literal notranslate"><span class="pre">W</span></code> and <code class="docutils literal notranslate"><span class="pre">C</span></code> are values per unit out-of-plane depth (J/m and F/m, respectively). Multiply them by the physical out-of-plane thickness to obtain total energy in joules and total capacitance in farads.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -498,8 +509,8 @@ The mode shape is given by</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p>W (<code class="docutils literal notranslate"><span class="pre">float</span></code>) – The computed electrostatic energy in joules.</p></li>
-<li><p>C (<code class="docutils literal notranslate"><span class="pre">float</span></code>) – The computed effective capacitance in farads.</p></li>
+<li><p>W (<code class="docutils literal notranslate"><span class="pre">float</span></code>) – The computed electrostatic energy per unit out-of-plane depth, in J/m.</p></li>
+<li><p>C (<code class="docutils literal notranslate"><span class="pre">float</span></code>) – The computed effective capacitance per unit out-of-plane depth, in F/m.</p></li>
 </ul>
 </p>
 </dd>
@@ -521,7 +532,7 @@ The mode shape is given by</p>
 <li><p><strong>step</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Current time step index (used for naming the output files).</p></li>
 <li><p><strong>coeff_m</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Array of modal coefficients in meters (shape (4,)) to substitute into the geometry template.</p></li>
 <li><p><strong>gmsh_exec</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name or path of the Gmsh executable to run (default: “gmsh”).</p></li>
-<li><p><strong>mshver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Gmsh mesh format version to use (“2.2” or “4.1”, default: “4.1”).</p></li>
+<li><p><strong>mshver</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Gmsh mesh format version to use (<code class="docutils literal notranslate"><span class="pre">&quot;2.2&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;4.1&quot;</span></code>, default: <code class="docutils literal notranslate"><span class="pre">&quot;4.1&quot;</span></code>). This helper maps <code class="docutils literal notranslate"><span class="pre">&quot;2.2&quot;</span></code> to Gmsh’s <code class="docutils literal notranslate"><span class="pre">msh2</span></code> format and treats every other value as <code class="docutils literal notranslate"><span class="pre">msh4</span></code>; command-line callers are restricted to the two documented values by <code class="docutils literal notranslate"><span class="pre">argparse</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -568,7 +579,7 @@ The mode shape is given by</p>
 In particular, we have</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[M qdd + C qd + K q = F \quad      ext{for each mode},\]</div>
+\[M qdd + C qd + K q = F \quad \text{for each mode},\]</div>
 </div>
 <p>and the Newmark update equations are applied in a vectorized manner for all modes simultaneously.</p>
 </div>
@@ -606,7 +617,8 @@ In particular, we have</p>
 <span class="sig-prename descclassname"><span class="pre">src.multi_physics.solver.</span></span><span class="sig-name descname"><span class="pre">_project_E_dg0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multi_physics/solver.html#_project_E_dg0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.multi_physics.solver._project_E_dg0" title="Link to this definition">¶</a></dt>
 <dd><div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
-<p>Project the electric field E = -grad(phi) onto a discontinuous Galerkin (DG0) function space to compute the cell-wise average electric field magnitude, which is used for diagnostics.</p>
+<p>Project the electric-field vector <span class="math notranslate nohighlight">\(\mathbf{E}=-\nabla\phi\)</span> onto a discontinuous Galerkin (DG0) function space. The returned function contains the cell-wise vector components; its magnitude is computed separately by the caller for diagnostics.</p>
+<p>This function modifies <code class="docutils literal notranslate"><span class="pre">domain</span></code> in place: mesh coordinates are converted from metres to microns before projection and are not restored. The projected vector values are then converted from volts per micron to volts per metre.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -620,7 +632,7 @@ In particular, we have</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p>Eh (<code class="docutils literal notranslate"><span class="pre">fem.Function</span></code>) – A function in the DG0 space representing the projected electric field magnitude.</p></li>
+<li><p>Eh (<code class="docutils literal notranslate"><span class="pre">fem.Function</span></code>) – A vector-valued function in the DG0 space containing the projected electric-field components in volts per metre.</p></li>
 </ul>
 </p>
 </dd>
@@ -632,13 +644,13 @@ In particular, we have</p>
 <span class="sig-prename descclassname"><span class="pre">src.multi_physics.solver.</span></span><span class="sig-name descname"><span class="pre">_render_geo_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff_um</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/multi_physics/solver.html#_render_geo_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.multi_physics.solver._render_geo_template" title="Link to this definition">¶</a></dt>
 <dd><div class="admonition-description admonition">
 <p class="admonition-title">Description</p>
-<p>Replace <cite>__COEFF1__</cite>, <cite>__COEFF2__</cite>, <cite>__COEFF3__</cite>, <cite>__COEFF4__</cite> in the template text with the given coefficients (in microns).</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">__COEFF1__</span></code>, <code class="docutils literal notranslate"><span class="pre">__COEFF2__</span></code>, <code class="docutils literal notranslate"><span class="pre">__COEFF3__</span></code>, and <code class="docutils literal notranslate"><span class="pre">__COEFF4__</span></code> in the template text with the given coefficients (in microns).</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template_text</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The Gmsh geometry template text.</p></li>
-<li><p><strong>coeff_um</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Array of coefficients in microns.</p></li>
+<li><p><strong>coeff_um</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Array containing exactly four modal coefficients in microns, ordered from mode 1 to mode 4.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -771,8 +783,8 @@ In particular, we have</p>
 <li><p><strong>xmin_m</strong> – The minimum x coordinate of the beam (used to compute the spatial coordinate xi).</p></li>
 <li><p><strong>L_m</strong> – The length of the cantilever beam (used to compute the mode shapes).</p></li>
 <li><p><strong>thickness_m</strong> – The thickness of the beam in the out-of-plane direction (used to scale the force).</p></li>
-<li><p><strong>dphidn</strong> – Optional tuple containing the normal derivative of the potential on the plate segment, the corresponding coordinates of the midpoints and the integration points used to compute the force without FEniCSx forms. If provided, it should be a tuple of (dphidn_values, midpoints, integration_points) where dphidn_values is an array of the normal derivative values at the midpoints, midpoints is an array of the (x,y) coordinates of the midpoints, and integration_points is an array of the integration point coordinates. Both midpoints and integration_points are assumed to be increasing in x.</p></li>
-<li><p><strong>phi</strong> – Optional tuple containing the potential function, domain, and facet tags, used to compute the force using FEniCSx forms. If provided, it should be a tuple of (phi_function, domain, facet_tags) where phi_function is the computed potential function, domain is the FEniCSx mesh domain, and facet_tags contains the physical tags for the facets.</p></li>
+<li><p><strong>dphidn</strong> – Optional tuple <code class="docutils literal notranslate"><span class="pre">(dphidn_values,</span> <span class="pre">midpoints,</span> <span class="pre">segment_points)</span></code> used to compute forces without FEniCSx forms. <code class="docutils literal notranslate"><span class="pre">dphidn_values</span></code> contains the normal derivative at each segment midpoint, <code class="docutils literal notranslate"><span class="pre">midpoints</span></code> contains the corresponding <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> coordinates, and <code class="docutils literal notranslate"><span class="pre">segment_points</span></code> contains the ordered segment endpoints used to calculate segment lengths and normals. The point arrays are assumed to be ordered by increasing x coordinate.</p></li>
+<li><p><strong>phi</strong> – Optional tuple <code class="docutils literal notranslate"><span class="pre">(phi_function,</span> <span class="pre">domain,</span> <span class="pre">facet_tags)</span></code> used to compute forces with FEniCSx forms. <code class="docutils literal notranslate"><span class="pre">phi_function</span></code> is the potential, <code class="docutils literal notranslate"><span class="pre">domain</span></code> is the FEniCSx mesh domain, and <code class="docutils literal notranslate"><span class="pre">facet_tags</span></code> contains the physical facet tags.</p></li>
 <li><p><strong>eps_r</strong> – Relative permittivity of the medium (default: 1.0).</p></li>
 <li><p><strong>eps0</strong> – Vacuum permittivity (default: 8.8541878128e-12 F/m).</p></li>
 <li><p><strong>clamped</strong> – A boolean indicating whether the beam is clamped at both ends (default: False). This affects the mode shapes used in the force computation.</p></li>
@@ -780,16 +792,12 @@ In particular, we have</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p>F (<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Array of modal forces for the first 4 modes.</p></li>
+<li><p>F (<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(4,)</span></code>. Entries below <code class="docutils literal notranslate"><span class="pre">nmodes</span></code> contain the computed modal forces; remaining entries are zero.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – <ul class="simple">
-<li><p>If <cite>nmodes</cite> is greater than 4, since the function is designed for up to 4 modes and would require generalization for more modes.</p></li>
-<li><p>If neither <cite>phi</cite> nor <cite>dphidn</cite> is provided, since at least one of them is needed to compute the forces.</p></li>
-</ul>
-</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">nmodes</span></code> is greater than 4, since the function is designed for up to 4 modes and would require generalization for more modes. If neither <code class="docutils literal notranslate"><span class="pre">phi</span></code> nor <code class="docutils literal notranslate"><span class="pre">dphidn</span></code> is provided, since at least one of them is needed to compute the forces. If both <code class="docutils literal notranslate"><span class="pre">phi</span></code> and <code class="docutils literal notranslate"><span class="pre">dphidn</span></code> are supplied and the number of derivative values does not match the number of facets carrying tag 10.</p>
 </dd>
 </dl>
 </dd></dl>

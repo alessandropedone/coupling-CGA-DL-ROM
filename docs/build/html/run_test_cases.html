@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=3a279da1" />
     
     
 
@@ -249,9 +250,11 @@ So, we start recalling that we have three packages in the <code class="docutils 
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: for static data generation and post-processing;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">surrogate</span></code>: for the surrogate models;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">multi_physics</span></code>: for the electro-mechanical solver.
-For a more detailed explanation of all functionalities, consult <code class="docutils literal notranslate"><span class="pre">report.pdf</span></code> in the main directory, which provides the necessary background information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">multi_physics</span></code>: for the electro-mechanical solver.</p></li>
 </ol>
+<blockquote>
+<div><p>Consult report.pdf in the main directory for a detailed background explanation, test cases, and results, including images and videos.</p>
+</div></blockquote>
 <section id="overall-outline">
 <h2>Overall Outline<a class="headerlink" href="#overall-outline" title="Link to this heading">¶</a></h2>
 <p>We first describe how the data and surrogate packages are used to train the surrogate models. We then present and validate the multiphysics solver, and finally assess its performance when integrating the pre-trained surrogate models.</p>
@@ -371,13 +374,72 @@ For the last two commands you can use the following additional flags:</p>
 </div>
 <p>This script compares the DL-ROM with the classical ROM, performing a profiling of execution times and an assessment of accuracy. In particular, the evaluation of the latter focuses on the displacement and the capacitance (quantity of interest).
 Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/performance</span></code> folder.</p>
+<p><strong>Geometry parameters.</strong> You can test the robustness of the DL-ROM over a grid of geometric parameters by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>test/test_geometry.py
+</pre></div>
+</div>
+<p>By default, this test compares the DL-ROM with the classical ROM on a 3-by-3 grid, varying the overetch from <span class="math notranslate nohighlight">\(0\)</span> to <span class="math notranslate nohighlight">\(0.5\)</span> and the distance between the plates from <span class="math notranslate nohighlight">\(1.5\)</span> to <span class="math notranslate nohighlight">\(2.5\)</span>. For every geometry, it evaluates the speedup and the normalized L-infinity errors of the capacitance and displacement, then reports their mean and standard deviation. The <code class="docutils literal notranslate"><span class="pre">--grid-refinement</span></code> option changes the number of values used for each parameter, while <code class="docutils literal notranslate"><span class="pre">--big-deformation</span></code> changes the distance range to <span class="math notranslate nohighlight">\([20,30]\)</span>.
+Results are saved in the <code class="docutils literal notranslate"><span class="pre">temp/geometry</span></code> folder.</p>
 <p><strong>Additional flags.</strong>
-For the last command you can use the following additional flags:</p>
+For the performance and geometry tests, you can use the following additional flags:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--no-simulation</span></code>: visualize the solution again after running test, you can add the flag;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--save-frames</span></code>: save the plot of the capacity over time and the video of the displacement over time;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--clamped</span></code>: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).</p></li>
 </ol>
+</section>
+<section id="memory-profiling-optional">
+<h3>Memory profiling (optional)<a class="headerlink" href="#memory-profiling-optional" title="Link to this heading">¶</a></h3>
+<p>You can use <a class="reference external" href="https://bloomberg.github.io/memray/">Memray</a>, which is already present in the provided environment, to run a memory inspection and compare the DL-ROM against the classical ROM.</p>
+<p>For the classical ROM you can run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>temp/memory<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>memray<span class="w"> </span>run<span class="w"> </span>--native<span class="w"> </span>-o<span class="w"> </span>temp/memory/classical_rom.bin<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--template-geo<span class="w"> </span>geometries/cantilever1.geo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--workdir<span class="w"> </span>temp/memory/classical_rom_run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dt<span class="w"> </span>1e-5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--nsteps<span class="w"> </span><span class="m">40</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vac<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fail-fast
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>memray<span class="w"> </span>flamegraph<span class="w"> </span>--temporal<span class="w"> </span>-o<span class="w"> </span>temp/memory/classical_rom.html<span class="w"> </span>temp/memory/classical_rom.bin
+</pre></div>
+</div>
+<p>For the DL-ROM you can run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>temp/memory<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>memray<span class="w"> </span>run<span class="w"> </span>--native<span class="w"> </span>-o<span class="w"> </span>temp/memory/dl_rom.bin<span class="w"> </span>-m<span class="w"> </span>src.multi_physics.solver<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--template-geo<span class="w"> </span>geometries/cantilever1.geo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--workdir<span class="w"> </span>temp/memory/dl_rom_run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--nmodes<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dt<span class="w"> </span>1e-5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--nsteps<span class="w"> </span><span class="m">40</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vdc<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vac<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--freq<span class="w"> </span><span class="m">2</span>.5e3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vupper<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--Vouter<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--omega<span class="w"> </span><span class="m">6</span>.3e5<span class="w"> </span><span class="m">3</span>.9e6<span class="w"> </span><span class="m">1</span>.1e7<span class="w"> </span><span class="m">2</span>.1e7<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mass<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span>1e-12<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--zeta<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--print-every<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fail-fast<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--derivative-nn-path<span class="w"> </span>models/derivative1.keras<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--no-postprocessing
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>memray<span class="w"> </span>flamegraph<span class="w"> </span>--temporal<span class="w"> </span>-o<span class="w"> </span>temp/memory/dl_rom.html<span class="w"> </span>temp/memory/dl_rom.bin
+</pre></div>
+</div>
+<p>Then you can take a look at the output HTML files.</p>
 </section>
 </section>
 </section>
@@ -448,6 +510,7 @@ For the last command you can use the following additional flags:</p>
 <li><a class="reference internal" href="#multi-physics">Multi-Physics</a><ul>
 <li><a class="reference internal" href="#classical-multi-physics-solver">Classical Multi-Physics Solver</a></li>
 <li><a class="reference internal" href="#dl-multi-physics-solver">DL Multi-Physics Solver</a></li>
+<li><a class="reference internal" href="#memory-profiling-optional">Memory profiling (optional)</a></li>
 </ul>
 </li>
 </ul>
@@ -465,5 +528,7 @@ For the last command you can use the following additional flags:</p>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>

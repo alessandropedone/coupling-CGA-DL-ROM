@@ -473,7 +473,7 @@ class DenseNetwork(tf.keras.Model):
         :param log: Whether to log training progress for TensorBoard.
         :param optimizer: The optimizer to be used for training. Options are 'adam', 'sgd', 'rmsprop'.
 
-        .. note::
+        .. tip::
 
             Use ``tensorboard --logdir logs`` to visualize logs (if log is set to True).
         """
@@ -822,7 +822,7 @@ class DeepONet(tf.keras.Model):
         :param log: Whether to log training progress for TensorBoard.
         :param optimizer: The optimizer to be used for training. Options are 'adam', 'sgd', 'rmsprop'.
 
-        .. note::
+        .. tip::
 
             Use ``tensorboard --logdir logs`` to visualize logs (if log is set to True).
         """

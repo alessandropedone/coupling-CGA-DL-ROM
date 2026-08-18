@@ -218,13 +218,13 @@ def generate_geometries(names: list[str],
     :param max_workers: Maximum number of worker processes to use for parallel geometry generation.
     :return: None
 
-    .. note::
+    .. tip::
 
         For example you may want to set this equal to TRUE if you have more data in that folder, 
         or already computed solutions, and for some reason you want to generate the geomteries 
         in that folder avoid touching every file except the "geo" subfolder the parameters file.
 
-    .. note::
+    .. tip::
 
         As output you get a series of geometry files in data_folder/geo and a parameters.csv file in data_folder.
     """

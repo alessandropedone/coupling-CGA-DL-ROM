@@ -5,7 +5,8 @@ So, we start recalling that we have three packages in the `src` folder:
 1. `data`: for static data generation and post-processing;
 2. `surrogate`: for the surrogate models;
 3. `multi_physics`: for the electro-mechanical solver.
-For a more detailed explanation of all functionalities, consult `report.pdf` in the main directory, which provides the necessary background information.
+
+> Consult report.pdf in the main directory for a detailed background explanation, test cases, and results, including images and videos.
 
 ## Overall Outline
 
@@ -129,8 +130,78 @@ python test/test_performance.py
 This script compares the DL-ROM with the classical ROM, performing a profiling of execution times and an assessment of accuracy. In particular, the evaluation of the latter focuses on the displacement and the capacitance (quantity of interest).
 Results are saved in the `temp/performance` folder.
 
+__Geometry parameters.__ You can test the robustness of the DL-ROM over a grid of geometric parameters by running:
+```bash
+python test/test_geometry.py
+```
+By default, this test compares the DL-ROM with the classical ROM on a 3-by-3 grid, varying the overetch from $0$ to $0.5$ and the distance between the plates from $1.5$ to $2.5$. For every geometry, it evaluates the speedup and the normalized L-infinity errors of the capacitance and displacement, then reports their mean and standard deviation. The `--grid-refinement` option changes the number of values used for each parameter, while `--big-deformation` changes the distance range to $[20,30]$.
+Results are saved in the `temp/geometry` folder.
+
 __Additional flags.__
-For the last command you can use the following additional flags:
+For the performance and geometry tests, you can use the following additional flags:
 1. `--no-simulation`: visualize the solution again after running test, you can add the flag;
 2. `--save-frames`: save the plot of the capacity over time and the video of the displacement over time;
 3. `--clamped`: run the test in the case of clamped-clamped upper plate (this flag works also for the first command of this section).
+
+
+### Memory profiling (optional)
+
+You can use [Memray](https://bloomberg.github.io/memray/), which is already present in the provided environment, to run a memory inspection and compare the DL-ROM against the classical ROM.
+
+For the classical ROM you can run
+
+```bash
+mkdir -p temp/memory && python -m memray run --native -o temp/memory/classical_rom.bin -m src.multi_physics.solver \
+  --template-geo geometries/cantilever1.geo \
+  --workdir temp/memory/classical_rom_run \
+  --nmodes 4 \
+  --dt 1e-5 \
+  --nsteps 40 \
+  --Vdc 0 \
+  --Vac 5 \
+  --freq 2.5e3 \
+  --Vupper 0 \
+  --Vouter 0 \
+  --omega 6.3e5 3.9e6 1.1e7 2.1e7 \
+  --mass 1e-12 1e-12 1e-12 1e-12 \
+  --zeta 0.01 0.01 0.01 0.01 \
+  --print-every 1 \
+  --fail-fast
+```
+
+and
+
+```bash
+python -m memray flamegraph --temporal -o temp/memory/classical_rom.html temp/memory/classical_rom.bin
+```
+
+For the DL-ROM you can run
+
+```bash
+mkdir -p temp/memory && python -m memray run --native -o temp/memory/dl_rom.bin -m src.multi_physics.solver \
+  --template-geo geometries/cantilever1.geo \
+  --workdir temp/memory/dl_rom_run \
+  --nmodes 4 \
+  --dt 1e-5 \
+  --nsteps 40 \
+  --Vdc 0 \
+  --Vac 5 \
+  --freq 2.5e3 \
+  --Vupper 0 \
+  --Vouter 0 \
+  --omega 6.3e5 3.9e6 1.1e7 2.1e7 \
+  --mass 1e-12 1e-12 1e-12 1e-12 \
+  --zeta 0.01 0.01 0.01 0.01 \
+  --print-every 1 \
+  --fail-fast \
+  --derivative-nn-path models/derivative1.keras \
+  --no-postprocessing
+```
+
+and
+
+```bash
+python -m memray flamegraph --temporal -o temp/memory/dl_rom.html temp/memory/dl_rom.bin
+```
+
+Then you can take a look at the output HTML files.

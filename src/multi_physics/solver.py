@@ -1,5 +1,6 @@
 """
-For details on the theorical formulation and numerical approach, please refer to the accompanying Markdown `Multi-physics model`.
+Script to solve the coupled electro-mechanical problem of a beam under electrostatic actuation using a modal decomposition approach together with Deep Learning techniques.
+For details on the theoretical formulation and numerical approach, please refer to the accompanying Markdown ``multi_physics_model.md``.
 
 Example usage::
 
@@ -10,13 +11,14 @@ There are several optional arguments to customize the behavior:
 - ``--template-geo``: Path to the Gmsh geometry template file (required). This file should contain placeholders ``__COEFF1__``, ``__COEFF2__``, ``__COEFF3__``, and ``__COEFF4__`` which will be replaced by the current modal coefficients (in microns) at each time step.
 - ``--workdir``: Base directory for output files (default: "coupled_work"). Meshes will be saved in ``workdir/meshes`` and results in ``workdir/results``.
 - ``--derivative-nn-path``: Optional path to a neural network model that can be used to predict the normal derivative of the potential on the force segment (tag 10) instead of computing it from the gradient. If provided, the code will call the model at each time step with appropriate input features to get the predicted dphi/dn values for use in the force computation.
-- ``--no-postprocessing``: If set, the code will not run post-processing steps (i.e., saving the potential field to a ParaView file and writing the modal history CSV).
-- ``--postprocessing-step``: Frequency of post-processing steps in terms of time steps (default: every step). For example, if set to 10, the code will save results and write to CSV every 10 time steps.
+- ``--potential-nn-path``: Optional path to a neural network model that can be used to predict the potential field instead of solving the electrostatic problem with FEniCSx. If provided, the code will call the model at each time step with appropriate input features to get the predicted potential field for use in diagnostics and force computation.
+- ``--no-postprocessing``: If set, the code will not run post-processing steps (i.e. saving the potential field to a ParaView file). Useful only if you want to run the simulation with ``--derivative-nn-path`` and don't care about the potential field output.
+- ``--postprocessing-step``: Frequency of post-processing steps in terms of time steps (default: every step). For example, if set to 10, the code will compute and save the FE solution for the potential field only every 10 time steps.
 - ``--gmsh``: Path to the Gmsh executable (default: "gmsh").
 - ``--mshver``: Gmsh mesh format version to use ("2.2" or "4.1", default: "4.1"). Note that the code currently expects physical tags to be integers, which is the case in both versions, but the internal handling of tags differs between versions. Version 4.1 is recommended for better performance and support for larger meshes.
 - ``--dt``: Time step size for the Newmark integration (default: 1e-6 seconds).
 - ``--nsteps``: Total number of time steps to simulate (default: 200).
-- ``--nmodes``: Number of modes to compute and include in the simulation (default: 4). The current implementation supports up to 4 modes, and the mode shapes are hardcoded for a cantilever beam. If you want to use more modes or different geometries, the code would need to be generalized.
+- ``--nmodes``: Number of modes for which modal forces are computed (default: 4). The current implementation supports up to 4 modes and provides hardcoded mode shapes for both cantilever and clamped-clamped beams; select the latter with ``--clamped``. The internal mechanical state and geometry template always retain four modal coefficients, with unused force entries left at zero when fewer than four modes are requested. More modes or other boundary conditions require generalizing the implementation and the geometry-template placeholders.
 - ``--xmin-um``, ``--L-um``, ``--thickness-um``: Geometric parameters of the cantilever beam in microns (default: -50, 100, 10).
 - ``--Vupper``, ``--Vouter``: Voltages for the upper conductor and outer boundary (default: 0.0 V). Use ``--no-outer-bc`` to apply natural Neumann conditions on the outer boundary instead of a Dirichlet condition.
 - ``--epsr``: Relative permittivity of the medium (default: 1.0).
@@ -26,10 +28,11 @@ There are several optional arguments to customize the behavior:
 - ``--fail-fast``: If set, the simulation will check for basic mesh quality and tag presence at each step and will abort if the mesh looks broken (e.g., too few nodes/cells or missing critical tags). This can help catch issues early in the remeshing process.
 - ``--min-nodes``, ``--min-cells``: Thresholds for the minimum number of nodes and cells in the mesh when ``--fail-fast`` is enabled (default: 2000 each).
 
-.. outputs:
-
-    :file:`results/electro_series.pvd`: ParaView time series containing the electrostatic potential field at each time step.
-    :file:`results/modal_history.csv`: CSV file with the time history of modal coefficients, forces, field extrema, energy, and mesh statistics for each time step. (q_i, F_i, diagnostics vs time)
+.. admonition:: Outputs
+    :class: tip
+    
+    - :file:`results/electro_series.pvd`: ParaView time series.
+    - :file:`modal_history.csv`: Modal-history CSV.
 """
 
 from __future__ import annotations
@@ -89,10 +92,10 @@ def _render_geo_template(template_text: str, coeff_um: np.ndarray) -> str:
     """
     .. admonition:: Description
 
-        Replace `__COEFF1__`, `__COEFF2__`, `__COEFF3__`, `__COEFF4__` in the template text with the given coefficients (in microns).
+        Replace ``__COEFF1__``, ``__COEFF2__``, ``__COEFF3__``, and ``__COEFF4__`` in the template text with the given coefficients (in microns).
 
     :param template_text: The Gmsh geometry template text.
-    :param coeff_um: Array of coefficients in microns.
+    :param coeff_um: Array containing exactly four modal coefficients in microns, ordered from mode 1 to mode 4.
 
     :returns:
         - geo_text (``str``) -- The rendered Gmsh geometry text with coefficients substituted.
@@ -124,7 +127,7 @@ def _make_mesh_step(
     :param step: Current time step index (used for naming the output files).
     :param coeff_m: Array of modal coefficients in meters (shape (4,)) to substitute into the geometry template.
     :param gmsh_exec: Name or path of the Gmsh executable to run (default: "gmsh").
-    :param mshver: Gmsh mesh format version to use ("2.2" or "4.1", default: "4.1").
+    :param mshver: Gmsh mesh format version to use (``"2.2"`` or ``"4.1"``, default: ``"4.1"``). This helper maps ``"2.2"`` to Gmsh's ``msh2`` format and treats every other value as ``msh4``; command-line callers are restricted to the two documented values by ``argparse``.
 
     :returns:
         - msh_path (``Path``) -- Path to the generated Gmsh mesh file for this time step.
@@ -198,13 +201,15 @@ def _project_E_dg0(domain, phi) -> fem.Function:
     """
     .. admonition:: Description
 
-        Project the electric field E = -grad(phi) onto a discontinuous Galerkin (DG0) function space to compute the cell-wise average electric field magnitude, which is used for diagnostics.
+        Project the electric-field vector :math:`\\mathbf{E}=-\\nabla\\phi` onto a discontinuous Galerkin (DG0) function space. The returned function contains the cell-wise vector components; its magnitude is computed separately by the caller for diagnostics.
+
+        This function modifies ``domain`` in place: mesh coordinates are converted from metres to microns before projection and are not restored. The projected vector values are then converted from volts per micron to volts per metre.
 
     :param domain: The FEniCSx mesh domain object.
     :param phi: The electrostatic potential function defined on the mesh.
 
     :returns:
-        - Eh (``fem.Function``) -- A function in the DG0 space representing the projected electric field magnitude.
+        - Eh (``fem.Function``) -- A vector-valued function in the DG0 space containing the projected electric-field components in volts per metre.
     """
     # Define the vector function space for the gradient
     domain.geometry.x[:] /= UM
@@ -233,7 +238,9 @@ def _energy_and_cap(
     """
     .. admonition:: Description
 
-        Compute the electrostatic energy `W` stored in the system and an effective capacitance `C=2W/Vdiff^2` based on the potential distribution `phi` and the voltage difference `Vdiff`.
+        Compute the electrostatic energy ``W`` stored in the system and an effective capacitance ``C = 2W / Vdiff**2`` based on the potential distribution ``phi`` and the voltage difference ``Vdiff``.
+
+        The integration domain is two-dimensional and no out-of-plane thickness is applied. Consequently, ``W`` and ``C`` are values per unit out-of-plane depth (J/m and F/m, respectively). Multiply them by the physical out-of-plane thickness to obtain total energy in joules and total capacitance in farads.
 
     :param domain: The FEniCSx mesh domain object.
     :param phi: The electrostatic potential function defined on the mesh.
@@ -242,8 +249,8 @@ def _energy_and_cap(
     :param eps0: Vacuum permittivity (default: 8.8541878128e-12 F/m).
 
     :returns:
-        - W (``float``) -- The computed electrostatic energy in joules.
-        - C (``float``) -- The computed effective capacitance in farads.
+        - W (``float``) -- The computed electrostatic energy per unit out-of-plane depth, in J/m.
+        - C (``float``) -- The computed effective capacitance per unit out-of-plane depth, in F/m.
     """
     eps = eps0 * eps_r
     # Linear dielectric
@@ -421,7 +428,7 @@ def _clamped_shape_ufl(
 
         .. math::
 
-            C_i = \\frac{\\cosh(\\beta_i L) - \\cos(\\beta_i L)}{\\sinh(\\beta_i L) + \\sin(\\beta_i L)}.
+            C_i = \\frac{\\cos(\\beta_i L) - \\cosh(\\beta_i L)}{\\sinh(\\beta_i L) + \\sin(\\beta_i L)}.
 
     :param xi: The spatial coordinate along the beam, :math:`\\xi = x - x_{\\min}`.
     :param beta: The mode parameter :math:`\\beta_i` for the *i*-th mode, related to the natural frequency.
@@ -453,7 +460,7 @@ def _clamped_shape_np(xi: np.ndarray, beta: float, L: float) -> np.ndarray:
 
         .. math::
 
-            C_i = \\frac{\\cosh(\\beta_i L) - \\cos(\\beta_i L)}{\\sinh(\\beta_i L) + \\sin(\\beta_i L)}.
+            C_i = \\frac{\\cos(\\beta_i L) - \\cosh(\\beta_i L)}{\\sinh(\\beta_i L) + \\sin(\\beta_i L)}.
 
     :param xi: The spatial coordinate along the beam, :math:`\\xi = x - x_{\\min}`.
     :param beta: The mode parameter :math:`\\beta_i` for the *i*-th mode, related to the natural frequency.
@@ -476,15 +483,15 @@ def _compute_displacement(
     """
     .. admonition:: Description
 
-        Compute the displacement field along the beam by superposing the first 4 modes weighted by their modal coefficients. The mode shapes are evaluated at the spatial coordinates `x` along the beam. The mode parameters `beta_i` are computed from the known roots of the cantilever beam characteristic equation divided by the beam length `L_m`.
+        Compute the displacement field along the beam by superposing four modes weighted by their modal coefficients. The mode shapes are evaluated at the spatial coordinates ``x`` along the beam. Depending on ``clamped``, the mode parameters ``beta_i`` are computed from the hardcoded roots of either the cantilever or clamped-clamped characteristic equation, divided by the beam length ``L``.
 
     :param x: The spatial coordinates along the beam where the displacement is evaluated (1D array).
     :param L: The length of the cantilever beam (used to compute the mode parameters).
-    :param q: The modal coefficients for the first `nmodes` modes (array of shape (nmodes,)).
+    :param q: Four modal coefficients, as an array of shape ``(4,)``.
     :param clamped: A boolean indicating whether the beam is clamped at both ends.
 
     :returns:
-        - u (``np.ndarray``) -- The computed displacement field along the beam at the coordinates `x`, resulting from the superposition of the first `nmodes` mode shapes weighted by their coefficients `q`.
+        - u (``np.ndarray``) -- The computed displacement field at ``x``, obtained by weighting and summing the four mode shapes with ``q``.
     """
 
     if not clamped:
@@ -577,18 +584,16 @@ def modal_forces_4(
     :param xmin_m: The minimum x coordinate of the beam (used to compute the spatial coordinate xi).
     :param L_m: The length of the cantilever beam (used to compute the mode shapes).
     :param thickness_m: The thickness of the beam in the out-of-plane direction (used to scale the force).
-    :param dphidn: Optional tuple containing the normal derivative of the potential on the plate segment, the corresponding coordinates of the midpoints and the integration points used to compute the force without FEniCSx forms. If provided, it should be a tuple of (dphidn_values, midpoints, integration_points) where dphidn_values is an array of the normal derivative values at the midpoints, midpoints is an array of the (x,y) coordinates of the midpoints, and integration_points is an array of the integration point coordinates. Both midpoints and integration_points are assumed to be increasing in x.
-    :param phi: Optional tuple containing the potential function, domain, and facet tags, used to compute the force using FEniCSx forms. If provided, it should be a tuple of (phi_function, domain, facet_tags) where phi_function is the computed potential function, domain is the FEniCSx mesh domain, and facet_tags contains the physical tags for the facets.
+    :param dphidn: Optional tuple ``(dphidn_values, midpoints, segment_points)`` used to compute forces without FEniCSx forms. ``dphidn_values`` contains the normal derivative at each segment midpoint, ``midpoints`` contains the corresponding ``(x, y)`` coordinates, and ``segment_points`` contains the ordered segment endpoints used to calculate segment lengths and normals. The point arrays are assumed to be ordered by increasing x coordinate.
+    :param phi: Optional tuple ``(phi_function, domain, facet_tags)`` used to compute forces with FEniCSx forms. ``phi_function`` is the potential, ``domain`` is the FEniCSx mesh domain, and ``facet_tags`` contains the physical facet tags.
     :param eps_r: Relative permittivity of the medium (default: 1.0).
     :param eps0: Vacuum permittivity (default: 8.8541878128e-12 F/m).
     :param clamped: A boolean indicating whether the beam is clamped at both ends (default: False). This affects the mode shapes used in the force computation.
 
     :returns:
-        - F (``np.ndarray``) -- Array of modal forces for the first 4 modes.
+        - F (``np.ndarray``) -- Array of shape ``(4,)``. Entries below ``nmodes`` contain the computed modal forces; remaining entries are zero.
 
-    :raises ValueError:
-        - If `nmodes` is greater than 4, since the function is designed for up to 4 modes and would require generalization for more modes.
-        - If neither `phi` nor `dphidn` is provided, since at least one of them is needed to compute the forces.
+    :raises ValueError: If ``nmodes`` is greater than 4, since the function is designed for up to 4 modes and would require generalization for more modes. If neither ``phi`` nor ``dphidn`` is provided, since at least one of them is needed to compute the forces. If both ``phi`` and ``dphidn`` are supplied and the number of derivative values does not match the number of facets carrying tag 10.
     """
     if nmodes > 4:
         raise ValueError(
@@ -686,7 +691,7 @@ def _newmark_step_diag(
             Perform one time step of the Newmark average acceleration method for a diagonal modal system, where M, C, K are arrays of modal masses, damping coefficients, and stiffnesses for each mode. The function updates the modal coordinates q, velocities qd, and accelerations qdd based on the applied forces F and the time step dt.
             In particular, we have
 
-            .. math:: M qdd + C qd + K q = F \quad \text{for each mode},
+            .. math:: M qdd + C qd + K q = F \quad \\text{for each mode},
 
             and the Newmark update equations are applied in a vectorized manner for all modes simultaneously.
 
@@ -759,7 +764,7 @@ def main():
     ap.add_argument(
         "--no-postprocessing",
         action="store_true",
-        help="If set to True, it will also save the results in VTK format for visualization in ParaView.",
+        help="If set to True, it will not perform postprocessing (i.e. saving the potential field to a ParaView file).",
         default=False,
     )
     ap.add_argument(

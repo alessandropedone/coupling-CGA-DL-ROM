@@ -14,7 +14,7 @@ There are several optional arguments to customize the behavior:
 - ``--prediction_seed``: Random seed for test sample selection (default: :math:`40`).
 - ``--using_training_set``: If set, divide the set into training, validation, and test sets as in the training script.
 
-.. note::
+.. attention::
 
     Ensure that the seeds used for splitting and prediction are consistent with those used during training for reproducibility.
 """

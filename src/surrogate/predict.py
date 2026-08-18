@@ -4,7 +4,7 @@ on a randomly selected test sample from a specified dataset. It saves the predic
 to a ``.h5`` file and generates plots comparing the surrogate predictions with the full-order
 model (FOM) results.
 
-.. note::
+.. attention::
 
     If you sample from the test set, ensure that the splitting seed matches that used during training.
     If you are using the model we trained just keep the default value of :math:`40`.

@@ -3,7 +3,7 @@ This module implements masked loss functions for handling NaN values in the targ
 These loss functions can be used in TensorFlow/Keras models to ignore NaN values during training
 and evaluation.
 
-.. note::
+.. danger::
     
     Be very careful about precision, since here ``tf.reduce_sum(mask)``
     can be very big if the number of points in a batch is large.
