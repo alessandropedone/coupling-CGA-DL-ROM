@@ -113,6 +113,7 @@ python -m src.multi_physics.solver \
   --zeta 0.01 0.01 0.01 0.01 \
   --print-every 1 \
   --fail-fast \
+  --no-outer-bc \
   --workdir "temp/visualization"
 ```
 Then, you can go to the `temp/visualization` folder and visualize the solution by opening the `temp/visualization/results` subfolder in ParaView. Remember to select the scalar field `phi` (electrostatic potential) for coloring. As an example of what the output looks like, we provide `test/videos/visualization.mp4`, which is the video of `phi` over time.
@@ -229,6 +230,7 @@ mkdir -p temp/memory && python -m memray run --native -o temp/memory/classical_r
   --mass 1e-12 1e-12 1e-12 1e-12 \
   --zeta 0.01 0.01 0.01 0.01 \
   --print-every 1 \
+  --no-outer-bc \
   --fail-fast
 ```
 
@@ -257,6 +259,7 @@ mkdir -p temp/memory && python -m memray run --native -o temp/memory/dl_rom.bin 
   --zeta 0.01 0.01 0.01 0.01 \
   --print-every 1 \
   --fail-fast \
+  --no-outer-bc \
   --derivative-nn-path models/derivative1.keras \
   --no-postprocessing
 ```
