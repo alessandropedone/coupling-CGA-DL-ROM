@@ -620,11 +620,11 @@ def plot_normal_derivative(file, postpone_show=False, pred=False, error=False, z
         ax = plt.gca()
         plt.colorbar(sm, ax=ax, label="Derivative modulus")
         if pred:
-            ax.set_title(rf"Predicted $\frac{{\partial V}}{{\partial n}}$ (zoom {zoom[i]})" if zoom is not None else rf"Predicted $\\frac{{\\partial V}}{{\\partial n}}$")
+            ax.set_title(rf"Predicted $\frac{{\partial \phi}}{{\partial n}}$ (zoom {zoom[i]})" if zoom is not None else rf"Predicted $\\frac{{\\partial \phi}}{{\\partial n}}$")
         elif error:
             ax.set_title("Relative error (zoom {}) (RMSE = {:.0e})".format(zoom[i], np.sqrt(np.mean((file['normal_derivative_pred'][:] - file['normal_derivatives_plate'][:])**2))) if zoom is not None else "Relative error (RMSE = {:.0e})".format(np.sqrt(np.mean((file['normal_derivative_pred'][:] - file['normal_derivatives_plate'][:])**2))))
         else:
-            ax.set_title(rf"$\frac{{\partial V}}{{\partial n}}$ (zoom {zoom[i]})" if zoom is not None else rf"$\\frac{{\\partial V}}{{\\partial n}}$")
+            ax.set_title(rf"$\frac{{\partial \phi}}{{\partial n}}$ (zoom {zoom[i]})" if zoom is not None else rf"$\\frac{{\\partial \phi}}{{\\partial n}}$")
 
     plt.tight_layout()
     if not postpone_show:
