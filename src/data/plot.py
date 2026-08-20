@@ -594,7 +594,7 @@ def plot_normal_derivative(file, postpone_show=False, pred=False, error=False, z
         if pred:
             normal_derivative = file["normal_derivative_pred"][:]
         elif error:
-            normal_derivative = abs(file["normal_derivative_pred"][:] - file["normal_derivatives_plate"][:]) / np.median(abs(file["normal_derivatives_plate"][:] + 1e-9))
+            normal_derivative = abs(file["normal_derivative_pred"][:] - file["normal_derivatives_plate"][:]) / np.max(abs(file["normal_derivatives_plate"][:] + 1e-9))
         else:
             normal_derivative = file["normal_derivatives_plate"][:]
         points = file["midpoints_plate"][:]

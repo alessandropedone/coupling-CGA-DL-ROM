@@ -252,21 +252,21 @@ def main():
             plot_normal_derivative(
                 file,
                 postpone_show=True,
-                zoom=[4, 15, 15],
-                center_points=[(0, 0), (-50, 0), (50, 0)],
+                zoom=[4],
+                center_points=[(0, 0)],
             )
             plot_normal_derivative(
                 file,
                 postpone_show=True,
-                zoom=[4, 15, 15],
-                center_points=[(0, 0), (-50, 0), (50, 0)],
+                zoom=[4],
+                center_points=[(0, 0)],
                 error=True,
             )
             plot_normal_derivative(
                 file,
                 postpone_show=True,
-                zoom=[4, 15, 15],
-                center_points=[(0, 0), (-50, 0), (50, 0)],
+                zoom=[4],
+                center_points=[(0, 0)],
                 pred=True,
             )
             plt.show()
