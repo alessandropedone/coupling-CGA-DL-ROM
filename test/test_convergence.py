@@ -25,7 +25,7 @@ def main():
         )
 
     # ----------------------------------------------------------------------
-    # Run the simulation with 4 modes with dt = 1e-4, 1e-5, 5e-6, 1e-6, 1e-7
+    # Run the simulation with 4 modes with Δt = 1e-4, 1e-5, 5e-6, 1e-6, 1e-7
     # ----------------------------------------------------------------------
     dt = [1e-5, 5e-6, 1e-6, 1e-7]
     steps = [4 * int(1e-4 / dt_i) for dt_i in dt]
@@ -89,6 +89,7 @@ def main():
             "--print-every",
             "1",
             "--fail-fast",
+            "--no-outer-bc",
             "--derivative-nn-path",
             (
                 "models/derivative1.keras"
@@ -105,7 +106,7 @@ def main():
         if ap.parse_args().clamped:
             cmd.append("--clamped")
         if not ap.parse_args().no_simulation:
-            print(f"Running simulation with dt = {dt_i:.0e}...")
+            print(f"Running simulation with Δt = {dt_i:.0e}...")
             subprocess.run(cmd, check=True)
 
     # ---------------------------------------------------------
@@ -184,22 +185,22 @@ def main():
     # ------------------------------
     plt.figure(figsize=(10, 6))
     plt.plot(
-        time1_cap[1:], capacity1[1:], label="dt = " + str(dt[0]), linestyle="-", linewidth=2
+        time1_cap[1:], capacity1[1:], label="Δt = " + str(dt[0]), linestyle="-", linewidth=2
     )
     plt.plot(
         time2_cap[1:],
         capacity2[1:],
-        label="dt = " + str(dt[1]),
+        label="Δt = " + str(dt[1]),
         linestyle="--",
         linewidth=2,
     )
     plt.plot(
-        time3_cap[1:], capacity3[1:], label="dt = " + str(dt[2]), linestyle=":", linewidth=2
+        time3_cap[1:], capacity3[1:], label="Δt = " + str(dt[2]), linestyle=":", linewidth=2
     )
     plt.plot(
         time4_cap[1:],
         capacity4[1:],
-        label="dt = " + str(dt[3]),
+        label="Δt = " + str(dt[3]),
         linestyle="-.",
         linewidth=2,
     )
@@ -219,10 +220,10 @@ def main():
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    (line1,) = ax.plot([], [], label="dt = " + str(dt[0]), linestyle="-", linewidth=2)
-    (line2,) = ax.plot([], [], label="dt = " + str(dt[1]), linestyle="--", linewidth=2)
-    (line3,) = ax.plot([], [], label="dt = " + str(dt[2]), linestyle=":", linewidth=2)
-    (line4,) = ax.plot([], [], label="dt = " + str(dt[3]), linestyle="-.", linewidth=2)
+    (line1,) = ax.plot([], [], label="Δt = " + str(dt[0]), linestyle="-", linewidth=2)
+    (line2,) = ax.plot([], [], label="Δt = " + str(dt[1]), linestyle="--", linewidth=2)
+    (line3,) = ax.plot([], [], label="Δt = " + str(dt[2]), linestyle=":", linewidth=2)
+    (line4,) = ax.plot([], [], label="Δt = " + str(dt[3]), linestyle="-.", linewidth=2)
 
     ax.set_xlim(x[0], x[-1])
     ax.set_ylim(ymin, ymax)

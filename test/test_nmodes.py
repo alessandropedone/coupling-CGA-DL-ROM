@@ -14,21 +14,42 @@ from utils import compute_displacement_from_history
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-simulation", action="store_true")
+    ap.add_argument("--big-deformation", action="store_true")
+    ap.add_argument("--clamped", action="store_true")
     ap.add_argument("--save-frames", action="store_true")
+    args = ap.parse_args()
+
+    if args.big_deformation and args.clamped:
+        raise ValueError(
+            "The --big-deformation and --clamped options cannot be used together, as the current clamped beam model is not designed for large deformations."
+        )
+
+    if args.big_deformation:
+        run_suffix = "_big_deformation"
+        template_geo = "geometries/cantilever2.geo"
+        vac = "230"
+    elif args.clamped:
+        run_suffix = "_clamped"
+        template_geo = "geometries/clamped.geo"
+        vac = "5"
+    else:
+        run_suffix = ""
+        template_geo = "geometries/cantilever1.geo"
+        vac = "5"
 
     modes_to_test = [1, 2, 3, 4]
 
-    if not ap.parse_args().no_simulation:
+    if not args.no_simulation:
         for nmodes in modes_to_test:
 
-            workdir = Path(f"temp/nmodes/run_nmodes_{nmodes}")
+            workdir = Path(f"temp/nmodes/run_nmodes_{nmodes}{run_suffix}")
 
             cmd = [
                 "python",
                 "-m",
                 "src.multi_physics.solver",
                 "--template-geo",
-                "geometries/cantilever1.geo",
+                template_geo,
                 "--workdir",
                 str(workdir),
                 "--nmodes",
@@ -40,7 +61,7 @@ def main():
                 "--Vdc",
                 "0",
                 "--Vac",
-                "5",
+                vac,
                 "--freq",
                 "2.5e3",
                 "--Vupper",
@@ -65,7 +86,10 @@ def main():
                 "--print-every",
                 "1",
                 "--fail-fast",
+                "--no-outer-bc"
             ]
+            if args.clamped:
+                cmd.append("--clamped")
 
             print(f"Running with {nmodes} modes...")
             subprocess.run(cmd, check=True)
@@ -75,10 +99,10 @@ def main():
     x = np.linspace(0, L_m, 100)
 
     # Read data
-    workdir_1 = Path(f"temp/nmodes/run_nmodes_1")
-    workdir_2 = Path(f"temp/nmodes/run_nmodes_2")
-    workdir_3 = Path(f"temp/nmodes/run_nmodes_3")
-    workdir_4 = Path(f"temp/nmodes/run_nmodes_4")
+    workdir_1 = Path(f"temp/nmodes/run_nmodes_1{run_suffix}")
+    workdir_2 = Path(f"temp/nmodes/run_nmodes_2{run_suffix}")
+    workdir_3 = Path(f"temp/nmodes/run_nmodes_3{run_suffix}")
+    workdir_4 = Path(f"temp/nmodes/run_nmodes_4{run_suffix}")
     csv_path_1 = workdir_1 / "modal_history.csv"
     csv_path_2 = workdir_2 / "modal_history.csv"
     csv_path_3 = workdir_3 / "modal_history.csv"
@@ -106,14 +130,22 @@ def main():
     plt.grid()
 
     # Save this plot
-    if ap.parse_args().save_frames:
-        plt.savefig("temp/nmodes/capacitance_over_time.png", dpi=300)
+    if args.save_frames:
+        plt.savefig(f"temp/nmodes/capacitance_over_time{run_suffix}.png", dpi=300)
 
     # Displacement fields: shape = (ntime, nx)
-    u_1 = compute_displacement_from_history(1, x, L_m, workdir_1)
-    u_2 = compute_displacement_from_history(2, x, L_m, workdir_2)
-    u_3 = compute_displacement_from_history(3, x, L_m, workdir_3)
-    u_4 = compute_displacement_from_history(4, x, L_m, workdir_4)
+    u_1 = compute_displacement_from_history(
+        1, x, L_m, workdir_1, clamped=args.clamped
+    )
+    u_2 = compute_displacement_from_history(
+        2, x, L_m, workdir_2, clamped=args.clamped
+    )
+    u_3 = compute_displacement_from_history(
+        3, x, L_m, workdir_3, clamped=args.clamped
+    )
+    u_4 = compute_displacement_from_history(
+        4, x, L_m, workdir_4, clamped=args.clamped
+    )
 
     # Global y-limits so the plot doesn't jump around
     ymin = min(u_1.min(), u_2.min(), u_3.min(), u_4.min())
@@ -196,11 +228,11 @@ def main():
         blit=False,
     )
 
-    if ap.parse_args().save_frames:
+    if args.save_frames:
         writer = FFMpegWriter(
             fps=10, codec="libx264", bitrate=2000, extra_args=["-pix_fmt", "yuv420p"]
         )
-        anim.save("temp/nmodes/simulation.mp4", writer=writer)
+        anim.save(f"temp/nmodes/simulation{run_suffix}.mp4", writer=writer)
 
     plt.show()
 

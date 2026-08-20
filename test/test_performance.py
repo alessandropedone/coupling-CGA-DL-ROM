@@ -84,6 +84,7 @@ def main():
         "--print-every",
         "1",
         "--fail-fast",
+        "--no-outer-bc",
     ]
     if ap.parse_args().clamped:
         cmd.append("--clamped")
@@ -151,6 +152,7 @@ def main():
         "--print-every",
         "1",
         "--fail-fast",
+        "--no-outer-bc",
         "--derivative-nn-path",
         (
             "models/derivative1.keras"
