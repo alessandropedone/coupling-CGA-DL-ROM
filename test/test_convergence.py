@@ -118,6 +118,8 @@ def main():
         if not ap.parse_args().big_deformation
         else Path(f"temp/convergence/run_nmodes_4_big_deformation")
     )
+    if ap.parse_args().clamped:
+        workdir = workdir.with_name(workdir.name + "_clamped")
     L_m = 1e-4
     x = np.linspace(0, L_m, 100)
     u1 = compute_displacement_from_history(
