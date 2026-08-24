@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
     
     
 
@@ -250,16 +251,16 @@
                <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                <span class="n">sol</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
-               <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> 
-               <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> 
-               <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> 
-               <span class="n">colorbar_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Quantity&quot;</span><span class="p">,</span>
-               <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+               <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Title"</span><span class="p">,</span> 
+               <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> 
+               <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> 
+               <span class="n">colorbar_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Quantity"</span><span class="p">,</span>
+               <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                <span class="n">sharp_color_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="n">outside_sharpness</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
                <span class="n">plot_triangulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                <span class="n">postpone_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the provided solution over the domain using cell-based data.</span>
@@ -277,7 +278,7 @@
 <span class="sd">    :param outside_sharpness: Number of color levels outside the sharp color range.</span>
 <span class="sd">    :param plot_triangulation: Whether to overlay the mesh triangulation.</span>
 <span class="sd">    :param postpone_show: Whether to postpone the ``plt.show()`` call.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># Create triangulation object</span>
     <span class="n">triang</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">triangles</span> <span class="o">=</span> <span class="n">cells</span><span class="p">)</span>
@@ -294,7 +295,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span>
             <span class="n">triang</span><span class="p">,</span>
             <span class="n">facecolors</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span>
-            <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span>
+            <span class="n">shading</span><span class="o">=</span><span class="s1">'flat'</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
             <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
         <span class="p">)</span>
@@ -302,12 +303,12 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span>
             <span class="n">triang</span><span class="p">,</span>
             <span class="n">facecolors</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span>
-            <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span>
+            <span class="n">shading</span><span class="o">=</span><span class="s1">'flat'</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span>
         <span class="p">)</span>
     <span class="c1"># plot also the connectivity (mesh)</span>
     <span class="k">if</span> <span class="n">plot_triangulation</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triang</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triang</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightgrey'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
@@ -323,16 +324,16 @@
                   <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                   <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                   <span class="n">sol</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                  <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span>
-                  <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-                  <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-                  <span class="n">colorbar_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Quantity&quot;</span><span class="p">,</span>
-                  <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+                  <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Title"</span><span class="p">,</span>
+                  <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+                  <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+                  <span class="n">colorbar_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Quantity"</span><span class="p">,</span>
+                  <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                   <span class="n">sharp_color_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                   <span class="n">outside_sharpness</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
                   <span class="n">plot_triangulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                   <span class="n">postpone_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the specified solution over the domain using vertex-based data.</span>
@@ -350,7 +351,7 @@
 <span class="sd">    :param outside_sharpness: Number of color levels outside the sharp color range.</span>
 <span class="sd">    :param plot_triangulation: Whether to overlay the mesh triangulation.</span>
 <span class="sd">    :param postpone_show: Whether to postpone the ``plt.show()`` call.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">triang</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">triangles</span> <span class="o">=</span> <span class="n">cells</span><span class="p">)</span>
 
@@ -378,7 +379,7 @@
 
     <span class="c1"># plot also the connectivity (mesh)</span>
     <span class="k">if</span> <span class="n">plot_triangulation</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triang</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triang</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightgrey'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
@@ -393,12 +394,12 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">domain_plot</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
             <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
             <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-            <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span>
-            <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-            <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Title"</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
             <span class="n">plot_triangulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
             <span class="n">postpone_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots only the domain and the mesh.</span>
@@ -411,14 +412,14 @@
 <span class="sd">    :param ylabel: Label for the y-axis.</span>
 <span class="sd">    :param plot_triangulation: Whether to overlay the mesh triangulation.</span>
 <span class="sd">    :param postpone_show: Whether to postpone the ``plt.show()`` call.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">triang</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">triangles</span> <span class="o">=</span> <span class="n">cells</span><span class="p">)</span>
     <span class="n">triangles</span> <span class="o">=</span> <span class="n">triang</span><span class="o">.</span><span class="n">triangles</span>
     <span class="n">neighbors</span> <span class="o">=</span> <span class="n">triang</span><span class="o">.</span><span class="n">neighbors</span>
 
     <span class="c1"># plot also the connectivity (mesh)</span>
     <span class="k">if</span> <span class="n">plot_triangulation</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triang</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triang</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightgrey'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
     <span class="n">boundary_edges</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -436,7 +437,7 @@
 
     <span class="c1"># Plot ONLY boundary</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">boundary_edges</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
         
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
@@ -452,16 +453,16 @@
          <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
          <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
          <span class="n">sol</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-         <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> 
-         <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> 
-         <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> 
-         <span class="n">colorbar_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;Quantity&quot;</span><span class="p">,</span>
-         <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+         <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Title"</span><span class="p">,</span> 
+         <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> 
+         <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> 
+         <span class="n">colorbar_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"Quantity"</span><span class="p">,</span>
+         <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
          <span class="n">sharp_color_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">outside_sharpness</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
          <span class="n">plot_triangulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
          <span class="n">postpone_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the provided solution over the domain.</span>
@@ -483,19 +484,19 @@
 <span class="sd">    .. note::</span>
 <span class="sd">        </span>
 <span class="sd">        If you set the solution to None you can plot only the domain.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Check validity of input data</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No data to plot.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"No data to plot."</span><span class="p">)</span>
         <span class="k">return</span>
     
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inconsistent lengths between x and y coordinates.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Inconsistent lengths between x and y coordinates."</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
             <span class="c1"># check if the solution is given in terms of cells</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inconsistent data lengths between coordinates and solution.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Inconsistent data lengths between coordinates and solution."</span><span class="p">)</span>
                 <span class="k">return</span>
         <span class="k">return</span>
     
@@ -514,7 +515,7 @@
 <div class="viewcode-block" id="_zoom_around">
 <a class="viewcode-back" href="../../../data.html#src.data.plot._zoom_around">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_zoom_around</span><span class="p">(</span><span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 
 <span class="sd">        It zooms the given axes around the specified center point.</span>
@@ -523,7 +524,7 @@
 <span class="sd">    :param x0: x coordinate of the zoom center.</span>
 <span class="sd">    :param y0: y coordinate of the zoom center.</span>
 <span class="sd">    :param zoom: Zoom factor.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
     <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
 
@@ -541,7 +542,7 @@
                 <span class="n">postpone_show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                 <span class="n">zoom</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                 <span class="n">center_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the domain and the mesh.</span>
@@ -550,7 +551,7 @@
 <span class="sd">    :param postpone_show: Whether to postpone the ``plt.show()`` call.</span>
 <span class="sd">    :param zoom: List of zoom levels for different subplots.</span>
 <span class="sd">    :param center_points: List of center points :math:`(x_0, y_0)` for each zoom level.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">))</span>
@@ -562,20 +563,20 @@
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">center_points</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of center_points must match number of zoom levels.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Length of center_points must match number of zoom levels."</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">plot</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-            <span class="n">y</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-            <span class="n">cells</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+            <span class="n">cells</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
             <span class="n">sol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Domain and mesh (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Domain and mesh&quot;</span><span class="p">,</span>
-            <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">"Domain and mesh (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Domain and mesh"</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
             <span class="n">sharp_color_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">plot_triangulation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">postpone_show</span><span class="o">=</span><span class="n">postpone_show</span>
@@ -586,7 +587,7 @@
             <span class="n">y0</span><span class="o">=</span><span class="n">center_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="p">)</span>
-        <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">"box"</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">postpone_show</span><span class="p">:</span>
@@ -602,8 +603,8 @@
                    <span class="n">center_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                    <span class="n">pred</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
                    <span class="n">error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-                   <span class="n">error_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;se&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+                   <span class="n">error_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"se"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the electrostatic potential over the domain.</span>
@@ -614,11 +615,11 @@
 <span class="sd">    :param center_points: List of center points :math:`(x_0, y_0)` for each zoom level.</span>
 <span class="sd">    :param pred: Whether to plot the predicted potential.</span>
 <span class="sd">    :param error: Whether to plot the error in potential prediction.</span>
-<span class="sd">    :param error_type: Type of error to plot (&quot;se&quot; for squared error, &quot;ae&quot; for absolute error).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    :param error_type: Type of error to plot ("se" for squared error, "ae" for absolute error).</span>
+<span class="sd">    """</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pred</span> <span class="ow">and</span> <span class="n">error</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot set both pred and error to True.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot set both pred and error to True."</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">))</span>
@@ -629,23 +630,23 @@
             <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">center_points</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of center_points must match number of zoom levels.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Length of center_points must match number of zoom levels."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">pred</span><span class="p">:</span>
-                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;potential_pred&quot;</span><span class="p">][:]</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"potential_pred"</span><span class="p">][:]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">][:]</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"potential"</span><span class="p">][:]</span>
             <span class="n">plot</span><span class="p">(</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-                <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-                <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+                <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
                 <span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="p">,</span>
-                <span class="n">title</span> <span class="o">=</span><span class="s2">&quot;Electrostatic potential (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Electrostatic potential&quot;</span><span class="p">,</span> 
-                <span class="n">xlabel</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-                <span class="n">ylabel</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-                <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">&quot;Potential&quot;</span><span class="p">,</span>
-                <span class="n">cmap</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+                <span class="n">title</span> <span class="o">=</span><span class="s2">"Electrostatic potential (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Electrostatic potential"</span><span class="p">,</span> 
+                <span class="n">xlabel</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+                <span class="n">ylabel</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+                <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">"Potential"</span><span class="p">,</span>
+                <span class="n">cmap</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                 <span class="n">sharp_color_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">plot_triangulation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="n">postpone_show</span> <span class="o">=</span> <span class="n">postpone_show</span>
@@ -658,8 +659,8 @@
             <span class="p">)</span>
             <span class="c1"># specifcy its a prediction</span>
             <span class="k">if</span> <span class="n">pred</span><span class="p">:</span>
-                <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Predicted electrostatic potential (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Predicted potential&quot;</span><span class="p">)</span>
-            <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
+                <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Predicted electrostatic potential (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Predicted potential"</span><span class="p">)</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">'box'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">))</span>
@@ -670,22 +671,22 @@
             <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">center_points</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of center_points must match number of zoom levels.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">error_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">,</span> <span class="s2">&quot;ae&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;error_type must be either &#39;se&#39; (squared error) or &#39;ae&#39; (absolute error).&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s2">&quot;se&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Length of center_points must match number of zoom levels."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"se"</span><span class="p">,</span> <span class="s2">"ae"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"error_type must be either 'se' (squared error) or 'ae' (absolute error)."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s2">"se"</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">plot</span><span class="p">(</span>
-                    <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-                    <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-                    <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
-                    <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">][:],</span>
-                    <span class="n">title</span> <span class="o">=</span><span class="s2">&quot;Squared error (RMSE </span><span class="si">{:.2e}</span><span class="s2">) (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">][:])),</span> <span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Squared error (RMSE </span><span class="si">{:.2e}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">][:]))),</span> 
-                    <span class="n">xlabel</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-                    <span class="n">ylabel</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-                    <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">&quot;Squared Error&quot;</span><span class="p">,</span>
-                    <span class="n">cmap</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+                    <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
+                    <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"se"</span><span class="p">][:],</span>
+                    <span class="n">title</span> <span class="o">=</span><span class="s2">"Squared error (RMSE </span><span class="si">{:.2e}</span><span class="s2">) (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">"se"</span><span class="p">][:])),</span> <span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Squared error (RMSE </span><span class="si">{:.2e}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">"se"</span><span class="p">][:]))),</span> 
+                    <span class="n">xlabel</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+                    <span class="n">ylabel</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+                    <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">"Squared Error"</span><span class="p">,</span>
+                    <span class="n">cmap</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                     <span class="n">sharp_color_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">plot_triangulation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                     <span class="n">postpone_show</span> <span class="o">=</span> <span class="n">postpone_show</span>
@@ -696,20 +697,20 @@
                     <span class="n">y0</span><span class="o">=</span><span class="n">center_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
                     <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
                 <span class="p">)</span>
-                <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
+                <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">'box'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">plot</span><span class="p">(</span>
-                    <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-                    <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-                    <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
-                    <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;ae&quot;</span><span class="p">][:],</span>
-                    <span class="n">title</span> <span class="o">=</span><span class="s2">&quot;Absolute error (MAE </span><span class="si">{:.2e}</span><span class="s2">) (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;ae&quot;</span><span class="p">][:]),</span> <span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Absolute error (MAE </span><span class="si">{:.2e}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;ae&quot;</span><span class="p">][:])),</span>
-                    <span class="n">xlabel</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-                    <span class="n">ylabel</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-                    <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">&quot;Absolute Error&quot;</span><span class="p">,</span>
-                    <span class="n">cmap</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+                    <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
+                    <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"ae"</span><span class="p">][:],</span>
+                    <span class="n">title</span> <span class="o">=</span><span class="s2">"Absolute error (MAE </span><span class="si">{:.2e}</span><span class="s2">) (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">"ae"</span><span class="p">][:]),</span> <span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Absolute error (MAE </span><span class="si">{:.2e}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">"ae"</span><span class="p">][:])),</span>
+                    <span class="n">xlabel</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+                    <span class="n">ylabel</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+                    <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">"Absolute Error"</span><span class="p">,</span>
+                    <span class="n">cmap</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                     <span class="n">sharp_color_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">plot_triangulation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                     <span class="n">postpone_show</span> <span class="o">=</span> <span class="n">postpone_show</span>
@@ -720,7 +721,7 @@
                     <span class="n">y0</span><span class="o">=</span><span class="n">center_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
                     <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
                 <span class="p">)</span>
-                <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
+                <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">'box'</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">postpone_show</span><span class="p">:</span>
@@ -734,8 +735,8 @@
               <span class="n">postpone_show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
               <span class="n">zoom</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
               <span class="n">center_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-              <span class="n">component</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+              <span class="n">component</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the x component of the gradient of the electrostatic potential.</span>
@@ -744,8 +745,8 @@
 <span class="sd">    :param postpone_show: Whether to postpone the ``plt.show()`` call.</span>
 <span class="sd">    :param zoom: List of zoom levels for different subplots.</span>
 <span class="sd">    :param center_points: List of center points :math:`(x_0, y_0)` for each zoom level.</span>
-<span class="sd">    :param component: Component of the gradient to plot (&quot;x&quot; or &quot;y&quot;).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    :param component: Component of the gradient to plot ("x" or "y").</span>
+<span class="sd">    """</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">))</span>
@@ -756,35 +757,35 @@
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">center_points</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of center_points must match number of zoom levels.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Length of center_points must match number of zoom levels."</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"x"</span><span class="p">:</span>
             <span class="n">plot</span><span class="p">(</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-                <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-                <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
-                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;grad_x&quot;</span><span class="p">][:],</span>
-                <span class="n">title</span> <span class="o">=</span><span class="s2">&quot;grad_x (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;grad_x&quot;</span><span class="p">,</span> 
-                <span class="n">xlabel</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-                <span class="n">ylabel</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-                <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">&quot;grad_x&quot;</span><span class="p">,</span>
-                <span class="n">cmap</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+                <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"grad_x"</span><span class="p">][:],</span>
+                <span class="n">title</span> <span class="o">=</span><span class="s2">"grad_x (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"grad_x"</span><span class="p">,</span> 
+                <span class="n">xlabel</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+                <span class="n">ylabel</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+                <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">"grad_x"</span><span class="p">,</span>
+                <span class="n">cmap</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                 <span class="n">sharp_color_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">plot_triangulation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="n">postpone_show</span> <span class="o">=</span> <span class="n">postpone_show</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
              <span class="n">plot</span><span class="p">(</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-                <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-                <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
-                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;grad_y&quot;</span><span class="p">][:],</span>
-                <span class="n">title</span> <span class="o">=</span><span class="s2">&quot;grad_y (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;grad_y&quot;</span><span class="p">,</span> 
-                <span class="n">xlabel</span> <span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-                <span class="n">ylabel</span> <span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-                <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">&quot;grad_y&quot;</span><span class="p">,</span>
-                <span class="n">cmap</span> <span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+                <span class="n">cells</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"grad_y"</span><span class="p">][:],</span>
+                <span class="n">title</span> <span class="o">=</span><span class="s2">"grad_y (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"grad_y"</span><span class="p">,</span> 
+                <span class="n">xlabel</span> <span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+                <span class="n">ylabel</span> <span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+                <span class="n">colorbar_label</span> <span class="o">=</span><span class="s2">"grad_y"</span><span class="p">,</span>
+                <span class="n">cmap</span> <span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
                 <span class="n">sharp_color_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">plot_triangulation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="n">postpone_show</span> <span class="o">=</span> <span class="n">postpone_show</span>
@@ -795,7 +796,7 @@
             <span class="n">y0</span><span class="o">=</span><span class="n">center_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="p">)</span>
-        <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">'box'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">postpone_show</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
@@ -805,7 +806,7 @@
 <div class="viewcode-block" id="plot_normal_derivative">
 <a class="viewcode-back" href="../../../data.html#src.data.plot.plot_normal_derivative">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_normal_derivative</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">center_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>   
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It plots the normal derivative of the potential on the upper plate as arrows.</span>
@@ -818,7 +819,7 @@
 <span class="sd">    :param center_points: List of center points :math:`(x_0, y_0)` for each zoom level.</span>
 <span class="sd">    </span>
 <span class="sd">    :raises ValueError: If both pred and error are set to True.</span>
-<span class="sd">    &quot;&quot;&quot;</span> 
+<span class="sd">    """</span> 
     <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">))</span>
@@ -829,19 +830,19 @@
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">center_points</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of center_points must match number of zoom levels.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Length of center_points must match number of zoom levels."</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">plot</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][:],</span>
-            <span class="n">y</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][:],</span>
-            <span class="n">cells</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">][:],</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">"x"</span><span class="p">][:],</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">"y"</span><span class="p">][:],</span>
+            <span class="n">cells</span><span class="o">=</span><span class="n">file</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">][:],</span>
             <span class="n">sol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Domain and mesh (zoom </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Domain and mesh&quot;</span><span class="p">,</span>
-            <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
-            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
-            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">"Domain and mesh (zoom </span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Domain and mesh"</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span>
             <span class="n">sharp_color_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">plot_triangulation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">postpone_show</span><span class="o">=</span><span class="n">postpone_show</span>
@@ -852,17 +853,17 @@
             <span class="n">y0</span><span class="o">=</span><span class="n">center_points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">center_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="p">)</span>
-        <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">'box'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pred</span> <span class="ow">and</span> <span class="n">error</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot set both pred and error to True.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot set both pred and error to True."</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pred</span><span class="p">:</span>
-            <span class="n">normal_derivative</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivative_pred&quot;</span><span class="p">][:]</span>
+            <span class="n">normal_derivative</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivative_pred"</span><span class="p">][:]</span>
         <span class="k">elif</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">normal_derivative</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivative_pred&quot;</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">][:])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">][:]</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">))</span>
+            <span class="n">normal_derivative</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivative_pred"</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivatives_plate"</span><span class="p">][:])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivatives_plate"</span><span class="p">][:]</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">normal_derivative</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">][:]</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;midpoints_plate&quot;</span><span class="p">][:]</span>
-        <span class="n">normals</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_vectors_plate&quot;</span><span class="p">][:]</span>
+            <span class="n">normal_derivative</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivatives_plate"</span><span class="p">][:]</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"midpoints_plate"</span><span class="p">][:]</span>
+        <span class="n">normals</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_vectors_plate"</span><span class="p">][:]</span>
         <span class="n">U</span> <span class="o">=</span> <span class="n">normals</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">normals</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">lengths</span> <span class="o">=</span> <span class="n">normal_derivative</span>
@@ -882,13 +883,13 @@
         <span class="p">)</span>
         <span class="n">sm</span><span class="o">.</span><span class="n">set_array</span><span class="p">([])</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Derivative modulus&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Derivative modulus"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pred</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Predicted $\frac</span><span class="se">{{</span><span class="s2">\partial V</span><span class="se">}}{{</span><span class="s2">\partial n</span><span class="se">}}</span><span class="s2">$ (zoom </span><span class="si">{</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">rf</span><span class="s2">&quot;Predicted $</span><span class="se">\\</span><span class="s2">frac</span><span class="se">{{\\</span><span class="s2">partial V</span><span class="se">}}{{\\</span><span class="s2">partial n</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"Predicted $\frac</span><span class="se">{{</span><span class="s2">\partial \phi</span><span class="se">}}{{</span><span class="s2">\partial n</span><span class="se">}}</span><span class="s2">$ (zoom </span><span class="si">{</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)"</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">rf</span><span class="s2">"Predicted $</span><span class="se">\\</span><span class="s2">frac</span><span class="se">{{\\</span><span class="s2">partial \phi</span><span class="se">}}{{\\</span><span class="s2">partial n</span><span class="se">}}</span><span class="s2">$"</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Relative error (zoom </span><span class="si">{}</span><span class="s2">) (RMSE = </span><span class="si">{:.0e}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivative_pred&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivatives_plate&#39;</span><span class="p">][:])</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;Relative error (RMSE = </span><span class="si">{:.0e}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivative_pred&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s1">&#39;normal_derivatives_plate&#39;</span><span class="p">][:])</span><span class="o">**</span><span class="mi">2</span><span class="p">))))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Relative error (zoom </span><span class="si">{}</span><span class="s2">) (RMSE = </span><span class="si">{:.0e}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">file</span><span class="p">[</span><span class="s1">'normal_derivative_pred'</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s1">'normal_derivatives_plate'</span><span class="p">][:])</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"Relative error (RMSE = </span><span class="si">{:.0e}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">file</span><span class="p">[</span><span class="s1">'normal_derivative_pred'</span><span class="p">][:]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s1">'normal_derivatives_plate'</span><span class="p">][:])</span><span class="o">**</span><span class="mi">2</span><span class="p">))))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;$\frac</span><span class="se">{{</span><span class="s2">\partial V</span><span class="se">}}{{</span><span class="s2">\partial n</span><span class="se">}}</span><span class="s2">$ (zoom </span><span class="si">{</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">rf</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">frac</span><span class="se">{{\\</span><span class="s2">partial V</span><span class="se">}}{{\\</span><span class="s2">partial n</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"$\frac</span><span class="se">{{</span><span class="s2">\partial \phi</span><span class="se">}}{{</span><span class="s2">\partial n</span><span class="se">}}</span><span class="s2">$ (zoom </span><span class="si">{</span><span class="n">zoom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)"</span> <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">rf</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">frac</span><span class="se">{{\\</span><span class="s2">partial \phi</span><span class="se">}}{{\\</span><span class="s2">partial n</span><span class="se">}}</span><span class="s2">$"</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">postpone_show</span><span class="p">:</span>
@@ -899,17 +900,17 @@
 <div class="viewcode-block" id="summary_plot">
 <a class="viewcode-back" href="../../../data.html#src.data.plot.summary_plot">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">summary_plot</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 <span class="sd">        </span>
 <span class="sd">        It creates a summary plot with all relevant plots.</span>
 <span class="sd">        </span>
 <span class="sd">    :param file: h5py file object containing the solution data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">plot_domain</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">)])</span>
     <span class="n">plot_potential</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">)])</span>
-    <span class="n">plot_grad</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">)],</span> <span class="n">component</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
-    <span class="n">plot_grad</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">)],</span> <span class="n">component</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">plot_grad</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">)],</span> <span class="n">component</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">plot_grad</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">)],</span> <span class="n">component</span><span class="o">=</span><span class="s2">"y"</span><span class="p">)</span>
     <span class="n">plot_normal_derivative</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)])</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 

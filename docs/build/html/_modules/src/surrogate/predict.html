@@ -237,7 +237,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for src.surrogate.predict</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This script loads a trained DeepONet surrogate model and uses it to make predictions</span>
 <span class="sd">on a randomly selected test sample from a specified dataset. It saves the predictions</span>
 <span class="sd">to a ``.h5`` file and generates plots comparing the surrogate predictions with the full-order</span>
@@ -247,11 +247,11 @@
 
 <span class="sd">    If you sample from the test set, ensure that the splitting seed matches that used during training.</span>
 <span class="sd">    If you are using the model we trained just keep the default value of :math:`40`.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"TF_CPP_MIN_LOG_LEVEL"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"3"</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
@@ -278,8 +278,8 @@
 
 <div class="viewcode-block" id="_find_id">
 <a class="viewcode-back" href="../../../surrogate.html#src.surrogate.predict._find_id">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_find_id</span><span class="p">(</span><span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_id</span><span class="p">(</span><span class="n">mu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"data"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    .. admonition:: Description</span>
 
 <span class="sd">        Find the index of a test sample in the parameters ``.csv`` file based on its geometrical parameters.</span>
@@ -291,15 +291,15 @@
 <span class="sd">        - test_sample_number (``int``) -- The index of the test sample in ``parameters.csv``.</span>
 
 <span class="sd">    :raises ValueError: If the test sample mu is not found in ``parameters.csv``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">parameters_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">&quot;parameters.csv&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">parameters_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="n">parameters_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">"parameters.csv"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">parameters_file</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="n">header</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># Skip header</span>
         <span class="n">mu_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
             <span class="n">mu_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span>
-            <span class="c1"># Remove the first element since it&#39;s the index</span>
+            <span class="c1"># Remove the first element since it's the index</span>
             <span class="n">mu_values</span> <span class="o">=</span> <span class="n">mu_values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">mu_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mu_values</span><span class="p">)</span>
     <span class="n">mu_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mu_list</span><span class="p">)</span>
@@ -310,7 +310,7 @@
             <span class="n">test_sample_number</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="k">break</span>
     <span class="k">if</span> <span class="n">test_sample_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Test sample mu not found in parameters.csv&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Test sample mu not found in parameters.csv"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">test_sample_number</span></div>
 
 
@@ -321,33 +321,33 @@
     <span class="c1"># Read input arguments</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--folder&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the data folder to delete.&quot;</span>
+        <span class="s2">"--folder"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"test"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to the data folder to delete."</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--model_path&quot;</span><span class="p">,</span>
+        <span class="s2">"--model_path"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;models/model.keras&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to save the trained model.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"models/model.keras"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Path to save the trained model."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--splitting_seed&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Random seed for data splitting.&quot;</span>
+        <span class="s2">"--splitting_seed"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Random seed for data splitting."</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--target&quot;</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="s2">&quot;normal_derivative&quot;</span><span class="p">],</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Target quantity to predict.&quot;</span><span class="p">,</span>
+        <span class="s2">"--target"</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">"potential"</span><span class="p">,</span> <span class="s2">"normal_derivative"</span><span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"potential"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Target quantity to predict."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--prediction_seed&quot;</span><span class="p">,</span>
+        <span class="s2">"--prediction_seed"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Random seed for test sample selection.&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Random seed for test sample selection."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--sample_from_test_set&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If set, sample from the test set; otherwise, sample from the entire dataset.&quot;</span><span class="p">,</span>
+        <span class="s2">"--sample_from_test_set"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"If set, sample from the test set; otherwise, sample from the entire dataset."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="n">data_folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">folder</span>
@@ -357,17 +357,17 @@
     <span class="n">model_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">model_path</span>
     <span class="n">use_test_set</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">sample_from_test_set</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_ENABLE_ONEDNN_OPTS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"TF_CPP_MIN_LOG_LEVEL"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"2"</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"TF_ENABLE_ONEDNN_OPTS"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"0"</span>
 
     <span class="c1"># Import coordinates dataset and solutions</span>
     <span class="n">mu</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">x_plate</span><span class="p">,</span> <span class="n">y_plate</span><span class="p">,</span> <span class="n">normal_derivatives_plate</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span>
         <span class="n">data_folder</span><span class="o">=</span><span class="n">data_folder</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;potential&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">"potential"</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">potential</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;normal_derivative&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">"normal_derivative"</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x_plate</span><span class="p">,</span> <span class="n">y_plate</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">normal_derivatives_plate</span><span class="p">)</span>
 
@@ -393,57 +393,57 @@
     <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
         <span class="n">model_path</span><span class="p">,</span>
         <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;DenseNetwork&quot;</span><span class="p">:</span> <span class="n">DenseNetwork</span><span class="p">,</span>
-            <span class="s2">&quot;FourierFeatures&quot;</span><span class="p">:</span> <span class="n">FourierFeatures</span><span class="p">,</span>
-            <span class="s2">&quot;LogUniformFreqInitializer&quot;</span><span class="p">:</span> <span class="n">LogUniformFreqInitializer</span><span class="p">,</span>
-            <span class="s2">&quot;EinsumLayer&quot;</span><span class="p">:</span> <span class="n">EinsumLayer</span><span class="p">,</span>
-            <span class="s2">&quot;DeepONet&quot;</span><span class="p">:</span> <span class="n">DeepONet</span><span class="p">,</span>
-            <span class="s2">&quot;masked_mse&quot;</span><span class="p">:</span> <span class="n">masked_mse</span><span class="p">,</span>
-            <span class="s2">&quot;masked_mae&quot;</span><span class="p">:</span> <span class="n">masked_mae</span><span class="p">,</span>
+            <span class="s2">"DenseNetwork"</span><span class="p">:</span> <span class="n">DenseNetwork</span><span class="p">,</span>
+            <span class="s2">"FourierFeatures"</span><span class="p">:</span> <span class="n">FourierFeatures</span><span class="p">,</span>
+            <span class="s2">"LogUniformFreqInitializer"</span><span class="p">:</span> <span class="n">LogUniformFreqInitializer</span><span class="p">,</span>
+            <span class="s2">"EinsumLayer"</span><span class="p">:</span> <span class="n">EinsumLayer</span><span class="p">,</span>
+            <span class="s2">"DeepONet"</span><span class="p">:</span> <span class="n">DeepONet</span><span class="p">,</span>
+            <span class="s2">"masked_mse"</span><span class="p">:</span> <span class="n">masked_mse</span><span class="p">,</span>
+            <span class="s2">"masked_mae"</span><span class="p">:</span> <span class="n">masked_mae</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Loaded surrogate model summary.</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Loaded surrogate model summary.</span><span class="se">\033</span><span class="s2">[0m"</span><span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
     <span class="c1"># Make prediction for the selected test sample</span>
     <span class="c1"># Print some information</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Testing the surrogate model on a random test sample.</span><span class="se">\033</span><span class="s2">[0m&quot;</span>
+        <span class="s2">"</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Testing the surrogate model on a random test sample.</span><span class="se">\033</span><span class="s2">[0m"</span>
     <span class="p">)</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">([</span><span class="n">mu_sample</span><span class="p">,</span> <span class="n">x_sample</span><span class="p">])</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Prediction shape:   &quot;</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Prediction shape:   "</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">branch_output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">mu_sample</span><span class="p">,</span> <span class="n">x_sample</span><span class="p">],</span> <span class="n">return_branch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Branch output shape:&quot;</span><span class="p">,</span> <span class="n">branch_output</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Branch output shape:"</span><span class="p">,</span> <span class="n">branch_output</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">trunk_output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">mu_sample</span><span class="p">,</span> <span class="n">x_sample</span><span class="p">],</span> <span class="n">return_trunk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Trunk output shape: &quot;</span><span class="p">,</span> <span class="n">trunk_output</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Trunk output shape: "</span><span class="p">,</span> <span class="n">trunk_output</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
     <span class="c1"># Find the index of the test sample in parameters.csv</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">_find_id</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">mu_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data_folder</span><span class="o">=</span><span class="n">data_folder</span><span class="p">)</span>
 
     <span class="c1"># Read the corresponding .h5 file in data_folder/results and plot the error</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Saving prediction and plotting results for test sample index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.</span><span class="se">\033</span><span class="s2">[0m&quot;</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Saving prediction and plotting results for test sample index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.</span><span class="se">\033</span><span class="s2">[0m"</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;results&#39;</span><span class="p">,</span><span class="w"> </span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s1">.h5&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Results file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span><span class="w"> </span><span class="s1">'results'</span><span class="p">,</span><span class="w"> </span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s1">.h5'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Plotting prediction and error in the case mu = </span><span class="si">{</span><span class="n">mu_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="se">\033</span><span class="s2">[0m&quot;</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="se">\033</span><span class="s2">[38;2;0;175;6m</span><span class="se">\n\n</span><span class="s2">Plotting prediction and error in the case mu = </span><span class="si">{</span><span class="n">mu_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="se">\033</span><span class="s2">[0m"</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;potential&quot;</span><span class="p">:</span>
-        <span class="n">fom_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.h5&quot;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fom_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">"potential"</span><span class="p">:</span>
+        <span class="n">fom_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">"results"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.h5"</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fom_file</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="c1"># use x[0] to dectect and remove nan values in y_pred</span>
             <span class="n">nan_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="s2">&quot;potential_pred&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;potential_pred&quot;</span><span class="p">]</span>
-            <span class="n">file</span><span class="p">[</span><span class="s2">&quot;potential_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s2">&quot;se&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">]</span>
-            <span class="n">file</span><span class="p">[</span><span class="s2">&quot;se&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">][:])</span> <span class="o">**</span> <span class="mi">2</span>
-            <span class="k">if</span> <span class="s2">&quot;ae&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;ae&quot;</span><span class="p">]</span>
-            <span class="n">file</span><span class="p">[</span><span class="s2">&quot;ae&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;potential&quot;</span><span class="p">][:])</span>
+            <span class="k">if</span> <span class="s2">"potential_pred"</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">"potential_pred"</span><span class="p">]</span>
+            <span class="n">file</span><span class="p">[</span><span class="s2">"potential_pred"</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">"se"</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">"se"</span><span class="p">]</span>
+            <span class="n">file</span><span class="p">[</span><span class="s2">"se"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">"potential"</span><span class="p">][:])</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="s2">"ae"</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">"ae"</span><span class="p">]</span>
+            <span class="n">file</span><span class="p">[</span><span class="s2">"ae"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">"potential"</span><span class="p">][:])</span>
             <span class="n">plot_potential</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
                 <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -456,7 +456,7 @@
                 <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
                 <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
                 <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;ae&quot;</span><span class="p">,</span>
+                <span class="n">error_type</span><span class="o">=</span><span class="s2">"ae"</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">plot_potential</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
@@ -464,7 +464,7 @@
                 <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
                 <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
                 <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;se&quot;</span><span class="p">,</span>
+                <span class="n">error_type</span><span class="o">=</span><span class="s2">"se"</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">plot_potential</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
@@ -475,49 +475,49 @@
             <span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-    <span class="k">elif</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;normal_derivative&quot;</span><span class="p">:</span>
-        <span class="n">fom_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.h5&quot;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fom_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">"normal_derivative"</span><span class="p">:</span>
+        <span class="n">fom_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_folder</span><span class="p">,</span> <span class="s2">"results"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.h5"</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">fom_file</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="c1"># use x[0] to dectect and remove nan values in y_pred</span>
             <span class="n">nan_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_sample</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="s2">&quot;normal_derivative_pred&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivative_pred&quot;</span><span class="p">]</span>
-            <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivative_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s2">&quot;normal_se&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_se&quot;</span><span class="p">]</span>
-            <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_se&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">][:]</span>
+            <span class="k">if</span> <span class="s2">"normal_derivative_pred"</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivative_pred"</span><span class="p">]</span>
+            <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivative_pred"</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">"normal_se"</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_se"</span><span class="p">]</span>
+            <span class="n">file</span><span class="p">[</span><span class="s2">"normal_se"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivatives_plate"</span><span class="p">][:]</span>
             <span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-            <span class="k">if</span> <span class="s2">&quot;normal_ae&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_ae&quot;</span><span class="p">]</span>
-            <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_ae&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
-                <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">&quot;normal_derivatives_plate&quot;</span><span class="p">][:]</span>
+            <span class="k">if</span> <span class="s2">"normal_ae"</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_ae"</span><span class="p">]</span>
+            <span class="n">file</span><span class="p">[</span><span class="s2">"normal_ae"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+                <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nan_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">file</span><span class="p">[</span><span class="s2">"normal_derivatives_plate"</span><span class="p">][:]</span>
             <span class="p">)</span>
             <span class="n">plot_normal_derivative</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
                 <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-                <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+                <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
             <span class="p">)</span>
             <span class="n">plot_normal_derivative</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
                 <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-                <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+                <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
                 <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">plot_normal_derivative</span><span class="p">(</span>
                 <span class="n">file</span><span class="p">,</span>
                 <span class="n">postpone_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-                <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+                <span class="n">zoom</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                <span class="n">center_points</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
                 <span class="n">pred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
         </article>

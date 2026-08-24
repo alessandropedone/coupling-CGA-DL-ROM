@@ -16,11 +16,11 @@ Abstract
 
 This project tackles the simulation of coupled electrostatic and mechanical phenomena in MEMS (Micro-Electro-Mechanical Systems) devices, whose widespread adoption in contemporary technologies makes accurate yet efficient modeling essential.
 
-Full-order numerical solvers quickly become computationally prohibitive for realistic geometries, and in such cases one of the possible solutions could be relying on reduced-order modeling.
+Full-order numerical solvers quickly become computationally prohibitive for realistic geometries, and in such cases one possible solution is to rely on reduced-order modeling.
 
-Indeed, we choose to do so: we construct an idealized test case that preserves the key physical features, then we develop a reduced-order model based on recent Deep Learning-based ROM (DL-ROM) techniques, in particular DeepONets, exploiting an approximation of mechanical deformation grounded in Euler–Bernoulli beam theory in order to design it to interface with a finite-element solver for the mechanical response.
+We therefore adopt this approach: we construct an idealized test case that retains the key physical features, then we develop a reduced-order model based on recent deep-learning-based ROM (DL-ROM) techniques, in particular DeepONets, using an approximation of mechanical deformation grounded in Euler-Bernoulli beam theory with the aim of interfacing it with a finite-element solver for computing the mechanical response.
 
-A brief review frames our methodology within current trends in MEMS modeling and data-driven model reduction, together with classical foundations such as modal approximation techniques.
+A brief review frames our methodology within current trends in MEMS modeling and data-driven model reduction, together with classical foundations such as modal decomposition techniques.
 
 **Tools:**
 
