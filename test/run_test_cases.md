@@ -1,7 +1,7 @@
 # Test Cases
 
 In this document, we make an overview of all the capabilities of the library. 
-So, we start recalling that we have three packages in the `src` folder:
+So, we start by recalling that we have three packages in the `src` folder:
 1. `data`: for static data generation and post-processing;
 2. `surrogate`: for the surrogate models;
 3. `multi_physics`: for the electro-mechanical solver.
@@ -23,23 +23,23 @@ We proceed with the following structure in mind:
 
 > In this case the upper plate is clamped at the left end and free at the right one (i.e. it's a cantilever).
 
-First you can create the __dataset__. Some plots of the domain and the (traditional) numerical solutions corresponding a combination of parameters present in the dataset you've just generated.
-If you want you can play with the number of __workers__ to make the generation faster. 
+First you can create the __dataset__, some plots of the domain and the (traditional) numerical solutions corresponding to a combination of parameters present in the dataset you've just generated.
+If you want, you can play with the number of __workers__ to make the generation faster. 
 
 ```bash
 python -m src.data.generate --folder "test/test1" --data_file "test/test1.csv" --geometry_input "geometries/cantilever1.geo" --workers 2
 ```
 
-> Note the real bottleneck of the process in this case is the mesh generation section, since the FOM (Full Order Model) is quite fast, since it's only a laplacian.
+> Note that the real bottleneck of the process in this case is the mesh generation section, since the FOM (Full Order Model) is quite fast, being only a laplacian.
 
 At the end of the data generation, a plot of the solution for a specific configuration is produced. Figures from 1 to 5 in `test/img` are an example of the output of this process. 
 
-Then you can __evaluate__ the model for the electrostatic potential we already trained on the test set you generated.
+Then you can __evaluate__ the model for the electrostatic potential that we have already trained on the test set you've generated.
 ```bash
 python -m src.surrogate.evaluate --folder "test/test1" --model_path "models/potential1.keras" --target "potential" 
 ```
 
-> Since the process data splitting is random, we actually don't know if the model has already seen the data we are generating here. So this is an unbiased estimator of the real performance of the model.
+> Since the process of data splitting is random, we actually don't know if the model has already seen the data we are generating here. So this is an unbiased estimator of the real performance of the model.
 
 Now you can visualize with some plots the predictions that the model can make.
 ```bash
@@ -48,7 +48,7 @@ python -m src.surrogate.predict --folder "test/test1" --model_path "models/poten
 
 Figures from 10 to 12 are an example of the plots produced by this command.
 
-You can do the same for with the model for the normal derivative of the potential on the boundary of the upper plate.
+You can do the same with the model for the normal derivative of the potential on the boundary of the upper plate.
 ```bash
 python -m src.surrogate.evaluate --folder "test/test1" --model_path "models/derivative1.keras" --target "normal_derivative" 
 ```
@@ -58,7 +58,7 @@ python -m src.surrogate.predict --folder "test/test1" --model_path "models/deriv
 
 Figures from 6 to 9 are an example of the plots produced by this command.
 
-If you want you can try training the model, with the dedicated module.
+If you want, you can try training the model, with the dedicated module.
 ```bash
 python -m src.surrogate.train --folder "test/test1" --model_path "models/potential.keras" --target "potential"
 ```
@@ -122,7 +122,7 @@ __Mesh convergence in time.__ You can perform a convergence study with respect t
 ```bash
 python test/test_convergence.py
 ```
-Results are saved in the `temp/convergence` folder. We provide `test/videos/mesh-convergence-time.mp4` and `test/img/mesh-convergence-time.png` with the plots produced by this test, in the case of a cantilever: the first for the evolution of the displacement and the second for one of the capacitance.
+Results are saved in the `temp/convergence` folder. We provide `test/videos/mesh-convergence-time.mp4` and `test/img/mesh-convergence-time.png` with the plots produced by this test, in the case of a cantilever: the first for the evolution of the displacement and the second for one of the capacitances.
 
 __Test number of modes.__ You can perform a test which compares the results changing the number of modes (ranging from 1 to 4) used to project the mechanical deformation. 
 ```bash
@@ -161,14 +161,14 @@ python -m src.multi_physics.solver \
   --no-outer-bc \
   --workdir "temp/visualization-dl"
 ```
-Then, you can visualize the solution using ParaView as in the previous case. This time you can select between three scalar field: `phi`, `phi_pred` and `phi_error`. Results are saved in the `temp/visualization-dl` folder. As an example of what the output looks like, we provide `test/videos/visualization-dl.mp4`, which is the video of `phi_error` over time.
+Then, you can visualize the solution using ParaView as in the previous case. This time you can select between three scalar fields: `phi`, `phi_pred` and `phi_error`. Results are saved in the `temp/visualization-dl` folder. As an example of what the output looks like, we provide `test/videos/visualization-dl.mp4`, which is the video of `phi_error` over time.
 
 __Performance.__ You can evaluate the overall performance of the DL-ROM by running:
 ```bash
 python test/test_performance.py
 ```
 This script compares the DL-ROM with the classical ROM, performing a profiling of execution times and an assessment of accuracy. In particular, the evaluation of the latter focuses on the displacement and the capacitance (quantity of interest).
-Results are saved in the `temp/performance` folder. We provide `test/videos/performance.mp4` and `and test/img/performance.png` with the plots produced by this test, in the case of cantilever: the first for the evolution of the displacement and the second for one of the capacitance.
+Results are saved in the `temp/performance` folder. We provide `test/videos/performance.mp4` and `and test/img/performance.png` with the plots produced by this test, in the case of cantilever: the first for the evolution of the displacement and the second one for one of the capacitances.
 
 __Geometry parameters.__ You can test the robustness of the DL-ROM over a grid of geometric parameters by running:
 ```bash
