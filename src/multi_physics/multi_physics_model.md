@@ -1,22 +1,22 @@
 # Multi-physics model
 
-This note documents the mathematical model for an idealized elctromechanical MEMS implemented in the coupled solver in the ``multi_physics`` package.
+This note documents the mathematical model for an idealized electromechanical MEMS implemented in the coupled solver in the ``multi_physics`` package.
 
 > For more details on the implementation and specific features, please refer to the package documentation.
 
 ## Overview
 
-The physics of this system is made of two parts:
+The physics of this system consists of two parts:
 - __Electrostatics__: the electrostatic potential $\phi$ solves the Laplace equation, with Dirichlet boundary conditions on the electrodes.
 - __Mechanics__ (of the upper electrode): Euler-Bernoulli beam deformation modeled via a 4-mode reduced-order model.
 
-> The choice of 4 as the number of modes is motivated by the fact that actually only the first mode is actually relevant for these kind of applications. In particular, if you are interested, you can take a look at the test which compares the simulations with 1, 2, 3 and 4 modes.
+> The choice of 4 as the number of modes is motivated by the fact that, in practice, only the first mode is actually relevant for these kind of applications. In particular, if interested, you can take a look at the test which compares the simulations with 1, 2, 3 and 4 modes.
 
 The coupling is due to the __electrostatic force__ which can deform the upper electrode. This force can be computed using Maxwell-stress traction, which depends on the electric field, and we project it onto the modal basis to obtain generalized modal forces.
 
 *Reduced-order modeling* comes into play with two main approaches:
 - __Classical (mechanical)__: we project the mechanical part onto the first 4 modes;
-- __DL (electrostatic)__: we speedup the computation of the force replacing the full FEM computation of $\phi$ with a geometry-aware DL surrogate model that predicts directly the force.
+- __DL (electrostatic)__: we speed up the computation of the force by replacing the full FEM computation of $\phi$ with a geometry-aware DL surrogate model that predicts directly the force.
 
 So, this justifies the use of the following terms in the sequel:
 - __Classical ROM__: solver that uses the modal projection and the full FEM approximation of the electrostatic part;
@@ -26,7 +26,7 @@ So, this justifies the use of the following terms in the sequel:
 
 > The DL-ROM allows us to overcome the main bottleneck of the problem: remeshing at each time step, since the force is just given directly by the neural network. See below and the report for more details.
 
-Now we discuss in depth the classical ROM, and at the end we make a brief comment on the differences with the DL-ROM.
+Now we discuss in detail the classical ROM, then we conclude with a brief comment on the differences with the DL-ROM.
 
 ## Geometry and kinematics
 
@@ -63,7 +63,7 @@ $$
 v_n (x)= \cosh\beta_nx - \cos\beta_nx + C_n\ (\sin\beta_nx-\sinh\beta_nx)
 $$
 
-with $\xi\in[0,L]$ and 
+with $x\in[0,L]$ and 
 
 $$
 C_n=\frac{\cos\beta_nL + \cosh\beta_nL}{\sin\beta_nL+\sinh\beta_nL}.
@@ -90,7 +90,7 @@ $$
 v_n (x)= \sinh\beta_nx - \sin\beta_nx + C_n (\cosh\beta_nx-\cos\beta_nx).
 $$
 
-with $\xi\in[0,L]$ and
+with $x\in[0,L]$ and
 
 $$
 C_n = \frac{\cos\beta_nL - \cosh\beta_nL}{\sin\beta_nL+\sinh\beta_nL}.
@@ -116,7 +116,7 @@ $$
 
 ## Electrostatics
 
-Let's formulate more precisely the electrostatic problem:
+We formulate the electrostatic problem more precisely as follows:
 
 $$ \begin{cases}
 -\nabla\cdot\left(\varepsilon\,\nabla \phi\right) = 0 &\text{in } \Omega(t)\\ 
@@ -136,20 +136,20 @@ where $\varepsilon=\varepsilon_0\varepsilon_r$ is the permittivity, $\Gamma_u(t)
 
 
 __Implementation notes:__
-1. In the solver implementation the following typical driving voltage is used:
+1. In the solver implementation, the following typical driving voltage is used:
 
 $$ 
 V_\ell(t)=V_{\mathrm{dc}} + V_{\mathrm{ac}}\sin(2\pi f t).
 $$
 
-3. The conforming finite element space $\mathbb{P}^1$ of continuous piecewise linear functions is used for the discrete weak formulation of the problem for $\phi$.
-4. The electric field $\mathbf{E}$ is obtained by computing exactly the gradient of $\phi$, which will belong automatically to the discontinuous finite element space $\mathbb{P}^0$ of piecewise constant functions.
+2. The conforming finite element space $\mathbb{P}^1$ of continuous piecewise linear functions is used for the discrete weak formulation of the problem for $\phi$.
+3. The electric field $\mathbf{E}$ is obtained by computing exactly the gradient of $\phi$, which will belong automatically to the discontinuous finite element space $\mathbb{P}^0$ of piecewise constant functions.
 
 
 
 ## Electrostatic traction via Maxwell stress
 
-In a linear dielectrics, the Maxwell stress tensor is given by
+In a linear dielectric, the Maxwell stress tensor is given by
 
 $$
 \mathbf{T} = \varepsilon\left(\mathbf{E}\otimes\mathbf{E} - \frac{1}{2}|\mathbf{E}|^2\mathbf{I}\right).
@@ -161,7 +161,7 @@ $$
 \mathbf{t} = \mathbf{T}\,\boldsymbol{n},
 $$
 
-where $n$ is the outward unit normal with respect to $\Omega(t)$, so by action-reaction the traction on the moving electrode is
+where $\boldsymbol{n}$ is the outward unit normal with respect to $\Omega(t)$, so by action-reaction the traction on the moving electrode is
 
 $$
 \mathbf{t}_u = -\mathbf{T}\,\boldsymbol{n}.
@@ -169,7 +169,7 @@ $$
 
 > This sign convention is essential, since the electrode is represented as a hole in the domain mesh.
 
-Thanks to this, it's possible to compute the physical force (Newtons) acting on the electrode in this way:
+Thanks to this, the physical force (Newtons) acting on the electrode can be computed in this way:
 
 $$
 \mathbf{F} = b\int_{\Gamma_u}\mathbf{t}_u\,ds,
@@ -202,7 +202,7 @@ where $\tilde\Gamma(t) \subseteq \Gamma_u(t)$ is the boundary segment marked by 
 
 ## Modal mechanical model
 
-The moving beam is represented by modal coordinates $\{q_n(t)\}_{n=1}^4$. Skipping the datails (see report), we know that, since the mode shapes are an orthogonal base of eigenfunctions of the operator $\partial_x^4$, the damped equation for the an Euler-Bernoulli beam becomes the following diagonal system of ODEs:
+The moving beam is represented by modal coordinates $\{q_n(t)\}_{n=1}^4$. Skipping the details (see report), we know that, since the mode shapes are an orthogonal basis of eigenfunctions of the operator $\partial_x^4$, the damped equation for the an Euler-Bernoulli beam becomes the following diagonal system of ODEs:
 
 $$
 m_n\ddot q_n(t) + c_n \dot q_n(t) + k_n q_n(t) = F_n(t),
@@ -225,7 +225,7 @@ we therefore adopt this representation.
 
 ## 5. Time integration
 
-For time integration, a Newmark scheme with $\beta=\frac{1}{4}$, $\gamma=\frac{1}{2}$ is applied independently to each modal DOF.
+For the time integration, a Newmark scheme with $\beta=\frac{1}{4}$, $\gamma=\frac{1}{2}$ is applied independently to each modal DOF.
 
 Given $q^k, \dot q^k, \ddot q^k$, define predictors:
 
@@ -274,7 +274,7 @@ For time steps $k=0,\dots,N-1$:
 
 ## Diagnostic quantities
 
-At each step $t_k$, the following quantities are computed, displayed and saved:
+At each step $t_k$, the following quantities are computed, displayed, and saved:
 
 $$
 \begin{gather*}
@@ -306,7 +306,7 @@ $$
 \frac{\partial\phi}{\partial \boldsymbol{n}} = (V_l - V_u) \, \mathcal{D}(\boldsymbol{\mu})
 $$
 
-where $D$ is the DeepONet and $\mu$ is the vector containing the geometric parameters.
+where $\mathcal{D}$ is the DeepONet and $\boldsymbol{\mu}$ is the vector containing the geometric parameters.
 
 > Here the assumption of linear dielectric becomes crucial.
 
@@ -327,7 +327,7 @@ $$
 
 ### Potential surrogate
 
-There's also the possibility to use a surrogate for the potential $\phi$. In this repository we only illustrate this possibility and it's accuracy, while this is not a source of computational speedup, since in any case you need a mesh to visualize the solution. See the two test cases about visualization of the solution.
+There's also the possibility to use a surrogate for the potential $\phi$. In this repository we only illustrate this possibility and its accuracy, although this is not a source of computational speedup, since in any case you need a mesh to visualize the solution. See the two test cases about visualization of the solution.
 
 
 ## Modelling assumptions
