@@ -45,5 +45,5 @@ you can just run the following command, and select the right option, to generate
 ```
 
 ## Numerical results
-You can find the instruction on how to reproduce them in `test/run_test_cases.md`, or equivalently in the documentation.
+You can find the instruction on how to reproduce them in [`test/run_test_cases.md`](https://github.com/alessandropedone/deeponet-for-mems/blob/main/test/run_test_cases.md), or equivalently in the documentation.
 
