@@ -46,7 +46,7 @@ Now you can visualize with some plots the predictions that the model can make.
 python -m src.surrogate.predict --folder "test/test1" --model_path "models/potential1.keras"  --target "potential" 
 ```
 
-Figures from 10 to 12 are an example of the plots produced by this command.
+Figures from 6 to 9 are an example of the plots produced by this command.
 
 You can do the same with the model for the normal derivative of the potential on the boundary of the upper plate.
 ```bash
@@ -56,7 +56,7 @@ python -m src.surrogate.evaluate --folder "test/test1" --model_path "models/deri
 python -m src.surrogate.predict --folder "test/test1" --model_path "models/derivative1.keras"  --target "normal_derivative" 
 ```
 
-Figures from 6 to 9 are an example of the plots produced by this command.
+Figures from 10 to 12 are an example of the plots produced by this command.
 
 If you want, you can try training the model, with the dedicated module.
 ```bash
