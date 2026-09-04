@@ -32,7 +32,7 @@ python -m src.data.generate --folder "test/test1" --data_file "test/test1.csv" -
 
 > Note that the real bottleneck of the process in this case is the mesh generation section, since the FOM (Full Order Model) is quite fast, being only a laplacian.
 
-At the end of the data generation, a plot of the solution for a specific configuration is produced. Figures from 1 to 5 in `test/img` are an example of the output of this process. 
+At the end of the data generation, a plot of the solution for a specific configuration is produced. Figures from 1 to 5 in `test/img` are an example of the output of this process.
 
 Then you can __evaluate__ the model for the electrostatic potential that we have already trained on the test set you've generated.
 ```bash
